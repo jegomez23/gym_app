@@ -1,0 +1,2 @@
+-- Local development seed entrypoint.
+-- Definitive demo data will be added during Database Implementation.

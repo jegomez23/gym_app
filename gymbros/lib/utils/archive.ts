@@ -17,7 +17,7 @@ export function getRelativeCommitDate(date: string) {
   const todayStart = new Date(
     today.getFullYear(),
     today.getMonth(),
-    today.getDate(),
+    today.getDate()
   );
   const diffMs = todayStart.getTime() - commitDate.getTime();
   const diffDays = Math.round(diffMs / 86_400_000);
@@ -45,7 +45,7 @@ export function getCommitsThisWeek(commits: Commit[]) {
   const startOfToday = new Date(
     today.getFullYear(),
     today.getMonth(),
-    today.getDate(),
+    today.getDate()
   );
   const day = startOfToday.getDay();
   const mondayOffset = day === 0 ? -6 : 1 - day;
@@ -66,6 +66,6 @@ export function getLatestFeeling(commits: Commit[]): CommitFeeling | string {
 export function sortCommitsNewestFirst(commits: Commit[]) {
   return [...commits].sort(
     (first, second) =>
-      new Date(second.date).getTime() - new Date(first.date).getTime(),
+      new Date(second.date).getTime() - new Date(first.date).getTime()
   );
 }

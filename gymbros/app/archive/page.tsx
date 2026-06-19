@@ -36,12 +36,15 @@ export default function ArchivePage() {
                 Resumen de evidencia
               </p>
               <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                <StatBlock label="Commits totales" value={sortedCommits.length} />
                 <StatBlock
-                  label="Esta semana"
-                  value={commitsThisWeek.length}
+                  label="Commits totales"
+                  value={sortedCommits.length}
                 />
-                <StatBlock label="Sensación más reciente" value={latestFeeling} />
+                <StatBlock label="Esta semana" value={commitsThisWeek.length} />
+                <StatBlock
+                  label="Sensación más reciente"
+                  value={latestFeeling}
+                />
               </div>
             </AppCard>
 

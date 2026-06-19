@@ -8,7 +8,11 @@ type MomentumCardProps = {
   insight?: string;
 };
 
-export function MomentumCard({ momentum, message, insight }: MomentumCardProps) {
+export function MomentumCard({
+  momentum,
+  message,
+  insight,
+}: MomentumCardProps) {
   return (
     <AppCard className="relative overflow-hidden p-6 shadow-[0_28px_90px_rgb(0_0_0/0.42)]">
       <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-[var(--accent-soft)] blur-3xl" />

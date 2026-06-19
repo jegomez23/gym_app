@@ -11,7 +11,7 @@ export function getCircleCommitsThisWeek(activity: CircleActivity[]) {
   const startOfToday = new Date(
     today.getFullYear(),
     today.getMonth(),
-    today.getDate(),
+    today.getDate()
   );
   const day = startOfToday.getDay();
   const mondayOffset = day === 0 ? -6 : 1 - day;
@@ -36,17 +36,17 @@ export function getRelativeActivityTime(date: string) {
   const startOfToday = new Date(
     now.getFullYear(),
     now.getMonth(),
-    now.getDate(),
+    now.getDate()
   );
   const startOfActivityDay = new Date(
     committedAt.getFullYear(),
     committedAt.getMonth(),
-    committedAt.getDate(),
+    committedAt.getDate()
   );
   const diffMs = now.getTime() - committedAt.getTime();
   const diffHours = Math.floor(diffMs / 3_600_000);
   const diffDays = Math.round(
-    (startOfToday.getTime() - startOfActivityDay.getTime()) / 86_400_000,
+    (startOfToday.getTime() - startOfActivityDay.getTime()) / 86_400_000
   );
 
   if (diffHours >= 1 && diffHours < 24) {

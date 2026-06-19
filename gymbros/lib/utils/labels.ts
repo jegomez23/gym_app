@@ -58,7 +58,9 @@ export function getTrainingLabel(training: TrainingFocus | string) {
     : training;
 }
 
-export function getFeelingLabel(feeling: CommitFeeling | CommitIntensity | string) {
+export function getFeelingLabel(
+  feeling: CommitFeeling | CommitIntensity | string
+) {
   if (feeling in feelingLabels) {
     return feelingLabels[feeling as CommitFeeling];
   }

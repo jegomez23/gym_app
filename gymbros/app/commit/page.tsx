@@ -78,7 +78,10 @@ const stepCopy = [
 
 function ProgressIndicator({ currentStep }: { currentStep: number }) {
   return (
-    <div className="mb-2 grid grid-cols-3 gap-2" aria-label="Progreso del Commit">
+    <div
+      className="mb-2 grid grid-cols-3 gap-2"
+      aria-label="Progreso del Commit"
+    >
       {[0, 1, 2].map((step) => (
         <div
           className={`h-1.5 rounded-full transition ${
@@ -96,7 +99,7 @@ export default function CommitFlowPage() {
   const addCommit = useCommitStore((state) => state.addCommit);
   const [step, setStep] = useState(0);
   const [trainingFocus, setTrainingFocus] = useState<TrainingFocus | null>(
-    null,
+    null
   );
   const [feeling, setFeeling] = useState<CommitFeeling | null>(null);
   const [reflection, setReflection] = useState("");

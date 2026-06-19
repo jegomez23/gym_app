@@ -53,8 +53,7 @@ function createCommit(input: NewCommitInput): Commit {
     date: getLocalDateStamp(),
     title: `${input.trainingFocus} Commit`,
     note:
-      reflection ||
-      `Apareciste. Esta sesión quedó guardada como evidencia.`,
+      reflection || `Apareciste. Esta sesión quedó guardada como evidencia.`,
     durationMinutes: 0,
     intensity: getIntensityFromFeeling(input.feeling),
     evidence: [input.trainingFocus, input.feeling],

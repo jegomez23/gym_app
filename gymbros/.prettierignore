@@ -1,0 +1,6 @@
+.next
+coverage
+node_modules
+package-lock.json
+supabase/types/database.generated.ts
+tsconfig.tsbuildinfo

@@ -24,7 +24,7 @@ export default function CirclePage() {
   const sortedActivity = [...activity].sort(
     (first, second) =>
       new Date(second.committedAt).getTime() -
-      new Date(first.committedAt).getTime(),
+      new Date(first.committedAt).getTime()
   );
   const commitsThisWeek = getCircleCommitsThisWeek(activity);
 
