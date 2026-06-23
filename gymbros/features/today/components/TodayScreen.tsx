@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { ChapterCard } from "@/components/gym/ChapterCard";
 import { AppButton } from "@/components/ui/AppButton";
 import { AppCard } from "@/components/ui/AppCard";
-import { StatBlock } from "@/components/ui/StatBlock";
+import { Avatar } from "@/components/ui/Avatar";
 import { NotificationsPanel } from "@/features/notifications/components/NotificationsPanel";
 import { DomainCommitCard } from "@/features/shared";
 import type {
@@ -25,16 +24,54 @@ type TodayScreenProps = {
   notifications: Notification[];
 };
 
-function momentumLabel(progress: ProgressSummary) {
-  if (progress.activeDays >= 4) {
-    return "En flujo";
+const MS_PER_DAY = 1000 * 60 * 60 * 24;
+// A pause long enough that the return deserves to be welcomed, not measured.
+const RETURN_AFTER_DAYS = 4;
+
+function firstName(name: string) {
+  return name.trim().split(" ")[0] || name;
+}
+
+function daysSince(value: string | null) {
+  if (!value) {
+    return null;
   }
 
-  if (progress.activeDays > 0) {
-    return "Base estable";
+  const then = new Date(value).getTime();
+  if (Number.isNaN(then)) {
+    return null;
   }
 
-  return "Reinicio";
+  return Math.floor((Date.now() - then) / MS_PER_DAY);
+}
+
+function showedUpToday(presence: CirclePresence[]) {
+  return presence.filter(
+    (member) => daysSince(member.lastCommitRecordedAt) === 0
+  );
+}
+
+function presenceLine(
+  present: CirclePresence[],
+  anyRecent: CirclePresence | null
+) {
+  if (present.length === 1) {
+    return `${firstName(present[0].memberName)} apareció hoy.`;
+  }
+
+  if (present.length === 2) {
+    return `${firstName(present[0].memberName)} y ${firstName(present[1].memberName)} aparecieron hoy.`;
+  }
+
+  if (present.length > 2) {
+    return `${firstName(present[0].memberName)}, ${firstName(present[1].memberName)} y otros aparecieron hoy.`;
+  }
+
+  if (anyRecent) {
+    return `${firstName(anyRecent.memberName)} apareció hace poco.`;
+  }
+
+  return "Tu círculo está en silencio. Hoy puedes empezar tú.";
 }
 
 export function TodayScreen({
@@ -52,25 +89,69 @@ export function TodayScreen({
       membership.status === "pending" && membership.invitedBy !== profile.id
   );
 
+  const name = firstName(profile.name);
+  const gap = daysSince(progress.lastCommitAt);
+  const isReturning =
+    progress.totalCommits > 0 && gap !== null && gap >= RETURN_AFTER_DAYS;
+  const isFirstTime = progress.totalCommits === 0;
+
+  const present = showedUpToday(presence);
+  const anyRecent =
+    presence.find((member) => member.lastCommitRecordedAt) ?? null;
+
   return (
     <>
-      <div className="-mt-2 mb-2 rounded-full border border-white/8 bg-white/[0.035] px-4 py-3 text-sm leading-6 text-secondary-text shadow-[0_14px_45px_rgb(0_0_0/0.24)]">
-        {profile.name}, hoy no se trata de hacer mas. Se trata de aparecer con
-        intencion.
-      </div>
+      {/* Hero — the screen's single anchor: who you are becoming, not a number. */}
+      <AppCard className="relative overflow-hidden" level="hero">
+        <div className="absolute -right-10 top-6 h-28 w-28 rounded-full bg-accent-soft blur-3xl" />
+        <div className="relative">
+          {isReturning ? (
+            <>
+              <p className="text-label uppercase text-accent">
+                Bienvenido de vuelta
+              </p>
+              <h2 className="mt-3 text-display text-primary-text">
+                La base sigue ahí.
+              </h2>
+              <p className="mt-3 max-w-80 text-body text-secondary-text">
+                {name}, no empezamos de cero. Sigues siendo quien estabas
+                eligiendo ser.
+              </p>
+            </>
+          ) : isFirstTime ? (
+            <>
+              <p className="text-label uppercase text-accent">Tu primer paso</p>
+              <h2 className="mt-3 text-display text-primary-text">
+                Empieza a dejar evidencia.
+              </h2>
+              <p className="mt-3 max-w-80 text-body text-secondary-text">
+                {name}, la primera vez que apareces, el archivo empieza a
+                recordar quién eres.
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-label uppercase text-secondary-text">
+                Quien estás siendo
+              </p>
+              <h2 className="mt-3 text-display text-primary-text">
+                Sigues apareciendo.
+              </h2>
+              <p className="mt-3 max-w-80 text-body text-secondary-text">
+                {name}, hoy no se trata de hacer más. Se trata de aparecer con
+                intención.
+              </p>
+              <p className="mt-4 text-caption text-secondary-text/80">
+                {progress.totalCommits}{" "}
+                {progress.totalCommits === 1 ? "prueba" : "pruebas"} de que esto
+                es real.
+              </p>
+            </>
+          )}
 
-      <ChapterCard />
-
-      <AppCard>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-secondary-text">
-          Momento actual
-        </p>
-        <h2 className="mt-2 text-2xl font-semibold text-primary-text">
-          {momentumLabel(progress)}
-        </h2>
-        <div className="mt-5 grid grid-cols-2 gap-3">
-          <StatBlock label="Commits" value={progress.totalCommits} />
-          <StatBlock label="Dias activos" value={progress.activeDays} />
+          <Link className="mt-6 block" href="/commit">
+            <AppButton className="w-full">Aparecer hoy</AppButton>
+          </Link>
         </div>
       </AppCard>
 
@@ -79,92 +160,65 @@ export function TodayScreen({
         profileId={profile.id}
       />
 
-      <AppCard>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-secondary-text">
-          Circulo
-        </p>
-        <h2 className="mt-2 text-2xl font-semibold text-primary-text">
-          {presence.length} presentes · {pendingInvitations.length} invitaciones
-        </h2>
-        <p className="mt-3 text-sm leading-6 text-secondary-text">
-          La presencia privada se calcula desde commits reales compartidos con
-          tu circulo.
-        </p>
+      <AppCard level="quiet">
+        <p className="text-label uppercase text-secondary-text">Tu círculo</p>
+        <div className="mt-3 flex items-center gap-3">
+          {present.length > 0 && (
+            <div className="flex -space-x-2">
+              {present.slice(0, 3).map((member) => (
+                <Avatar
+                  className="ring-2 ring-[var(--surface)]"
+                  key={member.memberId}
+                  name={member.memberName}
+                  size={32}
+                  src={member.memberAvatarUrl}
+                />
+              ))}
+            </div>
+          )}
+          <p className="text-body text-primary-text">
+            {presenceLine(present, anyRecent)}
+          </p>
+        </div>
         {pendingInvitations.length > 0 && (
-          <Link className="mt-5 block" href="/circle">
+          <Link className="mt-4 block" href="/circle">
             <AppButton className="w-full" variant="secondary">
-              Revisar invitaciones
+              {pendingInvitations.length === 1
+                ? "Alguien quiere acompañarte"
+                : "Algunas personas quieren acompañarte"}
             </AppButton>
           </Link>
         )}
       </AppCard>
 
       {latestCommit ? (
-        <DomainCommitCard commit={latestCommit} eyebrow="Ultimo Commit" />
-      ) : (
-        <AppCard>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-            Archivo vacio
-          </p>
-          <h2 className="mt-4 text-2xl font-semibold text-primary-text">
-            Tu primera evidencia empieza aqui.
-          </h2>
-          <p className="mt-3 text-sm leading-6 text-secondary-text">
-            Registra una sesion para activar el diario y el progreso.
-          </p>
-        </AppCard>
-      )}
+        <DomainCommitCard commit={latestCommit} eyebrow="Tu última evidencia" />
+      ) : null}
 
-      <AppCard>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-secondary-text">
-          Apoyos recientes
-        </p>
-        {recentSupports.length > 0 ? (
+      {recentSupports.length > 0 && (
+        <AppCard level="quiet">
+          <p className="text-label uppercase text-secondary-text">
+            Te acompañaron
+          </p>
           <div className="mt-4 flex flex-col gap-3">
             {recentSupports.map((support) => (
               <div
-                className="rounded-3xl border border-white/8 bg-white/[0.03] p-4"
+                className="rounded-md border border-white/8 bg-white/3 p-4"
                 key={support.id}
               >
-                <p className="text-sm leading-6 text-primary-text">
+                <p className="text-caption leading-6 text-primary-text">
                   {support.message}
                 </p>
-                <p className="mt-2 text-xs font-semibold uppercase tracking-[0.14em] text-secondary-text">
-                  {support.fromUserId === profile.id ? "Enviado" : "Recibido"}
+                <p className="mt-2 text-label uppercase text-secondary-text">
+                  {support.fromUserId === profile.id
+                    ? "Lo enviaste tú"
+                    : "Para ti"}
                 </p>
               </div>
             ))}
           </div>
-        ) : (
-          <p className="mt-3 text-sm leading-6 text-secondary-text">
-            Todavia no hay apoyos. Aparecer por otros empieza con un Commit
-            compartido.
-          </p>
-        )}
-      </AppCard>
-
-      <AppCard>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-secondary-text">
-          Journey
-        </p>
-        <h2 className="mt-2 text-2xl font-semibold text-primary-text">
-          {progress.firstCommitAt ? "Ya hay historia" : "Aun por empezar"}
-        </h2>
-        <p className="mt-3 text-sm leading-6 text-secondary-text">
-          {progress.firstCommitAt
-            ? `Primer Commit: ${new Intl.DateTimeFormat("es", {
-                day: "numeric",
-                month: "short",
-              }).format(new Date(progress.firstCommitAt))}.`
-            : "Registra la primera evidencia para activar tu timeline."}
-        </p>
-      </AppCard>
-
-      <Link href="/commit">
-        <AppButton className="h-15 w-full text-base shadow-[0_22px_60px_var(--accent-glow)]">
-          Registrar sesion
-        </AppButton>
-      </Link>
+        </AppCard>
+      )}
     </>
   );
 }

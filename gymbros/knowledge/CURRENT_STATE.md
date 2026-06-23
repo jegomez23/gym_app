@@ -41,11 +41,23 @@ optimistic UI is genuinely required.
 Current code shape:
 
 - `app/` contains route pages and page-level UI logic.
-- `components/layout/`, `components/ui/`, and `components/gym/` contain shared
-  UI components.
+- `components/layout/` and `components/ui/` contain shared UI components.
+  `components/ui/` holds the Phase 16 design system: token-driven primitives
+  (`AppButton`, `AppCard` hero/primary/quiet levels, `Field`/`Input`/`Textarea`/
+  `Select`, `Icon`, `Avatar`, `StatBlock`, `PillOption`). Design tokens
+  (type scale, radius, elevation, motion, color semantics) live in
+  `app/globals.css` and are the single source of truth — components reference
+  tokens, never hardcoded values.
 - `features/` owns route-specific query/view/action code for Today, Commit,
   Circle, Archive, Profile, Auth, Onboarding, Notifications, and shared feature
   primitives.
+- The emotional product layer (Phase 20 implementation) is client-only and
+  reuses existing data: Today shows an identity hero with a Quiet Return state
+  and human presence lines (derived from `progress`/`presence`); the Commit flow
+  resurfaces the last reflection as memory (via `journey.getJourney`) and hides
+  duration behind progressive disclosure; notifications acknowledge on card tap
+  (no admin chrome); sending Support shows a quiet confirmation. No schema,
+  Server Action, or DAL changes were made for these.
 - Circle and Notifications use client Supabase Realtime hooks
   (`useCircleRealtime`, `useNotificationsRealtime`) that refresh the server tree
   on `postgres_changes`. `app/providers.tsx` exposes the browser Supabase client
@@ -134,8 +146,8 @@ private app features.
   prototype shape.
 - Database tests currently verify migration contract from files.
 - Long reference docs contain duplicated and conflicting truth.
-- `ChapterCard` uses hardcoded chapter/season data with no database entity; it
-  is a decorative placeholder for a future feature.
+- The `ChapterCard` decorative placeholder was removed in Phase 16 (Design
+  System) along with the now-empty `components/gym/` directory.
 
 ## Reference Sources
 

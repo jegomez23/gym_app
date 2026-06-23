@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import Link from "next/link";
 
 import { AppButton } from "@/components/ui/AppButton";
+import { Field, Input } from "@/components/ui/Field";
 import { initialAuthActionState } from "@/lib/auth/actionState";
 
 import { loginAction } from "../actions/login";
@@ -22,28 +23,26 @@ export function LoginForm({ returnTo = "/" }: LoginFormProps) {
   return (
     <form action={formAction} className="flex flex-col gap-4">
       <input name="returnTo" type="hidden" value={returnTo} />
-      <label className="flex flex-col gap-2 text-sm text-secondary-text">
-        Email
-        <input
+      <Field htmlFor="login-email" label="Email">
+        <Input
           autoComplete="email"
-          className="rounded-2xl border border-white/8 bg-white/[0.03] p-4 text-primary-text outline-none focus:border-[var(--accent-border)]"
+          id="login-email"
           name="email"
           required
           type="email"
         />
-      </label>
-      <label className="flex flex-col gap-2 text-sm text-secondary-text">
-        Contrasena
-        <input
+      </Field>
+      <Field htmlFor="login-password" label="Contraseña">
+        <Input
           autoComplete="current-password"
-          className="rounded-2xl border border-white/8 bg-white/[0.03] p-4 text-primary-text outline-none focus:border-[var(--accent-border)]"
+          id="login-password"
           minLength={8}
           name="password"
           required
           type="password"
         />
-      </label>
-      <div className="flex items-center justify-between gap-3 text-sm">
+      </Field>
+      <div className="flex items-center justify-between gap-3 text-caption">
         <label className="flex items-center gap-2 text-secondary-text">
           <input defaultChecked name="remember" type="checkbox" />
           Recordar sesion
@@ -53,7 +52,7 @@ export function LoginForm({ returnTo = "/" }: LoginFormProps) {
         </Link>
       </div>
       <AuthStatus state={state} />
-      <AppButton disabled={pending} type="submit">
+      <AppButton loading={pending} type="submit">
         {pending ? "Entrando" : "Entrar"}
       </AppButton>
     </form>

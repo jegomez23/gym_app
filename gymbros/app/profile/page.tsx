@@ -12,12 +12,11 @@ export default async function ProfilePage() {
     <AppShell>
       <ScreenContainer
         eyebrow="Perfil"
-        subtitle="Es un registro silencioso de quien te estas convirtiendo."
+        subtitle="Un registro silencioso de quien te estás convirtiendo."
         title="Esto no es un perfil fitness."
       >
         <ProfileScreen
           memberships={viewModel.memberships}
-          presence={viewModel.presence}
           profile={viewModel.profile}
           progress={viewModel.progress}
         />

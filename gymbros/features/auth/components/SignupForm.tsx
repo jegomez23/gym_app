@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 
 import { AppButton } from "@/components/ui/AppButton";
+import { Field, Input } from "@/components/ui/Field";
 import { initialAuthActionState } from "@/lib/auth/actionState";
 
 import { signupAction } from "../actions/signup";
@@ -16,39 +17,36 @@ export function SignupForm() {
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
-      <label className="flex flex-col gap-2 text-sm text-secondary-text">
-        Nombre
-        <input
+      <Field htmlFor="signup-name" label="Nombre">
+        <Input
           autoComplete="name"
-          className="rounded-2xl border border-white/8 bg-white/[0.03] p-4 text-primary-text outline-none focus:border-[var(--accent-border)]"
+          id="signup-name"
           maxLength={100}
           name="name"
           required
         />
-      </label>
-      <label className="flex flex-col gap-2 text-sm text-secondary-text">
-        Email
-        <input
+      </Field>
+      <Field htmlFor="signup-email" label="Email">
+        <Input
           autoComplete="email"
-          className="rounded-2xl border border-white/8 bg-white/[0.03] p-4 text-primary-text outline-none focus:border-[var(--accent-border)]"
+          id="signup-email"
           name="email"
           required
           type="email"
         />
-      </label>
-      <label className="flex flex-col gap-2 text-sm text-secondary-text">
-        Contrasena
-        <input
+      </Field>
+      <Field htmlFor="signup-password" label="Contraseña">
+        <Input
           autoComplete="new-password"
-          className="rounded-2xl border border-white/8 bg-white/[0.03] p-4 text-primary-text outline-none focus:border-[var(--accent-border)]"
+          id="signup-password"
           minLength={8}
           name="password"
           required
           type="password"
         />
-      </label>
+      </Field>
       <AuthStatus state={state} />
-      <AppButton disabled={pending} type="submit">
+      <AppButton loading={pending} type="submit">
         {pending ? "Creando" : "Crear cuenta"}
       </AppButton>
     </form>

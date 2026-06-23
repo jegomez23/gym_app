@@ -17,6 +17,13 @@ sequence, decision tree, and rules.
 4. `knowledge/decisions/` explains major architectural decisions.
 5. `docs/` is reference material, not the first entry point.
 
+For why the product exists and what it must never become,
+`knowledge/PRODUCT_BIBLE.md` is the highest source of truth, with
+`knowledge/VOICE.md` (user-facing language) and `knowledge/PRINCIPLES.md`
+(immutable product principles, never-build blacklist, Future Filter). On
+product, identity, and voice questions, the Product Bible wins over everything
+except code reality.
+
 ## Knowledge Updates
 
 - Implementation reality changed: update `knowledge/CURRENT_STATE.md`.

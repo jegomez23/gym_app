@@ -25,22 +25,20 @@ export function AuthFormShell({
   return (
     <main className="min-h-dvh bg-background px-5 py-8 text-primary-text">
       <div className="mx-auto flex min-h-[calc(100dvh-4rem)] w-full max-w-lg flex-col justify-center">
-        <header className="mb-7">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-            {eyebrow}
-          </p>
-          <h1 className="text-4xl font-semibold leading-tight tracking-normal text-primary-text">
-            {title}
-          </h1>
-          <p className="mt-3 max-w-[22rem] text-sm leading-6 text-secondary-text">
+        <header className="mb-7 animate-rise">
+          <p className="mb-2 text-label uppercase text-accent">{eyebrow}</p>
+          <h1 className="text-display text-primary-text">{title}</h1>
+          <p className="mt-3 max-w-80 text-body text-secondary-text">
             {subtitle}
           </p>
         </header>
 
-        <AppCard>{children}</AppCard>
+        <div className="animate-rise">
+          <AppCard level="hero">{children}</AppCard>
+        </div>
 
         {footerHref && footerLabel && (
-          <p className="mt-5 text-center text-sm text-secondary-text">
+          <p className="mt-5 text-center text-caption text-secondary-text">
             {footerText}{" "}
             <Link className="font-semibold text-accent" href={footerHref}>
               {footerLabel}

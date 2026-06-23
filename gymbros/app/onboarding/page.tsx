@@ -33,7 +33,7 @@ export default async function OnboardingPage({
   return (
     <AuthFormShell
       eyebrow="Onboarding"
-      subtitle="Completa tu identidad privada antes de entrar al producto."
+      subtitle="Define tu identidad privada antes de empezar."
       title="Crea tu perfil."
     >
       <OnboardingForm

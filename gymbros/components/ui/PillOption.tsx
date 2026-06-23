@@ -14,10 +14,10 @@ export function PillOption({
   return (
     <button
       aria-pressed={active}
-      className={`rounded-full px-4 py-2 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-40 ${
+      className={`inline-flex min-h-11 items-center rounded-full px-4 text-caption font-medium transition duration-(--duration-fast) active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 ${
         active
-          ? "bg-accent text-[#111410] shadow-[0_10px_26px_var(--accent-glow)]"
-          : "border border-white/8 bg-white/5 text-secondary-text hover:border-[var(--accent-border)] hover:text-primary-text active:bg-white/8"
+          ? "bg-accent text-[#111410] shadow-glow"
+          : "border border-white/8 bg-white/5 text-secondary-text hover:border-accent-border hover:text-primary-text active:bg-white/8"
       } ${className}`}
       type="button"
       {...props}

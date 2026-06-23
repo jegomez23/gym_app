@@ -18,10 +18,10 @@ export function DeleteAccountForm() {
   if (!confirming) {
     return (
       <AppButton
-        className="mt-4 w-full border-red-400/20 text-red-300/70 hover:border-red-400/40 hover:text-red-300"
+        className="mt-4 w-full"
         onClick={() => setConfirming(true)}
         type="button"
-        variant="secondary"
+        variant="ghost"
       >
         Eliminar cuenta
       </AppButton>
@@ -30,9 +30,9 @@ export function DeleteAccountForm() {
 
   return (
     <form action={formAction} className="mt-4 flex flex-col gap-3">
-      <p className="text-sm leading-6 text-red-300/80">
-        Esta accion desactivara tu cuenta. Tus datos no se eliminan
-        inmediatamente. No podras iniciar sesion hasta que la cuenta sea
+      <p className="text-caption leading-6 text-danger">
+        Esta acción desactivará tu cuenta. Tus datos no se eliminan
+        inmediatamente. No podrás iniciar sesión hasta que la cuenta sea
         restaurada.
       </p>
       <div className="grid grid-cols-2 gap-3">
@@ -44,13 +44,8 @@ export function DeleteAccountForm() {
         >
           Cancelar
         </AppButton>
-        <AppButton
-          className="border-red-400/30 bg-red-500/10 text-red-100 hover:bg-red-500/20"
-          disabled={pending}
-          type="submit"
-          variant="secondary"
-        >
-          {pending ? "Eliminando..." : "Confirmar"}
+        <AppButton loading={pending} type="submit" variant="danger">
+          {pending ? "Eliminando" : "Confirmar"}
         </AppButton>
       </div>
       <AuthStatus state={state} />

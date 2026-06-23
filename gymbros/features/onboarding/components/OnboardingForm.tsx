@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 
 import { AppButton } from "@/components/ui/AppButton";
+import { Field, Input, Textarea } from "@/components/ui/Field";
 import { AuthStatus } from "@/features/auth/components/AuthStatus";
 import { initialAuthActionState } from "@/lib/auth/actionState";
 
@@ -29,11 +30,14 @@ export function OnboardingForm({
   return (
     <form action={formAction} className="flex flex-col gap-4">
       <input name="returnTo" type="hidden" value={returnTo} />
-      <label className="flex flex-col gap-2 text-sm text-secondary-text">
-        Username
-        <input
+      <Field
+        helper="Solo minúsculas, números y guion bajo."
+        htmlFor="onboarding-username"
+        label="Username"
+      >
+        <Input
           autoComplete="username"
-          className="rounded-2xl border border-white/8 bg-white/[0.03] p-4 text-primary-text outline-none focus:border-[var(--accent-border)]"
+          id="onboarding-username"
           maxLength={30}
           minLength={3}
           name="username"
@@ -41,33 +45,32 @@ export function OnboardingForm({
           placeholder="alex_training"
           required
         />
-      </label>
-      <label className="flex flex-col gap-2 text-sm text-secondary-text">
-        Display name
-        <input
+      </Field>
+      <Field htmlFor="onboarding-name" label="Tu nombre">
+        <Input
           autoComplete="name"
-          className="rounded-2xl border border-white/8 bg-white/[0.03] p-4 text-primary-text outline-none focus:border-[var(--accent-border)]"
           defaultValue={defaultName}
+          id="onboarding-name"
           maxLength={100}
           name="name"
           required
         />
-      </label>
-      <label className="flex flex-col gap-2 text-sm text-secondary-text">
-        Bio
-        <textarea
-          className="min-h-24 resize-none rounded-2xl border border-white/8 bg-white/[0.03] p-4 text-primary-text outline-none focus:border-[var(--accent-border)]"
+      </Field>
+      <Field htmlFor="onboarding-bio" label="Bio">
+        <Textarea
+          className="min-h-24"
+          id="onboarding-bio"
           maxLength={200}
           name="bio"
-          placeholder="Estoy construyendo disciplina, una sesion a la vez."
+          placeholder="Estoy construyendo disciplina, una sesión a la vez."
         />
-      </label>
+      </Field>
       <input name="avatarUrl" type="hidden" value="" />
       <input name="timezone" type="hidden" value={defaultTimezone} />
       <input name="locale" type="hidden" value={defaultLocale} />
       <input name="visibilityPreference" type="hidden" value="circle" />
       <AuthStatus state={state} />
-      <AppButton disabled={pending} type="submit">
+      <AppButton loading={pending} type="submit">
         {pending ? "Creando perfil" : "Entrar a Gym Circle"}
       </AppButton>
     </form>

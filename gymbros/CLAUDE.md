@@ -34,7 +34,9 @@ Then load only the files listed for your task type below.
 
 **Architecture decision** → `knowledge/PRINCIPLES.md` + `knowledge/ARCHITECTURE.md` + `knowledge/decisions/`
 
-**Product/domain decision** → `knowledge/PRINCIPLES.md` + `knowledge/DOMAIN.md`
+**Product/domain decision** → `knowledge/PRODUCT_BIBLE.md` + `knowledge/PRINCIPLES.md` (Future Filter + never-build blacklist) + `knowledge/DOMAIN.md`
+
+**Product copy / microcopy / notification wording** → `knowledge/VOICE.md` + `knowledge/PRODUCT_BIBLE.md`
 
 **Refactor** → `knowledge/CURRENT_STATE.md` + `knowledge/ARCHITECTURE.md` + `knowledge/PLAYBOOKS.md`
 
@@ -64,6 +66,14 @@ When information conflicts, this wins:
 3. **knowledge/PRINCIPLES.md, DOMAIN.md, ARCHITECTURE.md, DATABASE.md** — Canonical intent
 4. **knowledge/decisions/** — Architectural decision records
 5. **docs/** — Reference material, may be stale
+
+The hierarchy above resolves what is true and how the system works. For **why**
+the product exists and what it must never become, the highest source of truth is
+**knowledge/PRODUCT_BIBLE.md**, with **knowledge/VOICE.md** for user-facing
+language and **knowledge/PRINCIPLES.md** for the immutable product principles, the
+never-build blacklist, and the Future Filter. On any product, identity, or voice
+question, the Product Bible wins. Run every new product idea through the Future
+Filter in PRINCIPLES.md before building it.
 
 ---
 

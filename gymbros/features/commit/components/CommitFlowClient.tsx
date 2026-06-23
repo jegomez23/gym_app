@@ -9,6 +9,8 @@ import { z } from "zod";
 
 import { AppButton } from "@/components/ui/AppButton";
 import { AppCard } from "@/components/ui/AppCard";
+import { Field, Input, Textarea } from "@/components/ui/Field";
+import { Icon, type IconName } from "@/components/ui/Icon";
 import { PillOption } from "@/components/ui/PillOption";
 import { FormStatus } from "@/features/shared";
 import { initialActionState } from "@/features/shared/actionState";
@@ -42,10 +44,14 @@ const trainingOptions = [
 ] as const;
 
 const intensityOptions = [
-  { value: "light", label: "Ligero" },
-  { value: "steady", label: "Constante" },
-  { value: "deep", label: "Profundo" },
-] as const;
+  { value: "light", label: "Ligero", icon: "feeling-light" },
+  { value: "steady", label: "Constante", icon: "feeling-steady" },
+  { value: "deep", label: "Profundo", icon: "feeling-deep" },
+] as const satisfies ReadonlyArray<{
+  value: string;
+  label: string;
+  icon: IconName;
+}>;
 
 const visibilityOptions = [
   { value: "private", label: "Privado" },
@@ -59,28 +65,88 @@ type VisibilityType = (typeof visibilityOptions)[number]["value"];
 
 const stepCopy = [
   {
-    eyebrow: "Paso 1",
-    title: "Que accion quieres registrar",
-    subtitle: "Nombra el trabajo. Que sea simple y rapido de registrar.",
+    eyebrow: "Lo que hiciste",
+    title: "¿Qué hiciste hoy?",
+    subtitle: "Nómbralo simple. Apareciste, eso es lo que cuenta.",
   },
   {
-    eyebrow: "Paso 2",
-    title: "Como se sintio",
-    subtitle: "Sin puntuacion. Solo el tono honesto de la sesion.",
+    eyebrow: "Cómo se sintió",
+    title: "¿Cómo se sintió?",
+    subtitle: "Sin puntuación. Solo el tono honesto del momento.",
   },
   {
-    eyebrow: "Paso 3",
+    eyebrow: "Una nota para después",
     title: "Deja una nota para tu yo del futuro.",
-    subtitle: "Reflection opcional, siempre asociada a este Commit.",
+    subtitle: "Opcional. Algo que quieras recordar más adelante.",
   },
 ] as const;
 
+function FeelingTile({
+  icon,
+  label,
+  active,
+  onClick,
+}: {
+  icon: IconName;
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      aria-pressed={active}
+      className={`flex min-h-24 flex-1 flex-col items-center justify-center gap-2 rounded-lg border p-3 transition duration-(--duration-fast) ease-out-soft active:scale-95 ${
+        active
+          ? "border-accent-border bg-accent-soft text-accent"
+          : "border-white/8 bg-white/3 text-secondary-text hover:text-primary-text"
+      }`}
+      onClick={onClick}
+      type="button"
+    >
+      <Icon name={icon} size={26} />
+      <span className="text-caption font-medium">{label}</span>
+    </button>
+  );
+}
+
+function ShowingUpMoment({
+  name,
+  onDone,
+}: {
+  name: string;
+  onDone: () => void;
+}) {
+  const firstName = name.trim().split(" ")[0] || name;
+
+  return (
+    <button
+      aria-label="Continuar"
+      className="animate-fade fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 bg-background/92 px-8 text-center backdrop-blur-xl"
+      onClick={onDone}
+      type="button"
+    >
+      <span className="animate-pop flex h-20 w-20 items-center justify-center rounded-full bg-accent-soft text-accent ring-1 ring-accent-border">
+        <Icon name="check" size={34} strokeWidth={2.25} />
+      </span>
+      <div className="animate-rise">
+        <p className="text-label uppercase text-secondary-text">
+          Quedó registrado
+        </p>
+        <h2 className="mt-3 text-display text-primary-text">Apareciste.</h2>
+        <p className="mx-auto mt-3 max-w-80 text-body text-secondary-text">
+          {firstName}, una prueba más de quién estás eligiendo ser.
+        </p>
+      </div>
+      <p className="animate-fade text-caption text-secondary-text/70">
+        Toca para continuar
+      </p>
+    </button>
+  );
+}
+
 function ProgressIndicator({ currentStep }: { currentStep: number }) {
   return (
-    <div
-      aria-label="Progreso del Commit"
-      className="mb-2 grid grid-cols-3 gap-2"
-    >
+    <div aria-label="Progreso" className="mb-2 grid grid-cols-3 gap-2">
       {[0, 1, 2].map((step) => (
         <div
           className={`h-1.5 rounded-full transition ${
@@ -93,19 +159,42 @@ function ProgressIndicator({ currentStep }: { currentStep: number }) {
   );
 }
 
-export function CommitFlowClient() {
+export function CommitFlowClient({
+  name,
+  lastReflection,
+}: {
+  name: string;
+  lastReflection?: string | null;
+}) {
   const router = useRouter();
   const [actionState, formAction, pending] = useActionState(
     publishCommitAction,
     initialActionState
   );
   const [step, setStep] = useState(0);
+  const [direction, setDirection] = useState<"forward" | "back">("forward");
+  const [showDuration, setShowDuration] = useState(false);
+
+  // The act is sealed: hold a quiet moment of recognition before returning home.
+  const celebrating = actionState.status === "success";
+
+  function goToStep(next: number) {
+    setDirection(next > step ? "forward" : "back");
+    setStep(Math.min(Math.max(next, 0), 2));
+  }
+
+  function finishCelebration() {
+    router.push("/");
+  }
 
   useEffect(() => {
-    if (actionState.status === "success") {
-      router.push("/");
+    if (!celebrating) {
+      return;
     }
-  }, [router, actionState.status]);
+
+    const timeout = setTimeout(() => router.push("/"), 2800);
+    return () => clearTimeout(timeout);
+  }, [celebrating, router]);
   const [title, setTitle] = useState("");
   const [trainingType, setTrainingType] = useState<TrainingType>("training");
   const [intensity, setIntensity] = useState<IntensityType>("steady");
@@ -167,39 +256,54 @@ export function CommitFlowClient() {
       className="flex flex-col gap-5"
       onSubmit={guardSubmit}
     >
+      {celebrating && (
+        <ShowingUpMoment name={name} onDone={finishCelebration} />
+      )}
       <input name="type" type="hidden" value={trainingType} />
       <input name="intensity" type="hidden" value={intensity} />
       <input name="visibility" type="hidden" value={visibility} />
       <ProgressIndicator currentStep={step} />
 
-      <AppCard className="min-h-[25rem]">
-        <div className="flex h-full flex-col">
+      <AppCard className="min-h-[25rem]" level="hero">
+        <div
+          className={`flex h-full flex-col ${
+            direction === "forward"
+              ? "animate-slide-right"
+              : "animate-slide-left"
+          }`}
+          key={step}
+        >
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-              {copy.eyebrow}
-            </p>
-            <h2 className="mt-3 text-2xl font-semibold tracking-normal text-primary-text">
-              {copy.title}
-            </h2>
-            <p className="mt-2 text-sm leading-6 text-secondary-text">
+            <p className="text-label uppercase text-accent">{copy.eyebrow}</p>
+            <h2 className="mt-3 text-title text-primary-text">{copy.title}</h2>
+            <p className="mt-2 text-body text-secondary-text">
               {copy.subtitle}
             </p>
           </div>
 
           {step === 0 && (
             <div className="mt-8 flex flex-col gap-5">
-              <label className="flex flex-col gap-2 text-sm text-secondary-text">
-                Nombre del Commit
-                <input
-                  className="rounded-2xl border border-white/8 bg-white/[0.03] p-4 text-primary-text outline-none focus:border-[var(--accent-border)]"
-                  placeholder="Lower body restart"
+              {lastReflection && (
+                <div className="rounded-md border border-white/6 bg-white/3 p-4">
+                  <p className="text-label uppercase text-secondary-text">
+                    La última vez escribiste
+                  </p>
+                  <p className="mt-2 text-body italic leading-6 text-primary-text">
+                    “{lastReflection}”
+                  </p>
+                </div>
+              )}
+              <Field htmlFor="commit-title" label="¿Qué hiciste?">
+                <Input
+                  id="commit-title"
+                  placeholder="Tren inferior, vuelta a empezar"
                   {...titleField}
                   onChange={(event) => {
                     titleField.onChange(event);
                     setTitle(event.target.value);
                   }}
                 />
-              </label>
+              </Field>
               <div className="flex flex-wrap gap-2">
                 {trainingOptions.map((option) => (
                   <PillOption
@@ -215,45 +319,62 @@ export function CommitFlowClient() {
 
           {step === 1 && (
             <div className="mt-8 flex flex-col gap-5">
-              <div className="flex flex-wrap gap-2">
+              <div className="flex gap-2">
                 {intensityOptions.map((option) => (
-                  <PillOption
+                  <FeelingTile
                     active={intensity === option.value}
+                    icon={option.icon}
                     key={option.value}
                     label={option.label}
                     onClick={() => selectIntensity(option.value)}
                   />
                 ))}
               </div>
-              <label className="flex flex-col gap-2 text-sm text-secondary-text">
-                Duracion en minutos
-                <input
-                  className="rounded-2xl border border-white/8 bg-white/[0.03] p-4 text-primary-text outline-none focus:border-[var(--accent-border)]"
-                  inputMode="numeric"
-                  placeholder="45"
-                  {...form.register("durationMinutes")}
-                />
-                {form.formState.errors.durationMinutes && (
-                  <span className="text-xs text-red-400">
-                    Ingresa un numero positivo o deja el campo vacio.
-                  </span>
-                )}
-              </label>
+              {showDuration ? (
+                <Field
+                  error={
+                    form.formState.errors.durationMinutes
+                      ? "Ingresa un número positivo o deja el campo vacío."
+                      : undefined
+                  }
+                  htmlFor="commit-duration"
+                  label="Duración en minutos"
+                >
+                  <Input
+                    autoFocus
+                    id="commit-duration"
+                    inputMode="numeric"
+                    invalid={Boolean(form.formState.errors.durationMinutes)}
+                    placeholder="45"
+                    {...form.register("durationMinutes")}
+                  />
+                </Field>
+              ) : (
+                <button
+                  className="self-start text-caption text-secondary-text underline-offset-4 transition hover:text-primary-text hover:underline"
+                  onClick={() => setShowDuration(true)}
+                  type="button"
+                >
+                  + Añadir duración
+                </button>
+              )}
             </div>
           )}
 
           {step === 2 && (
             <div className="mt-8 flex flex-col gap-5">
-              <textarea
-                className="min-h-32 w-full resize-none rounded-3xl border border-white/8 bg-white/[0.03] p-5 text-base leading-7 text-primary-text outline-none transition placeholder:text-secondary-text/60 focus:border-[var(--accent-border)]"
+              <Textarea
+                aria-label="Nota personal"
+                className="min-h-32"
                 maxLength={500}
-                placeholder="Hoy apareci porque..."
+                placeholder="Hoy aparecí porque..."
                 {...form.register("note")}
               />
-              <textarea
-                className="min-h-32 w-full resize-none rounded-3xl border border-white/8 bg-white/[0.03] p-5 text-base leading-7 text-primary-text outline-none transition placeholder:text-secondary-text/60 focus:border-[var(--accent-border)]"
+              <Textarea
+                aria-label="Nota para tu yo del futuro"
+                className="min-h-32"
                 maxLength={300}
-                placeholder="Reflection opcional"
+                placeholder="Algo que quieras recordar más adelante (opcional)"
                 {...form.register("reflectionContent")}
               />
               <div className="flex flex-wrap gap-2">
@@ -277,7 +398,7 @@ export function CommitFlowClient() {
         <AppButton
           className="w-full"
           disabled={step === 0 || pending}
-          onClick={() => setStep((current) => Math.max(current - 1, 0))}
+          onClick={() => goToStep(step - 1)}
           type="button"
           variant="secondary"
         >
@@ -287,14 +408,14 @@ export function CommitFlowClient() {
           <AppButton
             className="w-full"
             disabled={!canContinue || pending}
-            onClick={() => setStep((current) => Math.min(current + 1, 2))}
+            onClick={() => goToStep(step + 1)}
             type="button"
           >
             Continuar
           </AppButton>
         ) : (
-          <AppButton className="w-full" disabled={pending} type="submit">
-            {pending ? "Guardando..." : "Guardar Commit"}
+          <AppButton className="w-full" loading={pending} type="submit">
+            {pending ? "Guardando" : "Dejar evidencia"}
           </AppButton>
         )}
       </div>

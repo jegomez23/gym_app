@@ -19,12 +19,10 @@ export function StateMessage({
   actionLabel,
 }: StateMessageProps) {
   return (
-    <AppCard className="flex min-h-[16rem] flex-col justify-center">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-        {eyebrow}
-      </p>
-      <h2 className="mt-4 text-2xl font-semibold text-primary-text">{title}</h2>
-      <p className="mt-3 text-sm leading-6 text-secondary-text">{message}</p>
+    <AppCard className="flex min-h-64 flex-col justify-center" level="hero">
+      <p className="text-label uppercase text-accent">{eyebrow}</p>
+      <h2 className="mt-4 text-title text-primary-text">{title}</h2>
+      <p className="mt-3 text-body text-secondary-text">{message}</p>
       {actionHref && actionLabel && (
         <Link className="mt-6" href={actionHref}>
           <AppButton className="w-full">{actionLabel}</AppButton>

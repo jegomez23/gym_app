@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 
 import { AppButton } from "@/components/ui/AppButton";
+import { Field, Input } from "@/components/ui/Field";
 import { initialAuthActionState } from "@/lib/auth/actionState";
 
 import { forgotPasswordAction } from "../actions/forgotPassword";
@@ -16,18 +17,17 @@ export function ForgotPasswordForm() {
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
-      <label className="flex flex-col gap-2 text-sm text-secondary-text">
-        Email
-        <input
+      <Field htmlFor="forgot-email" label="Email">
+        <Input
           autoComplete="email"
-          className="rounded-2xl border border-white/8 bg-white/[0.03] p-4 text-primary-text outline-none focus:border-[var(--accent-border)]"
+          id="forgot-email"
           name="email"
           required
           type="email"
         />
-      </label>
+      </Field>
       <AuthStatus state={state} />
-      <AppButton disabled={pending} type="submit">
+      <AppButton loading={pending} type="submit">
         {pending ? "Enviando" : "Enviar enlace"}
       </AppButton>
     </form>

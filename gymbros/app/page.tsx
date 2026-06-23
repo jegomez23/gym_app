@@ -11,11 +11,7 @@ export default async function TodayHubPage() {
 
   return (
     <AppShell>
-      <ScreenContainer
-        eyebrow="GYM CIRCLE"
-        subtitle="Un registro silencioso de quien te estas convirtiendo."
-        title="Hoy"
-      >
+      <ScreenContainer eyebrow="GYM CIRCLE" title="Hoy">
         {viewModel.status === "ready" ? (
           <TodayScreen
             commits={viewModel.commits}
@@ -30,9 +26,9 @@ export default async function TodayHubPage() {
           <StateMessage
             actionHref="/login"
             actionLabel="Entrar"
-            eyebrow="Datos reales"
+            eyebrow="Tu evidencia te espera"
             message={viewModel.message}
-            title="Crea tu cuenta o inicia sesion para cargar tu evidencia."
+            title="Entra para recordar quién estás siendo."
           />
         )}
       </ScreenContainer>

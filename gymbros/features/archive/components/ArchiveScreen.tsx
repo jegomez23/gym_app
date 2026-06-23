@@ -13,20 +13,20 @@ type ArchiveScreenProps = {
 export function ArchiveScreen({ journey, progress }: ArchiveScreenProps) {
   if (journey.length === 0) {
     return (
-      <AppCard className="flex min-h-[22rem] flex-col justify-between">
+      <AppCard className="flex min-h-88 flex-col justify-between" level="hero">
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-            Archivo vacio
-          </p>
-          <h2 className="mt-4 text-2xl font-semibold text-primary-text">
-            Tu archivo esta esperando.
+          <p className="text-label uppercase text-accent">Archivo vacío</p>
+          <h2 className="mt-4 text-title text-primary-text">
+            Tu archivo está esperando.
           </h2>
-          <p className="mt-3 text-sm leading-6 text-secondary-text">
-            La proxima sesion que guardes sera tu primera pieza de evidencia.
+          <p className="mt-3 text-body text-secondary-text">
+            La próxima sesión que guardes será tu primera pieza de evidencia.
           </p>
         </div>
         <Link href="/commit">
-          <AppButton className="mt-8 w-full">Crear primer Commit</AppButton>
+          <AppButton className="mt-8 w-full">
+            Dejar mi primera evidencia
+          </AppButton>
         </Link>
       </AppCard>
     );
@@ -34,25 +34,22 @@ export function ArchiveScreen({ journey, progress }: ArchiveScreenProps) {
 
   return (
     <>
-      <AppCard>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-secondary-text">
-          Resumen de evidencia
+      <AppCard level="hero">
+        <p className="text-label uppercase text-secondary-text">
+          Lo que has construido
         </p>
-        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <StatBlock label="Commits totales" value={progress.totalCommits} />
-          <StatBlock label="Dias activos" value={progress.activeDays} />
+        <div className="mt-4 grid grid-cols-2 gap-3">
+          <StatBlock label="Evidencias" value={progress.totalCommits} />
           <StatBlock
-            label="Ultimo Commit"
-            value={progress.lastCommitAt ? "Activo" : "Sin datos"}
+            label="Sigues presente"
+            value={progress.lastCommitAt ? "Sí" : "Aún no"}
           />
         </div>
       </AppCard>
 
-      <div className="mt-2 flex flex-col gap-4">
-        {journey.map((commit) => (
-          <DomainCommitCard commit={commit} key={commit.id} />
-        ))}
-      </div>
+      {journey.map((commit) => (
+        <DomainCommitCard commit={commit} key={commit.id} />
+      ))}
     </>
   );
 }

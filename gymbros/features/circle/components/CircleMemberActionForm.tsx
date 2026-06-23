@@ -52,12 +52,12 @@ export function CircleMemberActionForm({
     <form action={formAction} className="flex flex-col gap-2">
       <input name="memberId" type="hidden" value={memberId} />
       <AppButton
-        className="min-h-11 px-4"
-        disabled={pending}
+        loading={pending}
+        size="md"
         type="submit"
         variant={mode === "accept" ? "primary" : "secondary"}
       >
-        {pending ? "..." : labelByMode[mode]}
+        {labelByMode[mode]}
       </AppButton>
       <FormStatus state={state} />
     </form>

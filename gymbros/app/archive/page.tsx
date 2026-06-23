@@ -12,8 +12,8 @@ export default async function ArchivePage() {
     <AppShell>
       <ScreenContainer
         eyebrow="Archivo personal"
-        subtitle="Cada sesion guardada es una prueba de que estas construyendo constancia."
-        title="Tu evidencia vive aqui."
+        subtitle="Cada evidencia guardada es una prueba de quién estás siendo."
+        title="Tu evidencia vive aquí."
       >
         <ArchiveScreen
           journey={viewModel.journey}
