@@ -1,6 +1,7 @@
 import { createBrowserClient } from "@supabase/ssr";
 
 import { publicEnv } from "@/lib/env";
+import type { Database } from "@/supabase/types/database.generated";
 
 export function createClient() {
   if (
@@ -10,7 +11,7 @@ export function createClient() {
     return null;
   }
 
-  return createBrowserClient(
+  return createBrowserClient<Database>(
     publicEnv.NEXT_PUBLIC_SUPABASE_URL,
     publicEnv.NEXT_PUBLIC_SUPABASE_ANON_KEY
   );

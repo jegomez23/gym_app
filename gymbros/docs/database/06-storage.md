@@ -1,3 +1,5 @@
+> ⚠️ **STALE**: Storage is not implemented in the current MVP. This document describes a planned future feature. See `knowledge/DATABASE.md` for the current data contract.
+
 # 06 — Storage
 
 > **Propósito de este documento:** Definir los buckets de almacenamiento en Supabase Storage para Gym Circle. Qué archivos se almacenan, con qué permisos, tamaños máximos y nomenclatura.

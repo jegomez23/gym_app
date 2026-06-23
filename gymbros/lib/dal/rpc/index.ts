@@ -1,0 +1,1 @@
+export { DomainRpc } from "./domainRpc";

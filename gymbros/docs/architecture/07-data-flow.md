@@ -1,3 +1,5 @@
+> ⚠️ **DOCUMENTO DESACTUALIZADO**: Este documento describe un patrón planeado donde los Server Components llaman `supabase.from()` directamente. La arquitectura actual requiere pasar por `lib/dal/` para todo acceso a base de datos. Consultar `knowledge/ARCHITECTURE.md` para la arquitectura canónica.
+
 # 07 — Data Flow
 
 > **Propósito de este documento:** Explicar cómo viajan los datos en Gym Circle desde su origen en Supabase hasta la interfaz de usuario. Este documento describe la filosofía del flujo de datos, los patrones de comunicación entre capas y las reglas para cada tipo de operación.

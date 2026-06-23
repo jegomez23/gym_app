@@ -2,16 +2,35 @@
 
 Question: How is data modeled and protected?
 
-Last reviewed: 2026-06-19
+Last reviewed: 2026-06-22
 
 ## Current Reality
 
-No database schema, migrations, RLS policies, generated types, or Supabase local
-configuration exist in the repository yet.
+The repository now contains the initial Supabase/PostgreSQL MVP database
+implementation under `supabase/`.
 
-`lib/supabase/client.ts` can create a browser Supabase client if
-`NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are configured,
-but the app currently uses mock data.
+Implemented database infrastructure:
+
+- `supabase/config.toml` configures the local Supabase project and seed path.
+- `supabase/migrations/20260622_0001_extensions.sql` through
+  `20260622_0012_profile_lifecycle.sql` implement extensions, tables, indexes,
+  triggers, RLS, views, derived RPC functions, and additive profile lifecycle
+  fields.
+- `supabase/migrations/20260623_0001_social_core.sql` adds the `notifications`
+  table (with RLS, indexes), the `circle_memberships.invited_by` column, an
+  expanded membership status check (`pending|active|paused|ended`), a
+  discoverable-profiles select policy, and a reciprocity trigger update.
+- `supabase/seed.sql` contains minimal local development/demo data.
+- `supabase/types/database.generated.ts` contains database types aligned with
+  the implemented MVP schema.
+- `lib/supabase/client.ts` and `server.ts` are typed with the database contract.
+  Session refresh/route protection lives in root `proxy.ts` (Next.js 16 renamed
+  the `middleware.ts` convention to `proxy.ts`).
+
+The main app routes now use Supabase through `lib/dal/` and feature query
+modules. Mutations that exist today are routed through Server Actions and DAL
+services. Auth and onboarding screens create sessions and complete profiles
+without manual database intervention.
 
 ## Canonical MVP Data Contract
 
@@ -59,6 +78,52 @@ relationships.
 - Existing applied migrations should not be edited; create new migrations.
 - Seeds are development data, not production schema.
 - Rollback strategy should be explicit for destructive operations.
+
+## Implemented MVP Infrastructure
+
+Tables:
+
+- `profiles`
+- `commits`
+- `reflections`
+- `circle_memberships`
+- `supports`
+- `notifications` (added in `20260623_0001_social_core.sql`; RLS-scoped to the
+  recipient, soft-deletable, types: `support_received`, `circle_invitation`,
+  `invitation_accepted`, `reflection_received`)
+
+Triggers enforce:
+
+- profile creation from Supabase Auth users
+- `updated_at` for editable tables
+- Commit content immutability
+- Reflection ownership matching its Commit
+- Circle membership reciprocity
+- Support creation only between active Circle members
+
+Views:
+
+- `active_circle_memberships`
+- `visible_commits`
+- `commit_reflection_counts`
+- `support_history`
+
+RPC functions:
+
+- `get_circle_presence`
+- `get_journey_timeline`
+- `get_shared_history`
+- `get_progress_summary`
+- `get_commit_detail`
+
+Profile lifecycle fields:
+
+- `username`
+- `timezone`
+- `locale`
+
+`username` is nullable while a profile is pending onboarding and unique for
+active, non-deleted profiles.
 
 ## Open Database Decisions
 

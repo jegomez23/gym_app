@@ -2,16 +2,17 @@
 
 Question: What is true today?
 
-Last reviewed: 2026-06-19
+Last reviewed: 2026-06-23 (Production Hardening — Phase 13)
 
 ## Project Stage
 
-Gym Circle is an early prototype with a substantial reference documentation set.
-The current application demonstrates the product direction with mock data,
-client-side stores, and mobile-first UI.
+Gym Circle is an early production foundation with a substantial reference
+documentation set. The current application keeps the mobile-first UI direction
+but now reads domain data through Supabase-backed DAL services and writes through
+Server Actions.
 
-The target architecture is server-first, feature-first, Supabase-backed, and more
-structured than the implementation that exists today.
+The application now has an email/password authentication and onboarding
+foundation. Route-level mock state has been removed.
 
 ## Installed Stack
 
@@ -23,13 +24,17 @@ structured than the implementation that exists today.
 | Styling          | Tailwind CSS `4` via `@tailwindcss/postcss`                       |
 | Backend SDK      | `@supabase/supabase-js` `2.106.2`, `@supabase/ssr` `0.12.0`       |
 | Validation/forms | Zod `4.4.3`, React Hook Form `7.79.0`, Hookform resolvers `5.4.0` |
-| Server state     | TanStack Query `5.101.0`                                          |
-| Client state     | Zustand `5.0.14`                                                  |
+| Realtime         | Supabase Realtime postgres_changes channels (`useSupabase`)       |
+| Client state     | React local state only for current UI interactions                |
 | Testing          | Vitest `4.1.9`, Testing Library, jsdom                            |
 | Formatting       | Prettier `3.8.4`, EditorConfig                                    |
-| Database tooling | Supabase project skeleton exists; no real migrations yet          |
+| Database tooling | Supabase CLI dependency and versioned MVP migrations exist        |
 
-Planned but not installed: shadcn/ui, Drizzle ORM, Playwright.
+Planned but not installed: shadcn/ui, Drizzle ORM, Playwright. TanStack Query
+was removed in Phase 13: it was installed but had zero `useQuery`/`useMutation`
+consumers. Client server-state needs are met by Server Actions plus Supabase
+Realtime + `router.refresh()`. Reinstall only when client-side caching or
+optimistic UI is genuinely required.
 
 ## Implementation Reality
 
@@ -38,24 +43,36 @@ Current code shape:
 - `app/` contains route pages and page-level UI logic.
 - `components/layout/`, `components/ui/`, and `components/gym/` contain shared
   UI components.
-- `store/` contains Zustand stores backed by mock data.
-- `data/` contains mock commits and circle activity.
-- `types/` contains domain-facing TypeScript types.
-- `features/` exists as an empty feature-first skeleton.
-- `lib/supabase/` exposes browser, server, and proxy helper foundations, but the
-  app does not yet use Supabase as source of truth.
-- `supabase/` exists with config, seed placeholder, functions folder, and
-  generated-types placeholder. No definitive migrations exist yet.
-- `app/providers.tsx` wires TanStack Query, Supabase client context, and a no-op
-  Theme provider.
+- `features/` owns route-specific query/view/action code for Today, Commit,
+  Circle, Archive, Profile, Auth, Onboarding, Notifications, and shared feature
+  primitives.
+- Circle and Notifications use client Supabase Realtime hooks
+  (`useCircleRealtime`, `useNotificationsRealtime`) that refresh the server tree
+  on `postgres_changes`. `app/providers.tsx` exposes the browser Supabase client
+  via `useSupabase` for these subscriptions.
+- `lib/supabase/` exposes browser, server, and proxy helper foundations typed
+  with the database contract.
+- `lib/dal/` contains the domain Data Access Layer: repositories, services, RPC
+  wrappers, mappers, validators, domain types, and error translation.
+- `supabase/` contains local config, focused MVP migrations, local seed data,
+  functions folder, and checked-in database types.
+- `app/providers.tsx` wires the browser Supabase client context (`useSupabase`)
+  and a no-op Theme provider placeholder.
+- Prototype runtime stores and mock data files have been removed.
 
 Current routes:
 
-- `/` today hub
+- `/` public/auth-aware today hub
+- `/login` email/password login
+- `/signup` email/password signup
+- `/forgot-password` password reset request
+- `/reset-password` password update form
+- `/onboarding` pending-profile completion
 - `/commit` commit creation flow
 - `/circle` circle overview
 - `/archive` commit archive
 - `/profile` profile summary
+- `/auth/callback` Supabase email confirmation/recovery callback
 
 ## Architecture Reality
 
@@ -68,20 +85,36 @@ The reference docs describe a future architecture:
 - Zod and React Hook Form for validation and forms
 - Supabase Auth, RLS, Storage, Realtime, and migrations
 
-The current implementation is not there yet. It is a client-side prototype.
+The main route surfaces now follow this direction: route pages are server
+orchestrators, reads go through feature query modules and DAL services, and
+mutations use Server Actions. Client components are limited to form/UI
+interaction.
+
+Authentication now follows the same server-first direction: forms call Server
+Actions, auth/profile mutations go through DAL services, `proxy.ts` refreshes
+sessions and redirects protected routes, and completed profiles are required for
+private app features.
 
 ## Known Contradictions
 
-| Topic                   | Current mismatch                                                                                                                                         | Status             |
-| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ |
-| Next version            | Prompts/reference mention Next.js 15; `package.json` uses Next `16.2.7`.                                                                                 | Open               |
-| Installed stack         | Zod, RHF, TanStack Query, Supabase SSR, Vitest, Testing Library, and Prettier are installed; shadcn/ui, Drizzle, and Playwright are not.                 | Partially resolved |
-| Architecture            | Feature skeleton and providers exist; current pages are still client-heavy and route-local.                                                              | Partially resolved |
-| Database table count    | Canonical MVP contract freezes `auth.users`, `profiles`, `commits`, `reflections`, `circle_memberships`, and `supports`; no `progress_snapshots` in MVP. | Resolved           |
-| Circle bidirectionality | Canonical MVP contract assigns reciprocity to the database.                                                                                              | Resolved           |
-| Migrations              | Supabase CLI is canonical; `supabase/` skeleton exists, but no real SQL migrations exist yet.                                                            | Partially resolved |
-| README                  | Previously default Next README; now replaced with project overview.                                                                                      | Resolved           |
-| AI entry point          | Previously AGENTS only warned about Next; now bootloader routes to kernel.                                                                               | Resolved           |
+| Topic                   | Current mismatch                                                                                                                                         | Status                  |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| Next version            | Prompts/reference mention Next.js 15; `package.json` uses Next `16.2.7`.                                                                                 | Open                    |
+| Installed stack         | Zod, RHF, TanStack Query, Supabase SSR, Vitest, Testing Library, and Prettier are installed; shadcn/ui, Drizzle, and Playwright are not.                 | Partially resolved      |
+| Architecture            | Main route surfaces and Auth/Onboarding now use feature modules, server reads, Server Actions, and route protection.                                     | Partially resolved      |
+| Database table count    | Canonical MVP contract freezes `auth.users`, `profiles`, `commits`, `reflections`, `circle_memberships`, and `supports`; no `progress_snapshots` in MVP. | Resolved                |
+| Circle bidirectionality | Canonical MVP contract assigns reciprocity to the database.                                                                                              | Resolved                |
+| Migrations              | Supabase CLI is canonical; `supabase/migrations/` now contains the initial MVP schema, indexes, triggers, RLS, views, and functions.                     | Resolved                |
+| README                  | Previously default Next README; now replaced with project overview.                                                                                      | Resolved                |
+| AI entry point          | Previously AGENTS only warned about Next; now bootloader routes to kernel.                                                                               | Resolved                |
+| Middleware              | Next.js 16 deprecated `middleware.ts` and renamed the convention to `proxy.ts`. `proxy.ts` at root IS the active middleware. Was never broken.           | Resolved                |
+| DAL access pattern      | `proxy.ts` queries `supabase.from("profiles")` directly. Acceptable: proxy/edge runtime cannot use `server-only` DAL imports. Documented as intentional. | Resolved (accepted)     |
+| Data flow doc           | `docs/architecture/07-data-flow.md` shows `supabase.from()` in Server Components; current architecture routes reads through DAL services.                | Resolved (marked stale) |
+| Session patterns        | `requireDomainSession` and `getDomainSession` removed from `domainData.ts` (zero consumers). `requireProfile` from `lib/auth/session.ts` is canonical.   | Resolved                |
+| MEMORY.md               | Described current app as "prototype"; CURRENT_STATE.md describes early production foundation.                                                            | Resolved                |
+| First commit plan       | `docs/engineering/09-first-commit-plan.md` describes an already-executed initial setup.                                                                  | Resolved (marked stale) |
+| Storage docs            | `docs/database/06-storage.md` describes Storage buckets not implemented in MVP.                                                                          | Resolved (marked stale) |
+| Dead directories        | `store/` and `data/` directories removed. `lib/supabase/middleware.ts` removed (zero consumers, redundant with `proxy.ts`).                              | Resolved                |
 
 ## Active Roadmap
 
@@ -89,16 +122,20 @@ The current implementation is not there yet. It is a client-side prototype.
 2. Decide and record ADRs for open contradictions that affect implementation.
 3. Align dependencies with the chosen stack.
 4. Move prototype code toward the canonical architecture incrementally.
-5. Implement Supabase schema, migrations, RLS, auth, and server data flow.
+5. Build advanced product features on top of the authenticated lifecycle.
 
 ## Technical Debt
 
-- Mock data is used as product state.
-- Zustand stores currently hold domain data that should eventually live in
-  Supabase and server-state tooling.
-- No database implementation exists.
-- Supabase generated types are still a placeholder.
+- Full runtime RLS coverage still needs a running Supabase database.
+- Auth is email/password only; OAuth is not implemented. Circle invitations and
+  in-app notifications (Supabase Realtime) are implemented; email/push delivery
+  of notifications is not.
+- Some historical reference docs still describe the previous client-store
+  prototype shape.
+- Database tests currently verify migration contract from files.
 - Long reference docs contain duplicated and conflicting truth.
+- `ChapterCard` uses hardcoded chapter/season data with no database entity; it
+  is a decorative placeholder for a future feature.
 
 ## Reference Sources
 

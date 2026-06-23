@@ -1,3 +1,5 @@
+> ⚠️ **STALE**: This document describes the implementation plan for the initial commit, which has already been completed. See `knowledge/CURRENT_STATE.md` for current status.
+
 # 09 — First Commit Plan
 
 > **Propósito de este documento:** Definir exactamente qué archivos se crean, en qué orden, qué dependencias se instalan, qué configuraciones se aplican y cuál será el contenido del primer commit del proyecto. No improvisación. Solo ejecución.

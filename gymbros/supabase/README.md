@@ -13,4 +13,4 @@ Rules:
 - Schema changes must be versioned under `supabase/migrations/`.
 - Generated types live in `supabase/types/database.generated.ts`.
 - `seed.sql` is for local development data only.
-- No definitive migrations exist yet in Phase 1.
+- Initial MVP migrations exist and should not be edited after they are applied.

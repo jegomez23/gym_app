@@ -1,6 +1,9 @@
 # Generated Database Types
 
-`database.generated.ts` will be generated from Supabase after real migrations
-exist.
+`database.generated.ts` mirrors the implemented Supabase MVP schema.
 
-Do not edit generated files manually.
+Regenerate it after applying migrations with:
+
+```bash
+npx supabase gen types typescript --local > supabase/types/database.generated.ts
+```

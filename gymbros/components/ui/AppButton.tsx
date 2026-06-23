@@ -18,7 +18,7 @@ export function AppButton({
 
   return (
     <button
-      className={`min-h-13 rounded-full px-7 text-sm font-semibold tracking-[0.01em] transition active:scale-[0.98] disabled:cursor-not-allowed disabled:hover:border-white/8 disabled:hover:bg-white/5 disabled:opacity-45 ${variantClass} ${className}`}
+      className={`min-h-13 rounded-full px-7 text-sm font-semibold tracking-[0.01em] transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-border)] focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.98] disabled:cursor-not-allowed disabled:hover:border-white/8 disabled:hover:bg-white/5 disabled:opacity-45 ${variantClass} ${className}`}
       type="button"
       {...props}
     >

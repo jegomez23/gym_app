@@ -2,12 +2,16 @@
 
 Question: What durable lessons must not be forgotten?
 
-Last reviewed: 2026-06-19
+Last reviewed: 2026-06-23
 
 ## Known Pitfalls
 
 - Do not assume reference docs describe implemented reality. Check
   `CURRENT_STATE.md` and code first.
+- Next.js 16 deprecated `middleware.ts` in favor of `proxy.ts` with a named
+  `proxy` export. Creating `middleware.ts` alongside `proxy.ts` causes a build
+  error. Always read `node_modules/next/dist/docs/` before assuming Next.js
+  conventions from training data.
 - Do not move the entire `docs/` tree just to make the knowledge system look
   cleaner. It is valuable reference material.
 - Do not put persistent domain data in Zustand as the product matures.
@@ -21,8 +25,13 @@ Last reviewed: 2026-06-19
 - The project began with rich long-form docs before it had a canonical operating
   layer. This created duplicated planned truth. The kernel exists to prevent
   future drift.
-- The current app is a prototype that demonstrates product feel but does not yet
-  implement the documented server-first architecture.
+- The current app is an early production foundation. See `CURRENT_STATE.md` for
+  what is implemented vs planned.
+- TanStack Query was installed speculatively from the planned stack and shipped a
+  root `QueryClientProvider` with zero `useQuery`/`useMutation` consumers for
+  months. Removed in Phase 13. Do not add client server-state/caching libraries
+  before a real consumer exists; Server Actions + Supabase Realtime +
+  `router.refresh()` cover current needs.
 
 ## Tradeoffs
 

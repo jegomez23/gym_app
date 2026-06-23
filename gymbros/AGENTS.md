@@ -3,14 +3,10 @@
 This repository is optimized for AI-assisted development. Do not rely on chat
 history as project memory; the repository is the source of truth.
 
-## Boot Order
+This file is a compatibility shim. Start with `CLAUDE.md` for the canonical boot
+sequence, decision tree, and rules.
 
-1. Read `knowledge/CURRENT_STATE.md`.
-2. Read `knowledge/MAP.md` to route the task.
-3. Read only the canonical files required by that route.
-4. Inspect the implementation before editing.
-5. Validate the change.
-6. Update knowledge if reality changed.
+---
 
 ## Truth Hierarchy
 
@@ -20,16 +16,6 @@ history as project memory; the repository is the source of truth.
    own canonical intent.
 4. `knowledge/decisions/` explains major architectural decisions.
 5. `docs/` is reference material, not the first entry point.
-
-## Mandatory Next.js Rule
-
-<!-- BEGIN:nextjs-agent-rules -->
-
-This is NOT the Next.js you know. APIs, conventions, and file structure may
-differ from training data. Before writing Next.js code, read the relevant guide
-in `node_modules/next/dist/docs/` and heed deprecation notices.
-
-<!-- END:nextjs-agent-rules -->
 
 ## Knowledge Updates
 

@@ -4,6 +4,12 @@ This directory is the operating layer for Gym Circle. It exists so future AI
 agents and humans can understand the project without reading every long-form
 document or relying on previous conversations.
 
+## Boot
+
+Start with `CLAUDE.md` at the project root. Then read `CURRENT_STATE.md`, then
+route via `MAP.md`. Do not read this directory sequentially — use the decision
+tree in CLAUDE.md to load only what the task needs.
+
 ## Rule
 
 Each canonical file answers one important question:
