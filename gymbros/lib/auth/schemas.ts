@@ -71,6 +71,13 @@ export const onboardingProfileSchema = z.object({
     .optional()
     .nullable()
     .transform((value) => value || null),
+  identityStatement: z
+    .string()
+    .trim()
+    .max(140)
+    .optional()
+    .nullable()
+    .transform((value) => value || null),
   visibilityPreference: profileVisibilitySchema.default("circle"),
   timezone: z.string().trim().min(1).max(80).default("UTC"),
   locale: z.string().trim().min(2).max(20).default("en"),

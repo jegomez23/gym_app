@@ -113,10 +113,22 @@ export function TodayScreen({
               <h2 className="mt-3 text-display text-primary-text">
                 La base sigue ahí.
               </h2>
-              <p className="mt-3 max-w-80 text-body text-secondary-text">
-                {name}, no empezamos de cero. Sigues siendo quien estabas
-                eligiendo ser.
-              </p>
+              {profile.identityStatement ? (
+                <>
+                  {/* Their own words, returned at the moment they matter most. */}
+                  <p className="mt-4 max-w-80 text-body italic leading-7 text-primary-text">
+                    “{profile.identityStatement}”
+                  </p>
+                  <p className="mt-3 max-w-80 text-body text-secondary-text">
+                    {name}, sigues siendo esa persona.
+                  </p>
+                </>
+              ) : (
+                <p className="mt-3 max-w-80 text-body text-secondary-text">
+                  {name}, no empezamos de cero. Sigues siendo quien estabas
+                  eligiendo ser.
+                </p>
+              )}
             </>
           ) : isFirstTime ? (
             <>
@@ -140,11 +152,6 @@ export function TodayScreen({
               <p className="mt-3 max-w-80 text-body text-secondary-text">
                 {name}, hoy no se trata de hacer más. Se trata de aparecer con
                 intención.
-              </p>
-              <p className="mt-4 text-caption text-secondary-text/80">
-                {progress.totalCommits}{" "}
-                {progress.totalCommits === 1 ? "prueba" : "pruebas"} de que esto
-                es real.
               </p>
             </>
           )}

@@ -74,6 +74,7 @@ export function mapProfile(row: Tables<"profiles">): Profile {
     name: row.name,
     avatarUrl: row.avatar_url,
     bio: row.bio,
+    identityStatement: row.identity_statement,
     visibilityPreference: row.visibility_preference,
     onboardingCompleted: row.onboarding_completed,
     timezone: row.timezone,

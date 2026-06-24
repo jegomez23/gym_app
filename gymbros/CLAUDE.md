@@ -30,13 +30,21 @@ Then load only the files listed for your task type below.
 
 **Bug fix** → `knowledge/CURRENT_STATE.md` + `knowledge/PLAYBOOKS.md` + relevant feature code
 
-**UI/component work** → `knowledge/PRINCIPLES.md` + `knowledge/ARCHITECTURE.md` + `knowledge/PLAYBOOKS.md`
+**UI/component work** → `knowledge/PRINCIPLES.md` + `knowledge/INTERACTION_SYSTEM.md` + `knowledge/ARCHITECTURE.md` + `knowledge/PLAYBOOKS.md`
+
+**Interaction / behavior / how it should feel** → `knowledge/INTERACTION_SYSTEM.md` + `knowledge/PRODUCT_BIBLE.md` + `knowledge/VOICE.md`
+
+**Human state / where the person is (behave from state, not screen)** → `knowledge/STATE_SYSTEM.md` + `knowledge/INTERACTION_SYSTEM.md` + `knowledge/PRODUCT_BIBLE.md`
 
 **Architecture decision** → `knowledge/PRINCIPLES.md` + `knowledge/ARCHITECTURE.md` + `knowledge/decisions/`
 
 **Product/domain decision** → `knowledge/PRODUCT_BIBLE.md` + `knowledge/PRINCIPLES.md` (Future Filter + never-build blacklist) + `knowledge/DOMAIN.md`
 
 **Product copy / microcopy / notification wording** → `knowledge/VOICE.md` + `knowledge/PRODUCT_BIBLE.md`
+
+**Memory / resurfacing work (returning the user's own past)** → `knowledge/MEMORY_SELECTION_ENGINE.md` + `knowledge/PRODUCT_BIBLE.md` + `knowledge/VOICE.md`
+
+**Changing the memory system itself (new contexts, thresholds, policy)** → `knowledge/MEMORY_GOVERNANCE.md` (constitutional layer) + `knowledge/MEMORY_SELECTION_ENGINE.md` + `knowledge/PRINCIPLES.md`
 
 **Refactor** → `knowledge/CURRENT_STATE.md` + `knowledge/ARCHITECTURE.md` + `knowledge/PLAYBOOKS.md`
 
@@ -74,6 +82,18 @@ language and **knowledge/PRINCIPLES.md** for the immutable product principles, t
 never-build blacklist, and the Future Filter. On any product, identity, or voice
 question, the Product Bible wins. Run every new product idea through the Future
 Filter in PRINCIPLES.md before building it.
+
+For anything that returns the user's own past to them (memory / resurfacing), the
+authority chain is fixed and one-directional: **Product Bible → Principles → Memory
+Governance (`MEMORY_GOVERNANCE.md`, the constitution) → Memory Selection Engine
+(`MEMORY_SELECTION_ENGINE.md`, the conscience) → implementation.** The philosophy
+governs the selector; the selector governs the implementation; never the reverse.
+
+The full product behavior hierarchy is fixed and one-directional: **Product Bible →
+Voice → Principles → Memory Governance → Memory Selection → Interaction System
+(`INTERACTION_SYSTEM.md`, how it behaves) → State System (`STATE_SYSTEM.md`, where
+the person is) → implementation.** Implementation never begins from a screen; it
+begins from a human state, read from evidence (never inferred emotion).
 
 ---
 

@@ -16,6 +16,7 @@ export type Database = {
           name: string;
           avatar_url: string | null;
           bio: string | null;
+          identity_statement: string | null;
           visibility_preference: "private" | "circle" | "public";
           onboarding_completed: boolean;
           timezone: string;
@@ -30,6 +31,7 @@ export type Database = {
           name: string;
           avatar_url?: string | null;
           bio?: string | null;
+          identity_statement?: string | null;
           visibility_preference?: "private" | "circle" | "public";
           onboarding_completed?: boolean;
           timezone?: string;
@@ -44,6 +46,7 @@ export type Database = {
           name?: string;
           avatar_url?: string | null;
           bio?: string | null;
+          identity_statement?: string | null;
           visibility_preference?: "private" | "circle" | "public";
           onboarding_completed?: boolean;
           timezone?: string;

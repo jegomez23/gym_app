@@ -1,16 +1,14 @@
 import Link from "next/link";
 import { AppButton } from "@/components/ui/AppButton";
 import { AppCard } from "@/components/ui/AppCard";
-import { StatBlock } from "@/components/ui/StatBlock";
 import { DomainCommitCard } from "@/features/shared";
-import type { JourneyItem, ProgressSummary } from "@/lib/dal";
+import type { JourneyItem } from "@/lib/dal";
 
 type ArchiveScreenProps = {
   journey: JourneyItem[];
-  progress: ProgressSummary;
 };
 
-export function ArchiveScreen({ journey, progress }: ArchiveScreenProps) {
+export function ArchiveScreen({ journey }: ArchiveScreenProps) {
   if (journey.length === 0) {
     return (
       <AppCard className="flex min-h-88 flex-col justify-between" level="hero">
@@ -34,19 +32,6 @@ export function ArchiveScreen({ journey, progress }: ArchiveScreenProps) {
 
   return (
     <>
-      <AppCard level="hero">
-        <p className="text-label uppercase text-secondary-text">
-          Lo que has construido
-        </p>
-        <div className="mt-4 grid grid-cols-2 gap-3">
-          <StatBlock label="Evidencias" value={progress.totalCommits} />
-          <StatBlock
-            label="Sigues presente"
-            value={progress.lastCommitAt ? "Sí" : "Aún no"}
-          />
-        </div>
-      </AppCard>
-
       {journey.map((commit) => (
         <DomainCommitCard commit={commit} key={commit.id} />
       ))}

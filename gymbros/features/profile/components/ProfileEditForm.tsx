@@ -30,6 +30,26 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
 
   return (
     <form action={formAction} className="mt-4 flex flex-col gap-3">
+      {/* The vow comes first, with room to breathe. Editing it is not admin. */}
+      <div className="mb-5 flex flex-col gap-2">
+        <label
+          className="text-body font-medium text-primary-text"
+          htmlFor="profile-identity"
+        >
+          En quién te estás convirtiendo
+        </label>
+        <p className="text-caption text-secondary-text">
+          Cámbiala cuando deje de ser cierta. Sin prisa.
+        </p>
+        <Textarea
+          className="min-h-24 text-body leading-7"
+          defaultValue={profile.identityStatement ?? ""}
+          id="profile-identity"
+          maxLength={140}
+          name="identityStatement"
+          placeholder="Alguien que aparece, incluso los días difíciles."
+        />
+      </div>
       <Field
         helper="Solo minúsculas, números y guion bajo. Te pueden invitar por este nombre."
         htmlFor="profile-username"
@@ -54,29 +74,11 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
           required
         />
       </Field>
-      <Field htmlFor="profile-bio" label="Bio">
-        <Textarea
-          className="min-h-24"
-          defaultValue={profile.bio ?? ""}
-          id="profile-bio"
-          maxLength={200}
-          name="bio"
-        />
-      </Field>
       <Field
-        helper="Placeholder sin upload todavía: pega una URL temporal si necesitas una imagen."
-        htmlFor="profile-avatar"
-        label="Avatar URL"
+        helper="Quién puede ver tu evidencia."
+        htmlFor="profile-visibility"
+        label="Visibilidad"
       >
-        <Input
-          defaultValue={profile.avatarUrl ?? ""}
-          id="profile-avatar"
-          maxLength={500}
-          name="avatarUrl"
-          placeholder="Storage llega en la fase final"
-        />
-      </Field>
-      <Field htmlFor="profile-visibility" label="Visibilidad">
         <Select
           defaultValue={profile.visibilityPreference}
           id="profile-visibility"
@@ -86,25 +88,6 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
           <option value="private">Privado — solo tú</option>
           <option value="public">Público — cualquiera</option>
         </Select>
-      </Field>
-      <Field htmlFor="profile-timezone" label="Timezone">
-        <Input
-          defaultValue={profile.timezone}
-          id="profile-timezone"
-          maxLength={80}
-          name="timezone"
-          required
-        />
-      </Field>
-      <Field htmlFor="profile-locale" label="Locale">
-        <Input
-          defaultValue={profile.locale}
-          id="profile-locale"
-          maxLength={20}
-          minLength={2}
-          name="locale"
-          required
-        />
       </Field>
       <AuthStatus state={state} />
       <AppButton loading={pending} type="submit" variant="secondary">

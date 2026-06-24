@@ -30,7 +30,18 @@ describe("Supabase MVP migrations", () => {
       "20260622_0011_functions.sql",
       "20260622_0012_profile_lifecycle.sql",
       "20260623_0001_social_core.sql",
+      "20260624_0001_identity_statement.sql",
     ]);
+  });
+
+  it("adds the nullable identity statement field only", () => {
+    const identity = migration("20260624_0001_identity_statement.sql");
+
+    expect(identity).toContain(
+      "add column if not exists identity_statement text"
+    );
+    expect(identity).toContain("profiles_identity_statement_length_check");
+    expect(identity).not.toMatch(/create table/i);
   });
 
   it("adds profile lifecycle fields without adding non-MVP tables", () => {

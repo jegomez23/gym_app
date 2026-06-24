@@ -18,6 +18,7 @@ const profile: Profile = {
   name: "Dia",
   avatarUrl: null,
   bio: null,
+  identityStatement: null,
   visibilityPreference: "circle",
   onboardingCompleted: true,
   timezone: "UTC",

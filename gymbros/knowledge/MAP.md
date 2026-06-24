@@ -15,7 +15,9 @@ Always start with:
 | Task                    | Required canonical context                                      | Optional reference                                                      |
 | ----------------------- | --------------------------------------------------------------- | ----------------------------------------------------------------------- |
 | New feature             | `PRINCIPLES.md`, `DOMAIN.md`, `ARCHITECTURE.md`, `PLAYBOOKS.md` | relevant `docs/domain/`, `docs/architecture/03-feature-architecture.md` |
-| UI/component work       | `PRINCIPLES.md`, `ARCHITECTURE.md`, `PLAYBOOKS.md`              | `docs/engineering/07-accessibility.md`, existing `components/`          |
+| UI/component work       | `PRINCIPLES.md`, `INTERACTION_SYSTEM.md`, `ARCHITECTURE.md`, `PLAYBOOKS.md` | `docs/engineering/07-accessibility.md`, existing `components/`          |
+| Interaction / behavior / feel | `PRODUCT_BIBLE.md`, `VOICE.md`, `PRINCIPLES.md`, `INTERACTION_SYSTEM.md` | existing `components/`, relevant feature flow                  |
+| Human state / where the person is | `PRODUCT_BIBLE.md`, `INTERACTION_SYSTEM.md`, `STATE_SYSTEM.md`, `MEMORY_SELECTION_ENGINE.md` | `DATABASE.md` (evidence substrate)        |
 | Page or route work      | `ARCHITECTURE.md`, `PLAYBOOKS.md`                               | `docs/architecture/05-routing.md`, relevant `app/` route                |
 | State management        | `ARCHITECTURE.md`, `CURRENT_STATE.md`                           | `docs/architecture/04-state-management.md`                              |
 | Database work           | `DATABASE.md`, `PLAYBOOKS.md`                                   | `docs/database/`                                                        |
@@ -24,6 +26,8 @@ Always start with:
 | Refactor                | `CURRENT_STATE.md`, `ARCHITECTURE.md`, `PLAYBOOKS.md`           | relevant architecture reference                                         |
 | Architecture decision   | `PRINCIPLES.md`, `ARCHITECTURE.md`, `decisions/README.md`       | existing ADRs and relevant reference docs                               |
 | Product/domain decision | `PRINCIPLES.md`, `DOMAIN.md`                                    | `docs/00-observations.md`, `docs/01-truth.md`, `docs/02-manifesto.md`   |
+| Memory / resurfacing work | `PRODUCT_BIBLE.md`, `PRINCIPLES.md`, `VOICE.md`, `MEMORY_SELECTION_ENGINE.md` | `DATABASE.md` (evidence substrate)                       |
+| Changing the memory system itself | `PRODUCT_BIBLE.md`, `PRINCIPLES.md`, `MEMORY_GOVERNANCE.md`, `MEMORY_SELECTION_ENGINE.md` | `decisions/` (Selection Policy version ADRs)   |
 | Release/deploy          | `CURRENT_STATE.md`, `PLAYBOOKS.md`                              | `docs/engineering/08-definition-of-done.md`                             |
 
 ## Code Routing

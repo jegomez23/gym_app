@@ -25,6 +25,7 @@ export type Profile = {
   name: string;
   avatarUrl: string | null;
   bio: string | null;
+  identityStatement: string | null;
   visibilityPreference: ProfileVisibility;
   onboardingCompleted: boolean;
   timezone: string;

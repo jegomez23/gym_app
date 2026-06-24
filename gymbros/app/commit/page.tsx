@@ -25,7 +25,11 @@ export default async function CommitFlowPage() {
         subtitle="Convierte lo que hiciste en evidencia de quien estás siendo."
         title="Aparece hoy"
       >
-        <CommitFlowClient lastReflection={lastReflection} name={profile.name} />
+        <CommitFlowClient
+          identityStatement={profile.identityStatement}
+          lastReflection={lastReflection}
+          name={profile.name}
+        />
       </ScreenContainer>
     </AppShell>
   );

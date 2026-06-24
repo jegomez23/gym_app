@@ -22,6 +22,7 @@ export async function createProfileAction(
     name: formData.get("name"),
     avatarUrl: formData.get("avatarUrl"),
     bio: formData.get("bio"),
+    identityStatement: formData.get("identityStatement"),
     visibilityPreference: formData.get("visibilityPreference") || "circle",
     timezone: formData.get("timezone") || "UTC",
     locale: formData.get("locale") || "en",

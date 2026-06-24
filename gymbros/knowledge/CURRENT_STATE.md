@@ -58,6 +58,59 @@ Current code shape:
   duration behind progressive disclosure; notifications acknowledge on card tap
   (no admin chrome); sending Support shows a quiet confirmation. No schema,
   Server Action, or DAL changes were made for these.
+- Phase 22 (Identity Becomes Personal) added the identity spine: a single
+  nullable `profiles.identity_statement` field (migration
+  `20260624_0001_identity_statement.sql`, generated types, DAL type/mapper/
+  schemas/repository, and Zod validation in `lib/auth/schemas.ts`). Onboarding
+  now leads with one quiet question ("¿En quién te estás convirtiendo?")
+  instead of bio-first; the statement is the optional emotional center. It is
+  integrated only where it increases meaning: the Today Quiet Return moment
+  echoes the user's own words, the Commit recognition moment ("Apareciste.")
+  echoes the vow the just-sealed action proves, and Profile became a mirror
+  whose hero is the statement (with a calm inline edit). The statement is the
+  user's words, never copy we generate.
+- Phase 23 (World-Class Product Review) removed leftover habit-tracker and
+  self-referential chrome: the Today daily commit-count line, the Archive
+  metrics card (the evidence cards are the record), the Profile evidence tally,
+  the Profile "círculo privado" count card, and the Profile "Principios del
+  producto" list (the product no longer advertises its own philosophy — it
+  lives it). The Profile edit form was reduced from a settings panel to a
+  mirror: identity statement, name, username, and the privacy control only;
+  bio, avatar-URL, timezone, and locale fields were removed from the surface
+  (their columns and values are untouched — onboarding still captures timezone/
+  locale automatically). `getProfileViewModel` now loads only the profile
+  (three unused circle/progress queries removed). No schema changes.
+- Phase 24 (Memory Selection Engine) is **design only — not built**. It adds a
+  canonical knowledge document, `knowledge/MEMORY_SELECTION_ENGINE.md`, defining
+  how the product decides which single piece of a user's own past (if any) returns
+  at a given moment, with silence as the default output. No code, schema, UI, or
+  Server Action was added; the existing client-only resurfacing (Quiet Return echo,
+  Commit recognition's last-reflection memory) is the current partial reality this
+  document will eventually govern.
+- Phase 25 (Memory Governance & Evolution) is **design only — not built**. It adds
+  `knowledge/MEMORY_GOVERNANCE.md`, the constitutional layer above the Memory
+  Selection Engine: the immutable principles that may never change, the rules for
+  what counts as allowed evolution vs. drift, a fixed decision framework, the trust
+  budget, a memory review checklist, and explicit Selection Policy versioning. The
+  authority chain is Product Bible → Principles → Memory Governance → Memory
+  Selection Engine → implementation. No code, schema, UI, or Server Action added.
+- Phase 26 (Emotional Interaction System) is **design only — not built**. It adds
+  `knowledge/INTERACTION_SYSTEM.md`, the canonical behavior layer: the qualities
+  every interaction must produce (calm, certainty, warmth, dignity, continuity,
+  restraint), 14 immutable interaction principles, the Arrival→Orientation→Action→
+  Recognition→Rest rhythm, and philosophies for motion, feedback, silence, errors,
+  human presence, and future-surface compatibility. It governs how the product
+  behaves, sitting above implementation and below the memory layer in the hierarchy.
+  No code, schema, UI, or Server Action added.
+- Phase 27 (State System) is **design only — not built**. It adds
+  `knowledge/STATE_SYSTEM.md`, the canonical set of human states the product serves
+  (Beginning, Building, Returning, Protected, Witnessed, Supported, Reflecting,
+  Waiting, Alone, Resting, Transitioning), each with its product response, a
+  deterministic state-priority order (human state always beats feature context), the
+  invalid states Gym Circle refuses to create, and the hard engineering boundary that
+  state is derived from evidence, never inferred emotion. It sits below the
+  Interaction System and above implementation: implementation begins from a human
+  state, not a screen. No code, schema, UI, or Server Action added.
 - Circle and Notifications use client Supabase Realtime hooks
   (`useCircleRealtime`, `useNotificationsRealtime`) that refresh the server tree
   on `postgres_changes`. `app/providers.tsx` exposes the browser Supabase client
@@ -153,6 +206,10 @@ private app features.
 
 - Product philosophy: `docs/00-observations.md`, `docs/01-truth.md`,
   `docs/02-manifesto.md`
+- Memory selection (designed, not built): `knowledge/MEMORY_SELECTION_ENGINE.md`
+- Memory governance / constitution (designed, not built): `knowledge/MEMORY_GOVERNANCE.md`
+- Interaction / behavior system (designed, not built): `knowledge/INTERACTION_SYSTEM.md`
+- State system / where the person is (designed, not built): `knowledge/STATE_SYSTEM.md`
 - Product/domain map: `docs/product/00-product-map.md`
 - Architecture reference: `docs/architecture/`
 - Engineering reference: `docs/engineering/`

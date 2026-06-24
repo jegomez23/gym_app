@@ -121,6 +121,8 @@ Profile lifecycle fields:
 - `username`
 - `timezone`
 - `locale`
+- `identity_statement` (added in `20260624_0001_identity_statement.sql`; nullable,
+  1–140 chars, the user's own answer to "who am I becoming?" — see DOMAIN/identity)
 
 `username` is nullable while a profile is pending onboarding and unique for
 active, non-deleted profiles.

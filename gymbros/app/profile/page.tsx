@@ -15,11 +15,7 @@ export default async function ProfilePage() {
         subtitle="Un registro silencioso de quien te estás convirtiendo."
         title="Esto no es un perfil fitness."
       >
-        <ProfileScreen
-          memberships={viewModel.memberships}
-          profile={viewModel.profile}
-          progress={viewModel.progress}
-        />
+        <ProfileScreen profile={viewModel.profile} />
       </ScreenContainer>
     </AppShell>
   );

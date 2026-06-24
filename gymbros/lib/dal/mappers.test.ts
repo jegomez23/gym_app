@@ -18,6 +18,7 @@ describe("DAL mappers", () => {
         name: "Dia",
         avatar_url: null,
         bio: "Building quietly",
+        identity_statement: "Alguien que aparece.",
         visibility_preference: "circle",
         onboarding_completed: true,
         timezone: "Europe/Madrid",

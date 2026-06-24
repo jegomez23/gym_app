@@ -111,12 +111,15 @@ function FeelingTile({
 
 function ShowingUpMoment({
   name,
+  identityStatement,
   onDone,
 }: {
   name: string;
+  identityStatement?: string | null;
   onDone: () => void;
 }) {
   const firstName = name.trim().split(" ")[0] || name;
+  const vow = identityStatement?.trim();
 
   return (
     <button
@@ -133,9 +136,21 @@ function ShowingUpMoment({
           Quedó registrado
         </p>
         <h2 className="mt-3 text-display text-primary-text">Apareciste.</h2>
-        <p className="mx-auto mt-3 max-w-80 text-body text-secondary-text">
-          {firstName}, una prueba más de quién estás eligiendo ser.
-        </p>
+        {vow ? (
+          // What was just sealed is proof of the vow they wrote themselves.
+          <>
+            <p className="mx-auto mt-4 max-w-80 text-body italic leading-7 text-primary-text">
+              “{vow}”
+            </p>
+            <p className="mx-auto mt-3 max-w-80 text-body text-secondary-text">
+              {firstName}, una prueba más.
+            </p>
+          </>
+        ) : (
+          <p className="mx-auto mt-3 max-w-80 text-body text-secondary-text">
+            {firstName}, una prueba más de quién estás eligiendo ser.
+          </p>
+        )}
       </div>
       <p className="animate-fade text-caption text-secondary-text/70">
         Toca para continuar
@@ -161,9 +176,11 @@ function ProgressIndicator({ currentStep }: { currentStep: number }) {
 
 export function CommitFlowClient({
   name,
+  identityStatement,
   lastReflection,
 }: {
   name: string;
+  identityStatement?: string | null;
   lastReflection?: string | null;
 }) {
   const router = useRouter();
@@ -257,7 +274,11 @@ export function CommitFlowClient({
       onSubmit={guardSubmit}
     >
       {celebrating && (
-        <ShowingUpMoment name={name} onDone={finishCelebration} />
+        <ShowingUpMoment
+          identityStatement={identityStatement}
+          name={name}
+          onDone={finishCelebration}
+        />
       )}
       <input name="type" type="hidden" value={trainingType} />
       <input name="intensity" type="hidden" value={intensity} />

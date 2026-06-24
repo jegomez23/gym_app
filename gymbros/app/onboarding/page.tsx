@@ -32,9 +32,9 @@ export default async function OnboardingPage({
 
   return (
     <AuthFormShell
-      eyebrow="Onboarding"
-      subtitle="Define tu identidad privada antes de empezar."
-      title="Crea tu perfil."
+      eyebrow="Antes de empezar"
+      subtitle="Sin métricas, sin presión. Solo una frase para que la app recuerde a quién vienes a convertirte."
+      title="Empecemos por ti."
     >
       <OnboardingForm
         defaultLocale="es"

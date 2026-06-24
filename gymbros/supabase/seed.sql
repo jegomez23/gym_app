@@ -99,15 +99,16 @@ values
 update public.profiles
 set
   bio = seed.bio,
+  identity_statement = seed.identity_statement,
   visibility_preference = seed.visibility_preference,
   onboarding_completed = true
 from (
   values
-    ('00000000-0000-0000-0000-000000000001'::uuid, 'Building consistency without spectacle.', 'circle'),
-    ('00000000-0000-0000-0000-000000000002'::uuid, 'Shows up early and keeps the rhythm steady.', 'circle'),
-    ('00000000-0000-0000-0000-000000000003'::uuid, 'Returning after a pause, one clean action at a time.', 'private'),
-    ('00000000-0000-0000-0000-000000000004'::uuid, 'Quiet member with a small but real training thread.', 'circle')
-) as seed(id, bio, visibility_preference)
+    ('00000000-0000-0000-0000-000000000001'::uuid, 'Building consistency without spectacle.', 'Alguien que aparece, incluso cuando nadie mira.', 'circle'),
+    ('00000000-0000-0000-0000-000000000002'::uuid, 'Shows up early and keeps the rhythm steady.', 'Alguien constante, sin prisa y sin pausa.', 'circle'),
+    ('00000000-0000-0000-0000-000000000003'::uuid, 'Returning after a pause, one clean action at a time.', 'Alguien que vuelve, una acción honesta a la vez.', 'private'),
+    ('00000000-0000-0000-0000-000000000004'::uuid, 'Quiet member with a small but real training thread.', null, 'circle')
+) as seed(id, bio, identity_statement, visibility_preference)
 where profiles.id = seed.id;
 
 insert into public.circle_memberships (user_id, circle_user_id, status, joined_at)
