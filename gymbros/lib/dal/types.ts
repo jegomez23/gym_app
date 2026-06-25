@@ -10,7 +10,8 @@ export type NotificationType =
   | "support_received"
   | "circle_invitation"
   | "invitation_accepted"
-  | "reflection_received";
+  | "reflection_received"
+  | "shared_presence";
 export type NotificationEntityType =
   | "support"
   | "circle_membership"

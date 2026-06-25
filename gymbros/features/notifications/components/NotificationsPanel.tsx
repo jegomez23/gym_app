@@ -31,7 +31,7 @@ function NotificationCard({ notification }: { notification: Notification }) {
 
   if (notification.readAt) {
     return (
-      <div className="rounded-md border border-white/6 bg-white/3 p-4">
+      <div className="rounded-md bg-white/4 p-4">
         <p className="text-caption leading-6 text-secondary-text">
           {notification.message}
         </p>

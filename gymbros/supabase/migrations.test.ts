@@ -31,7 +31,27 @@ describe("Supabase MVP migrations", () => {
       "20260622_0012_profile_lifecycle.sql",
       "20260623_0001_social_core.sql",
       "20260624_0001_identity_statement.sql",
+      "20260625_0001_progress_summary_lifetime.sql",
+      "20260625_0002_shared_presence.sql",
     ]);
+  });
+
+  it("carries shared presence on the notifications type, never a new table", () => {
+    const sharedPresence = migration("20260625_0002_shared_presence.sql");
+
+    expect(sharedPresence).toContain("alter table public.notifications");
+    expect(sharedPresence).toContain("'shared_presence'");
+    expect(sharedPresence).not.toMatch(/create table/i);
+  });
+
+  it("makes get_progress_summary an all-time identity signal, not a 30-day window", () => {
+    const lifetime = migration("20260625_0001_progress_summary_lifetime.sql");
+
+    expect(lifetime).toContain(
+      "create or replace function public.get_progress_summary"
+    );
+    expect(lifetime).toContain("p_from timestamptz default '-infinity'");
+    expect(lifetime).not.toMatch(/interval '30 days'/);
   });
 
   it("adds the nullable identity statement field only", () => {

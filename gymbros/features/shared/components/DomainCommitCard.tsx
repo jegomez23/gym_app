@@ -64,7 +64,7 @@ export function DomainCommitCard({ commit, eyebrow }: DomainCommitCardProps) {
       )}
 
       {reflections.length > 0 && (
-        <div className="mt-4 rounded-md bg-white/[0.035] p-4">
+        <div className="mt-4 rounded-md bg-white/4 p-4">
           <p className="text-body text-secondary-text">
             {reflections[0].content}
           </p>

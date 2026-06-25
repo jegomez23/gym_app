@@ -54,6 +54,7 @@ export const notificationTypeSchema = z.enum([
   "circle_invitation",
   "invitation_accepted",
   "reflection_received",
+  "shared_presence",
 ]);
 export const notificationEntityTypeSchema = z.enum([
   "support",

@@ -278,7 +278,8 @@ export type Database = {
             | "support_received"
             | "circle_invitation"
             | "invitation_accepted"
-            | "reflection_received";
+            | "reflection_received"
+            | "shared_presence";
           entity_type:
             | "support"
             | "circle_membership"
@@ -299,7 +300,8 @@ export type Database = {
             | "support_received"
             | "circle_invitation"
             | "invitation_accepted"
-            | "reflection_received";
+            | "reflection_received"
+            | "shared_presence";
           entity_type?:
             | "support"
             | "circle_membership"
@@ -320,7 +322,8 @@ export type Database = {
             | "support_received"
             | "circle_invitation"
             | "invitation_accepted"
-            | "reflection_received";
+            | "reflection_received"
+            | "shared_presence";
           entity_type?:
             | "support"
             | "circle_membership"

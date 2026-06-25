@@ -15,7 +15,10 @@ export default async function ArchivePage() {
         subtitle="Cada evidencia guardada es una prueba de quién estás siendo."
         title="Tu evidencia vive aquí."
       >
-        <ArchiveScreen journey={viewModel.journey} />
+        <ArchiveScreen
+          cadence={viewModel.cadence}
+          journey={viewModel.journey}
+        />
       </ScreenContainer>
     </AppShell>
   );

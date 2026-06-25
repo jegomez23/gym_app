@@ -167,6 +167,39 @@ export class CircleService {
     return this.circle.changeCircleStatus(profileId, input);
   }
 
+  /**
+   * Propose to appear alongside a circle member (Phase 42 — shared presence).
+   * It is a quiet gift, not a demand: it creates a single `shared_presence`
+   * notification the partner may accept by acknowledging. Whether both showed up
+   * is derived later from commit evidence (`deriveSharedPresence`); nothing about
+   * the pact is tracked beyond this proposal. Requires an active relationship —
+   * presence is only ever shared with someone who already chose to be there.
+   */
+  async proposeSharedPresence(
+    profileId: string,
+    partnerId: string
+  ): Promise<Notification> {
+    if (profileId === partnerId) {
+      throw new AuthorizationError("No puedes aparecer contigo mismo.");
+    }
+
+    const membership = await this.circle.findMembership(profileId, partnerId);
+
+    if (!membership || membership.status !== "active") {
+      throw new AuthorizationError(
+        "Aparecer juntos requiere un Circle activo."
+      );
+    }
+
+    const profile = await this.profiles.findProfile(profileId);
+
+    return this.notifications.createNotification(profileId, {
+      recipientUserId: partnerId,
+      type: "shared_presence",
+      message: `${profile.name} quiere aparecer contigo hoy.`,
+    });
+  }
+
   leaveCircle(
     profileId: string,
     input: JoinCircleInput

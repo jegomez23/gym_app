@@ -13,7 +13,10 @@ import type {
   Support,
 } from "@/lib/dal";
 import type { SelectedMemory } from "@/lib/memory/selectMemory";
+import type { SharedPresence } from "@/lib/presence/deriveSharedPresence";
 import type { DerivedState } from "@/lib/state/deriveState";
+
+import { SharedPresencePanel } from "./SharedPresencePanel";
 
 type TodayScreenProps = {
   profile: Profile;
@@ -26,6 +29,9 @@ type TodayScreenProps = {
   state: DerivedState;
   // At most one memory the Memory Selection Engine chose to return, or null.
   memory: SelectedMemory | null;
+  // Live shared-presence pacts (pending invitations + accepted, derived) — the
+  // quiet "I'm not doing this alone" surface.
+  sharedPresence: SharedPresence;
 };
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -199,6 +205,110 @@ function TodayHero({
   }
 }
 
+/**
+ * Composition policy — the State Engine shapes the whole screen, not just the
+ * hero words (STATE_SYSTEM.md Part 4 "Appears / Silent on", Part 5 priority).
+ * Each state decides which blocks belong, what stays silent, and what leads.
+ * The more vulnerable the state (Protected, Resting), the more silence wins; the
+ * more relational (Supported), the more a person — never a number — comes first.
+ */
+type ScreenPolicy = {
+  /** A push to act. Protected has none (silent on prompts). */
+  cta: "primary" | "quiet" | "none";
+  /** The human word is lifted above everything (Supported only). */
+  supportLeads: boolean;
+  circle: boolean;
+  /** The last commit — the foundation in Returning, "other feedback" in Supported. */
+  evidence: boolean;
+  notifications: boolean;
+  /** The support block where it does not already lead. */
+  supportsTail: boolean;
+};
+
+const SCREEN_POLICY: Record<DerivedState["state"], ScreenPolicy> = {
+  // An invitation and nothing else. Silent on all metrics, all memory.
+  beginning: {
+    cta: "primary",
+    supportLeads: false,
+    circle: false,
+    evidence: false,
+    notifications: true,
+    supportsTail: false,
+  },
+  // The full steady screen: one anchor, the circle, the foundation, human words.
+  building: {
+    cta: "primary",
+    supportLeads: false,
+    circle: true,
+    evidence: true,
+    notifications: true,
+    supportsTail: true,
+  },
+  // The sacred arrival: their words + their foundation. The gap and circle noise
+  // stay quiet so nothing distracts from "la base sigue ahí".
+  returning: {
+    cta: "primary",
+    supportLeads: false,
+    circle: false,
+    evidence: true,
+    notifications: true,
+    supportsTail: false,
+  },
+  // Reverence and restraint. Near-silence: the hero only, no push, nothing heavy.
+  protected: {
+    cta: "none",
+    supportLeads: false,
+    circle: false,
+    evidence: false,
+    notifications: false,
+    supportsTail: false,
+  },
+  // The person and their words, undiluted, above everything else.
+  supported: {
+    cta: "primary",
+    supportLeads: true,
+    circle: true,
+    evidence: false,
+    notifications: true,
+    supportsTail: false,
+  },
+  // An open, quiet door. No push, no feedback, no count. Just the way back.
+  resting: {
+    cta: "quiet",
+    supportLeads: false,
+    circle: false,
+    evidence: false,
+    notifications: false,
+    supportsTail: false,
+  },
+};
+
+function SupportsCard({
+  recentSupports,
+  profileId,
+}: {
+  recentSupports: Support[];
+  profileId: string;
+}) {
+  return (
+    <AppCard level="quiet">
+      <p className="text-label uppercase text-secondary-text">Te acompañaron</p>
+      <div className="mt-4 flex flex-col gap-3">
+        {recentSupports.map((support) => (
+          <div className="rounded-md bg-white/4 p-4" key={support.id}>
+            <p className="text-caption leading-6 text-primary-text">
+              {support.message}
+            </p>
+            <p className="mt-2 text-label uppercase text-secondary-text">
+              {support.fromUserId === profileId ? "Lo enviaste tú" : "Para ti"}
+            </p>
+          </div>
+        ))}
+      </div>
+    </AppCard>
+  );
+}
+
 export function TodayScreen({
   profile,
   commits,
@@ -208,7 +318,10 @@ export function TodayScreen({
   notifications,
   state,
   memory,
+  sharedPresence,
 }: TodayScreenProps) {
+  const policy = SCREEN_POLICY[state.state];
+
   const latestCommit = commits[0];
   const pendingInvitations = memberships.filter(
     (membership) =>
@@ -216,12 +329,12 @@ export function TodayScreen({
   );
 
   const name = firstName(profile.name);
-  // Protected is the one state where we hold back evidence of achievement.
-  const isProtected = state.state === "protected";
 
   const present = showedUpToday(presence);
   const anyRecent =
     presence.find((member) => member.lastCommitRecordedAt) ?? null;
+
+  const hasSupports = recentSupports.length > 0;
 
   return (
     <>
@@ -236,75 +349,81 @@ export function TodayScreen({
             state={state.state}
           />
 
-          <Link className="mt-6 block" href="/commit">
-            <AppButton className="w-full">Aparecer hoy</AppButton>
-          </Link>
-        </div>
-      </AppCard>
-
-      <NotificationsPanel
-        notifications={notifications}
-        profileId={profile.id}
-      />
-
-      <AppCard level="quiet">
-        <p className="text-label uppercase text-secondary-text">Tu círculo</p>
-        <div className="mt-3 flex items-center gap-3">
-          {present.length > 0 && (
-            <div className="flex -space-x-2">
-              {present.slice(0, 3).map((member) => (
-                <Avatar
-                  className="ring-2 ring-[var(--surface)]"
-                  key={member.memberId}
-                  name={member.memberName}
-                  size={32}
-                  src={member.memberAvatarUrl}
-                />
-              ))}
-            </div>
+          {policy.cta !== "none" && (
+            <Link className="mt-6 block" href="/commit">
+              <AppButton
+                className="w-full"
+                variant={policy.cta === "quiet" ? "secondary" : undefined}
+              >
+                {policy.cta === "quiet"
+                  ? "Cuando quieras, aparece"
+                  : "Aparecer hoy"}
+              </AppButton>
+            </Link>
           )}
-          <p className="text-body text-primary-text">
-            {presenceLine(present, anyRecent)}
-          </p>
         </div>
-        {pendingInvitations.length > 0 && (
-          <Link className="mt-4 block" href="/circle">
-            <AppButton className="w-full" variant="secondary">
-              {pendingInvitations.length === 1
-                ? "Alguien quiere acompañarte"
-                : "Algunas personas quieren acompañarte"}
-            </AppButton>
-          </Link>
-        )}
       </AppCard>
 
-      {latestCommit && !isProtected ? (
+      {/* Supported lifts the human word above everything — received, undiluted. */}
+      {policy.supportLeads && hasSupports && (
+        <SupportsCard profileId={profile.id} recentSupports={recentSupports} />
+      )}
+
+      {/* Shared presence rides the same state gate as other relational signals:
+          never surfaced in the near-silent states (Protected, Resting). */}
+      {policy.notifications && (
+        <SharedPresencePanel
+          active={sharedPresence.active}
+          pending={sharedPresence.pending}
+        />
+      )}
+
+      {policy.notifications && (
+        <NotificationsPanel
+          notifications={notifications}
+          profileId={profile.id}
+        />
+      )}
+
+      {policy.circle && (
+        <AppCard level="quiet">
+          <p className="text-label uppercase text-secondary-text">Tu círculo</p>
+          <div className="mt-3 flex items-center gap-3">
+            {present.length > 0 && (
+              <div className="flex -space-x-2">
+                {present.slice(0, 3).map((member) => (
+                  <Avatar
+                    className="ring-2 ring-[var(--surface)]"
+                    key={member.memberId}
+                    name={member.memberName}
+                    size={32}
+                    src={member.memberAvatarUrl}
+                  />
+                ))}
+              </div>
+            )}
+            <p className="text-body text-primary-text">
+              {presenceLine(present, anyRecent)}
+            </p>
+          </div>
+          {pendingInvitations.length > 0 && (
+            <Link className="mt-4 block" href="/circle">
+              <AppButton className="w-full" variant="secondary">
+                {pendingInvitations.length === 1
+                  ? "Alguien quiere acompañarte"
+                  : "Algunas personas quieren acompañarte"}
+              </AppButton>
+            </Link>
+          )}
+        </AppCard>
+      )}
+
+      {policy.evidence && latestCommit ? (
         <DomainCommitCard commit={latestCommit} eyebrow="Tu última evidencia" />
       ) : null}
 
-      {recentSupports.length > 0 && (
-        <AppCard level="quiet">
-          <p className="text-label uppercase text-secondary-text">
-            Te acompañaron
-          </p>
-          <div className="mt-4 flex flex-col gap-3">
-            {recentSupports.map((support) => (
-              <div
-                className="rounded-md border border-white/8 bg-white/3 p-4"
-                key={support.id}
-              >
-                <p className="text-caption leading-6 text-primary-text">
-                  {support.message}
-                </p>
-                <p className="mt-2 text-label uppercase text-secondary-text">
-                  {support.fromUserId === profile.id
-                    ? "Lo enviaste tú"
-                    : "Para ti"}
-                </p>
-              </div>
-            ))}
-          </div>
-        </AppCard>
+      {policy.supportsTail && hasSupports && (
+        <SupportsCard profileId={profile.id} recentSupports={recentSupports} />
       )}
     </>
   );

@@ -189,18 +189,19 @@ export function CommitFlowClient({
   const [direction, setDirection] = useState<"forward" | "back">("forward");
   const [showDuration, setShowDuration] = useState(false);
 
-  // One source of truth per field: controlled state mirrored to an always-mounted
-  // hidden input for everything that must survive across steps, and native inputs
-  // only for values local to the submit step (note, reflection). Because steps are
-  // unmounted as the user advances, any value collected on an earlier step must be
-  // serialized from a hidden input that is rendered outside the step — otherwise it
-  // is missing from FormData at submit. The Server Action's Zod schema is the single
-  // validation boundary — no client-side form library duplicating it.
+  // One source of truth per field: every value lives in controlled state mirrored to
+  // an always-mounted hidden input, so it survives a step unmounting as the user moves
+  // back and forth. This once excluded the submit-step text (note, reflection) — but
+  // "Volver" from the final step unmounted those native inputs and silently discarded
+  // the user's written words. Everything is controlled now. The Server Action's Zod
+  // schema is the single validation boundary — no client-side form library duplicates it.
   const [title, setTitle] = useState("");
   const [durationMinutes, setDurationMinutes] = useState("");
   const [trainingType, setTrainingType] = useState<TrainingType>("training");
   const [intensity, setIntensity] = useState<IntensityType>("steady");
   const [visibility, setVisibility] = useState<VisibilityType>("circle");
+  const [note, setNote] = useState("");
+  const [reflectionContent, setReflectionContent] = useState("");
   const [reflectionType, setReflectionType] = useState<ReflectionType | null>(
     null
   );
@@ -266,6 +267,8 @@ export function CommitFlowClient({
       <input name="type" type="hidden" value={trainingType} />
       <input name="intensity" type="hidden" value={intensity} />
       <input name="visibility" type="hidden" value={visibility} />
+      <input name="note" type="hidden" value={note} />
+      <input name="reflectionContent" type="hidden" value={reflectionContent} />
       <input name="reflectionType" type="hidden" value={reflectionType ?? ""} />
       <ProgressIndicator currentStep={step} />
 
@@ -351,15 +354,17 @@ export function CommitFlowClient({
                 aria-label="Nota personal"
                 className="min-h-32"
                 maxLength={500}
-                name="note"
+                onChange={(event) => setNote(event.target.value)}
                 placeholder="Hoy aparecí porque..."
+                value={note}
               />
               <Textarea
                 aria-label="Nota para tu yo del futuro"
                 className="min-h-32"
                 maxLength={300}
-                name="reflectionContent"
+                onChange={(event) => setReflectionContent(event.target.value)}
                 placeholder="Algo que quieras recordar más adelante (opcional)"
+                value={reflectionContent}
               />
               <div>
                 <p className="text-label uppercase text-secondary-text">

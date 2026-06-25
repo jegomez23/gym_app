@@ -21,6 +21,7 @@ export default async function TodayHubPage() {
             presence={viewModel.presence}
             profile={viewModel.profile}
             recentSupports={viewModel.recentSupports}
+            sharedPresence={viewModel.sharedPresence}
             state={viewModel.state}
           />
         ) : (

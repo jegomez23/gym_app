@@ -37,6 +37,34 @@ describe("CommitFlowClient", () => {
     expect(hiddenTitle?.value).toBe("Tren inferior");
   });
 
+  it("preserves the note and reflection when navigating back from the submit step", () => {
+    render(<CommitFlowClient name="Juan" />);
+
+    fireEvent.change(screen.getByLabelText("¿Qué hiciste?"), {
+      target: { value: "Tren inferior" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Continuar" })); // → step 1
+    fireEvent.click(screen.getByRole("button", { name: "Continuar" })); // → step 2
+
+    fireEvent.change(screen.getByLabelText("Nota personal"), {
+      target: { value: "Hoy aparecí porque importa." },
+    });
+    fireEvent.change(screen.getByLabelText("Nota para tu yo del futuro"), {
+      target: { value: "Recuerda este día." },
+    });
+
+    // "Volver" unmounts the submit step; returning to it used to wipe both fields.
+    fireEvent.click(screen.getByRole("button", { name: "Volver" })); // → step 1
+    fireEvent.click(screen.getByRole("button", { name: "Continuar" })); // → step 2
+
+    expect(screen.getByLabelText("Nota personal")).toHaveValue(
+      "Hoy aparecí porque importa."
+    );
+    expect(screen.getByLabelText("Nota para tu yo del futuro")).toHaveValue(
+      "Recuerda este día."
+    );
+  });
+
   it("advances on Enter from a single-line step instead of publishing", () => {
     render(<CommitFlowClient name="Juan" />);
 

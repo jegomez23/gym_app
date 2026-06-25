@@ -7,7 +7,7 @@ import {
   mapProgressSummary,
   mapSharedHistory,
 } from "../mappers";
-import { unwrapData, unwrapList } from "../result";
+import { unwrapList, unwrapSingle } from "../result";
 import { dateRangeSchema, paginationSchema, uuidSchema } from "../schemas";
 import type {
   CirclePresence,
@@ -100,7 +100,7 @@ export class DomainRpc {
       p_to: parsedRange.data.to,
     });
 
-    return mapProgressSummary(unwrapData(result)[0]);
+    return mapProgressSummary(unwrapSingle(result));
   }
 
   async getCommitDetail(commitId: string): Promise<CommitDetail> {
@@ -113,6 +113,6 @@ export class DomainRpc {
       p_commit_id: parsedCommitId.data,
     });
 
-    return mapCommitDetail(unwrapData(result)[0]);
+    return mapCommitDetail(unwrapSingle(result));
   }
 }

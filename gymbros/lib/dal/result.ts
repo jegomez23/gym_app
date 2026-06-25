@@ -26,3 +26,17 @@ export function unwrapList<T>(result: PostgrestResult<T[]>): T[] {
 
   return result.data ?? [];
 }
+
+/**
+ * For set-returning RPCs read as a single row. An empty result is a missing
+ * resource (NotFoundError), never an undefined that a mapper would crash on.
+ */
+export function unwrapSingle<T>(result: PostgrestResult<T[]>): T {
+  const row = unwrapList(result)[0];
+
+  if (row === undefined) {
+    throw new NotFoundError();
+  }
+
+  return row;
+}

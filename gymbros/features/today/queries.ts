@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 
 import { getUserContext } from "@/lib/auth/session";
 import { selectMemory } from "@/lib/memory/selectMemory";
+import { deriveSharedPresence } from "@/lib/presence/deriveSharedPresence";
 import { deriveState } from "@/lib/state/deriveState";
 
 export async function getTodayViewModel() {
@@ -41,7 +42,7 @@ export async function getTodayViewModel() {
     context.data.services.circle.listCircle(profile.id),
     context.data.services.circle.listRecentSupportsForProfile(profile.id, 5),
     context.data.services.notifications.listNotifications(profile.id, {
-      limit: 5,
+      limit: 8,
     }),
     // Same Journey read Archive uses — gives the engine the user's reflections
     // (with type) so Protected is derivable from their own words.
@@ -85,6 +86,37 @@ export async function getTodayViewModel() {
       })),
   });
 
+  // Shared presence (Phase 42): proposals ride the notifications carrier, and
+  // whether both people appeared is derived from commit evidence already loaded.
+  // Partner last-commit and names come from circle presence — no new read.
+  const partnerLastCommitAt: Record<string, string | null> = {};
+  const partnerName: Record<string, string> = {};
+  for (const member of presence) {
+    partnerLastCommitAt[member.memberId] = member.lastCommitRecordedAt;
+    partnerName[member.memberId] = member.memberName;
+  }
+
+  const sharedPresence = deriveSharedPresence({
+    proposals: notifications
+      .filter((notification) => notification.type === "shared_presence")
+      .map((notification) => ({
+        notificationId: notification.id,
+        partnerId: notification.actorUserId ?? "",
+        partnerName:
+          partnerName[notification.actorUserId ?? ""] ?? "tu círculo",
+        accepted: notification.readAt !== null,
+        createdAt: notification.createdAt,
+      })),
+    selfLastCommitAt: progress.lastCommitAt,
+    partnerLastCommitAt,
+  });
+
+  // Shared-presence proposals have their own calm surface; keep them out of the
+  // generic notifications panel so they are never double-rendered.
+  const generalNotifications = notifications.filter(
+    (notification) => notification.type !== "shared_presence"
+  );
+
   return {
     status: "ready" as const,
     profile,
@@ -93,7 +125,8 @@ export async function getTodayViewModel() {
     presence,
     memberships,
     recentSupports,
-    notifications,
+    notifications: generalNotifications,
+    sharedPresence,
     state,
     memory,
   };

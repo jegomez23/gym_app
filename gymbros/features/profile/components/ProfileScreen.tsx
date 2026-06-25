@@ -52,21 +52,19 @@ export function ProfileScreen({ profile }: ProfileScreenProps) {
         </div>
       </AppCard>
 
-      <AppCard level="quiet">
-        <p className="text-label uppercase text-secondary-text">
-          Editar perfil
-        </p>
-        <ProfileEditForm profile={profile} />
-      </AppCard>
+      {/* The form reads directly on the page — its own first label is the
+          hierarchy. No card, no "Editar perfil" heading boxing it in. */}
+      <ProfileEditForm profile={profile} />
 
-      <AppCard level="quiet">
+      {/* Account actions are set apart by a single hairline, not a container. */}
+      <div className="border-t border-white/8 pt-6">
         <form action={logoutAction}>
           <AppButton className="w-full" type="submit" variant="secondary">
             Cerrar sesión
           </AppButton>
         </form>
         <DeleteAccountForm />
-      </AppCard>
+      </div>
     </>
   );
 }

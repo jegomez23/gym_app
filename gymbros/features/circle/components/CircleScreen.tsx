@@ -11,6 +11,7 @@ import type {
 import { CircleInviteForm } from "./CircleInviteForm";
 import { CircleMemberActionForm } from "./CircleMemberActionForm";
 import { CircleRealtimeClient } from "./CircleRealtimeClient";
+import { ProposePresenceForm } from "./ProposePresenceForm";
 import { SupportFormClient } from "./SupportFormClient";
 
 type CircleScreenProps = {
@@ -54,6 +55,11 @@ export function CircleScreen({
   );
   const activeMembers = memberProfiles.filter(
     ({ membership }) => membership.status === "active"
+  );
+  // One person, one row. Presence (their last evidence) lives inline on the
+  // member, never as a second parallel list of the same humans.
+  const presenceByMember = new Map(
+    presence.map((member) => [member.memberId, member])
   );
 
   if (memberships.length === 0) {
@@ -162,68 +168,48 @@ export function CircleScreen({
       {activeMembers.length > 0 && (
         <section className="mt-2">
           <p className="mb-3 text-label uppercase text-secondary-text">
-            Miembros
+            Tu círculo
           </p>
           <div className="flex flex-col gap-3">
-            {activeMembers.map(({ membership, profile }) => (
-              <AppCard key={membership.id} level="quiet">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <Avatar
-                      name={profile?.name ?? "Miembro"}
-                      src={profile?.avatarUrl}
-                    />
-                    <div>
-                      <h3 className="text-heading text-primary-text">
-                        {profile?.name ?? "Miembro"}
-                      </h3>
-                      <p className="mt-0.5 text-caption text-secondary-text">
-                        @{profile?.username ?? "circle"} · activo
-                      </p>
+            {activeMembers.map(({ membership, profile }) => {
+              const memberPresence = presenceByMember.get(
+                membership.circleUserId
+              );
+              const evidenceLine = memberPresence
+                ? `${memberPresence.lastCommitTitle || "Apareció"} · ${formatPresenceDate(memberPresence.lastCommitRecordedAt)}`
+                : "Sin evidencia reciente";
+
+              return (
+                <AppCard key={membership.id} level="quiet">
+                  <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <Avatar
+                        name={profile?.name ?? "Miembro"}
+                        src={profile?.avatarUrl}
+                      />
+                      <div>
+                        <h3 className="text-heading text-primary-text">
+                          {profile?.name ?? "Miembro"}
+                        </h3>
+                        <p className="mt-0.5 text-caption text-secondary-text">
+                          {evidenceLine}
+                        </p>
+                      </div>
                     </div>
+                    <CircleMemberActionForm
+                      memberId={membership.circleUserId}
+                      mode="leave"
+                    />
                   </div>
-                  <CircleMemberActionForm
-                    memberId={membership.circleUserId}
-                    mode="leave"
-                  />
-                </div>
-              </AppCard>
-            ))}
+                  <div className="mt-3 border-t border-white/6 pt-3">
+                    <ProposePresenceForm partnerId={membership.circleUserId} />
+                  </div>
+                </AppCard>
+              );
+            })}
           </div>
         </section>
       )}
-
-      <section className="mt-2">
-        <p className="mb-3 text-label uppercase text-secondary-text">
-          Presencia
-        </p>
-        <div className="flex flex-col gap-3">
-          {presence.length > 0 ? (
-            presence.map((member) => (
-              <AppCard key={member.memberId} level="quiet">
-                <div className="flex items-center gap-3">
-                  <Avatar name={member.memberName} />
-                  <div>
-                    <h3 className="text-heading text-primary-text">
-                      {member.memberName}
-                    </h3>
-                    <p className="mt-0.5 text-caption text-secondary-text">
-                      {member.lastCommitTitle || "Apareció"} ·{" "}
-                      {formatPresenceDate(member.lastCommitRecordedAt)}
-                    </p>
-                  </div>
-                </div>
-              </AppCard>
-            ))
-          ) : (
-            <AppCard level="quiet">
-              <p className="text-body text-secondary-text">
-                Tu círculo está aquí. Todavía nadie ha aparecido hoy.
-              </p>
-            </AppCard>
-          )}
-        </div>
-      </section>
 
       {recentSupports.length > 0 && (
         <section className="mt-2">

@@ -6,9 +6,12 @@ import type { JourneyItem } from "@/lib/dal";
 
 type ArchiveScreenProps = {
   journey: JourneyItem[];
+  // One quiet sentence on the rhythm of the practice, or null when there is no
+  // honest cadence to claim yet. Context, never a headline.
+  cadence: string | null;
 };
 
-export function ArchiveScreen({ journey }: ArchiveScreenProps) {
+export function ArchiveScreen({ journey, cadence }: ArchiveScreenProps) {
   if (journey.length === 0) {
     return (
       <AppCard className="flex min-h-88 flex-col justify-between" level="hero">
@@ -32,6 +35,13 @@ export function ArchiveScreen({ journey }: ArchiveScreenProps) {
 
   return (
     <>
+      {cadence && (
+        // The practice speaking quietly about itself, above the evidence it is
+        // made of. No card, no number, no emphasis — just context.
+        <p className="px-1 text-body leading-7 text-secondary-text">
+          {cadence}
+        </p>
+      )}
       {journey.map((commit) => (
         <DomainCommitCard commit={commit} key={commit.id} />
       ))}

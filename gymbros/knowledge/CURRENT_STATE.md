@@ -203,6 +203,153 @@ Current code shape:
   off for someone who has shown up exactly once — a dedicated just-started nuance would
   need either a new derived state or a totalCommits===1 branch in `deriveState`, not
   added here to avoid speculative state.
+- Phase 39 (Quiet Return restored — progress is lifetime) is **built**. Root-cause bug:
+  `get_progress_summary` defaulted to a 30-day window, but `deriveState` and
+  `isFirstCommit` read its `totalCommits`/`lastCommitAt` as **lifetime** signals — so a
+  user returning after a gap > 30 days derived `beginning` instead of `returning`,
+  breaking the Quiet Return (and re-triggering "tu primera prueba"). Migration
+  `20260625_0001_progress_summary_lifetime.sql` redefines the function all-time by
+  default (`p_from '-infinity'`, `p_to 'infinity'`; same signature, no type regen; range
+  params kept for scoped callers). Also hardened the single-row RPC unwrap: new
+  `unwrapSingle` in `lib/dal/result.ts` (used by `getProgressSummary` + `getCommitDetail`)
+  throws `NotFoundError` on an empty set instead of letting a mapper crash on
+  `undefined` → `error.tsx`. Tests: `lib/dal/result.test.ts`, `supabase/migrations.test.ts`
+  lock the all-time default. `unwrapData[0]` pattern removed from the RPC layer.
+- Phase 40 (Today becomes state-shaped) is **built**. Previously the State Engine
+  drove only the Today **hero words** while the blocks below (circle, last-evidence,
+  supports, notifications) rendered in a fixed order for every state. Now the
+  derived state shapes the **whole** screen per `STATE_SYSTEM.md` Part 4
+  ("Appears / Silent on") and Part 5 priority, via a single declarative
+  `SCREEN_POLICY` record in `TodayScreen.tsx` (no data/DAL/schema change — pure
+  client composition of already-derived state). Per state: **Protected** strips to
+  the hero alone — no CTA (silent on prompts), no circle, no evidence, no
+  notifications (near-silence/reverence); **Resting** shows the hero + a quiet
+  secondary "Cuando quieras, aparece" open-door CTA, everything else silent;
+  **Supported** lifts the human word (`SupportsCard`, extracted for reuse) to the
+  **top**, above notifications/circle, and hides the last-evidence card ("undiluted,"
+  silent on other feedback); **Returning** keeps the foundation (last evidence) but
+  silences the circle noise so nothing distracts from the sacred arrival;
+  **Beginning** is one invitation (hero + CTA), silent on all metrics/memory;
+  **Building** is the full steady screen (unchanged composition). The CTA is now
+  state-aware (primary / quiet-secondary / none). This is the first phase of the
+  "make dormant engines visible" mandate: the State Engine now actively reorders and
+  reveals/hides the home screen, not just its sentence.
+- Phase 41 (Process, not performance — cadence) is **built**. The product could
+  remember evidence and derive state but could not express that a *practice
+  evolves*. The audit found the signal already existed and was being thrown away:
+  `ProgressSummary` computes `activeDays` and `firstCommitAt`, and the Archive
+  query loaded the whole `progress` summary then never rendered it (a dead read).
+  `lib/process/describeCadence.ts` (pure, deterministic, explainable, silence-by-
+  default — same shape as `deriveState`/`selectMemory`) turns that evidence into
+  **one sentence about rhythm, never a number**: e.g. "Has estado apareciendo unas
+  tres veces por semana." Rhythm is counted in *active days* (not total commits, so
+  a busy single day never inflates it) over the span since `firstCommitAt`, bucketed
+  into soft phrases. It returns `null` (silence) until honest: fewer than
+  `CADENCE_MIN_COMMITS` (3) or a span under `CADENCE_MIN_DAYS` (14). The sparse
+  bucket is worded without punishment ("a tu propio ritmo"). It is rendered as a
+  single quiet `text-secondary-text` line at the head of the Archive — context, not
+  a headline, no card, no metric chrome — replacing the dead `progress` return in
+  `features/archive/queries.ts` with a `cadence: string | null`. This deliberately
+  does **not** add statistics, streaks, goals, achievements, records, or graphs
+  (all rejected by brief and by Phase 23's prior metric-stripping). Tested by
+  `lib/process/describeCadence.test.ts`. The **social** direction ("appear together
+  tomorrow" / mutual presence) was audited and **deferred**: it needs new schema, a
+  Server Action, and two-party state — complexity beyond "the smallest progression
+  layer" — and is recommended as a separate future phase, not built here.
+- Phase 42 (Shared presence — appearing together) is **built**. Two circle members
+  can quietly commit to appear together without challenges, streaks, competition,
+  schedules, or accountability-by-guilt. The audit's decisive finding: the MVP table
+  set is **frozen and guarded** (`migrations.test.ts` asserts the exact created-table
+  list and that no new table appears), so shared presence **reuses the notifications
+  carrier instead of a new table** — migration `20260625_0002_shared_presence.sql`
+  only extends the `notifications_type_check` constraint with a `shared_presence`
+  type (no `create table`). A proposal is one `shared_presence` notification
+  (`CircleService.proposeSharedPresence`, reusing the existing membership + profile +
+  notification deps — no new DAL wiring); the partner accepts with the lightest act,
+  acknowledging it (the existing `markNotificationRead`, `read_at` = accepted).
+  Whether both actually showed up is **derived**, not tracked: `lib/presence/
+  deriveSharedPresence.ts` (pure, deterministic, explainable, silence-by-default —
+  same shape as `deriveState`/`selectMemory`/`describeCadence`) reads the proposal
+  notifications + the user's own `lastCommitAt` + partners' `lastCommitRecordedAt`
+  (already in circle presence — no new read) and resolves each pact to
+  `waiting`/`almost`/`together`, counting only commits left *after* the pact began.
+  A pact lives in a 36h window then simply expires — never failed, never mourned.
+  Surfaces: a propose button on each active member in `CircleScreen`
+  (`ProposePresenceForm`), and a calm `SharedPresencePanel` on Today (pending invite
+  + accept, then the derived status line — "Los dos aparecieron."), gated by the same
+  Phase 40 state policy so it never appears in the near-silent states (Protected,
+  Resting). Shared-presence notifications are filtered out of the generic
+  `NotificationsPanel` so they render in exactly one place. Tested by
+  `lib/presence/deriveSharedPresence.test.ts`. **Remaining highest-leverage seam:**
+  the proposer has no live tracker of the pact (RLS lets only the recipient read a
+  notification, and a reciprocal "accepted" notification was deliberately not added —
+  a proposer-side waiting tracker risks the "I can't disappoint them" pressure the
+  phase forbids). Duplicate proposals also can't be prevented from the proposer's
+  side under RLS; the form's optimistic confirmation mitigates re-tapping. Adding a
+  reciprocal acceptance notification (with a distinct type) is the clean way to give
+  both sides symmetric, RLS-safe visibility if that pressure trade-off is accepted.
+- Phase 43 (Product polish — Circle) is **done**. The Apple-review audit found the
+  Circle screen was the one screen that read as engineered, not designed: it stacked
+  two parallel sections — "Miembros" and "Presencia" — that rendered the **same
+  people twice** (same avatars + names), once as a member row and once as a presence
+  row. That duplicated hierarchy is now **merged into one row per person**:
+  `CircleScreen` folds each member's last evidence inline (`presenceByMember` map,
+  keyed by `circleUserId`) and the standalone "Presencia" section is **deleted**. The
+  label warmed from "Miembros" to "Tu círculo". Net: one fewer labeled section, no
+  duplicate person list, less scrolling — the screen stops looking like a CRUD admin
+  panel. No new code, ~30 lines removed. **Next highest-leverage refinement:** the
+  Profile screen's final card stacks logout + delete-account in a single quiet box;
+  separating destructive deletion from the routine logout is the next small polish.
+- Phase 44 (Design system refinement) is **done**. The audit found the loudest
+  "built at different times" artifact: the same passive recessed inner-block atom (a
+  small inset block of secondary text) was hand-coded **three different ways** across
+  three files — `SupportsCard` item (`border border-white/8 bg-white/3`),
+  `NotificationCard` read state (`border border-white/6 bg-white/3`), and
+  `DomainCommitCard` reflection (`bg-white/[0.035]`, borderless). Three border
+  opacities, two background spellings (one an arbitrary bracket value). Unified to one
+  recipe — `rounded-md bg-white/4 p-4` (borderless fill, scale value, lifts above the
+  `surface-quiet` parent). Interactive controls (`Field`, `FeelingTile`) keep their
+  stroke deliberately — a border reads as "tappable/editable"; only passive blocks
+  lost theirs. Net: three recipes → one family, decorative hairlines removed, no
+  redesign. **Next refinement:** `AppCard` `hero` and `primary` levels are nearly
+  identical (both `premium-surface` + `border-white/8` + `backdrop-blur-xl`, differing
+  only in radius/padding/shadow by one step); collapsing toward fewer card altitudes
+  is the next vocabulary reduction.
+- Phase 45 (Screen hierarchy — one surface, not a stack) is **done**. The audit asked
+  per screen "one continuous surface or a stack of cards?" **Profile** was the
+  offender: three stacked elevations where containers did typography's work — the hero
+  mirror (a legitimate card), plus a `quiet` card whose only job was to hold an
+  "Editar perfil" label + the edit form, plus a third `quiet` card boxing logout +
+  delete. Neither lower card was an *item*; they were settings groupings boxed for no
+  reason. (Circle's cards survive — they're genuine lists of people/invitations/
+  supports; Today/Commit are single-hero; Archive is a feed.) Both `quiet` cards
+  removed: `ProfileEditForm` now reads directly on the page surface (its own first
+  label, "En quién te estás convirtiendo", is the hierarchy — the redundant
+  card-label is gone), and account actions are set apart by a **single hairline
+  divider** (`border-t border-white/8 pt-6`) instead of a container. The form's
+  orphaned `mt-4` (which spaced it under the deleted label) was dropped so page rhythm
+  governs. Net: three elevations → one, two containers deleted, Profile now reads as
+  one calm page. **Next refinement:** Circle's hero card packs three concerns (privacy
+  badge + invite form + support form) into one surface — splitting reading from acting
+  there is the next hierarchy pass.
+- Phase 46 (Commit flow — no silent loss of the user's words) is **done**. Root cause:
+  `CommitFlowClient` kept every cross-step field in controlled state mirrored to an
+  always-mounted hidden input **except** the two step-2 textareas (`note`,
+  `reflectionContent`), which were uncontrolled native inputs rationalized as "local to
+  the submit step." But the submit step has a "Volver" button — tapping it unmounted
+  step 2 and **silently discarded the user's written note and future-note**; returning
+  and publishing saved them empty. Same root cause as the already-fixed step-0 title
+  loss, never extended to step 2. Fix: `note` + `reflectionContent` now live in
+  controlled state mirrored to hidden inputs like every other field — one uniform field
+  model, no field survives differently from another. Regression test added
+  (`CommitFlowClient.test.tsx`): type both fields on the submit step, go back, return,
+  assert the values persist. (Separately confirmed the 30-day-window bug was unique to
+  `get_progress_summary` — `get_journey_timeline` is count-limited, `get_shared_history`
+  is membership-scoped, `get_circle_presence`'s last-commit is all-time; no other RPC
+  carries that latent window.) **Next highest-leverage opportunity:** the commit step-2
+  "Nota personal" (stored on the commit) vs "Nota para tu yo del futuro" (a typed
+  reflection) are easy to confuse, and a `reflectionType` chosen without reflection text
+  is silently dropped — clarifying that relationship is the next UX pass.
 - Circle and Notifications use client Supabase Realtime hooks
   (`useCircleRealtime`, `useNotificationsRealtime`) that refresh the server tree
   on `postgres_changes`. `app/providers.tsx` exposes the browser Supabase client
