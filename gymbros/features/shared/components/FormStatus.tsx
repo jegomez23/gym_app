@@ -17,7 +17,7 @@ export function FormStatus({ state }: FormStatusProps) {
   return (
     <p
       aria-live="polite"
-      className={`animate-rise mt-3 rounded-md border p-4 text-caption font-medium ${className}`}
+      className={`animate-rise rounded-md border p-4 text-caption font-medium ${className}`}
       role={state.status === "error" ? "alert" : "status"}
     >
       {state.message}

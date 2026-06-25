@@ -4,19 +4,19 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import {
-  authErrorState,
   friendlyAuthError,
   onboardingProfileSchema,
   safeReturnTo,
-  type AuthActionState,
 } from "@/lib/auth";
 import { NotFoundError } from "@/lib/dal/errors";
 import { requireUser } from "@/lib/auth/session";
+import type { ActionState } from "@/features/shared/actionState";
+import { actionErrorState } from "@/features/shared/server/actionResult";
 
 export async function createProfileAction(
-  _previousState: AuthActionState,
+  _previousState: ActionState,
   formData: FormData
-): Promise<AuthActionState> {
+): Promise<ActionState> {
   const parsed = onboardingProfileSchema.safeParse({
     username: formData.get("username"),
     name: formData.get("name"),
@@ -29,7 +29,7 @@ export async function createProfileAction(
   });
 
   if (!parsed.success) {
-    return authErrorState("Revisa tu perfil antes de continuar.");
+    return actionErrorState("Revisa tu perfil antes de continuar.");
   }
 
   try {
@@ -52,7 +52,7 @@ export async function createProfileAction(
     revalidatePath("/");
     revalidatePath("/profile");
   } catch (error) {
-    return authErrorState(friendlyAuthError(error));
+    return actionErrorState(friendlyAuthError(error));
   }
 
   redirect(safeReturnTo(formData.get("returnTo") ?? "/"));

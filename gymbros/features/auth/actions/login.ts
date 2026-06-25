@@ -3,19 +3,15 @@
 import { redirect } from "next/navigation";
 
 import { createDomainDataLayer } from "@/lib/dal";
-import {
-  authErrorState,
-  friendlyAuthError,
-  credentialsSchema,
-  safeReturnTo,
-  type AuthActionState,
-} from "@/lib/auth";
+import { friendlyAuthError, credentialsSchema, safeReturnTo } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import type { ActionState } from "@/features/shared/actionState";
+import { actionErrorState } from "@/features/shared/server/actionResult";
 
 export async function loginAction(
-  _previousState: AuthActionState,
+  _previousState: ActionState,
   formData: FormData
-): Promise<AuthActionState> {
+): Promise<ActionState> {
   const parsed = credentialsSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
@@ -23,23 +19,23 @@ export async function loginAction(
   });
 
   if (!parsed.success) {
-    return authErrorState("Revisa tu email y contrasena.");
+    return actionErrorState("Revisa tu email y contrasena.");
   }
 
   const supabase = await createClient();
   if (!supabase) {
-    return authErrorState("Supabase no esta configurado.");
+    return actionErrorState("Supabase no esta configurado.");
   }
 
   const data = createDomainDataLayer(supabase);
   const result = await data.services.auth.signInWithPassword(parsed.data);
 
   if (result.error) {
-    return authErrorState(friendlyAuthError(result.error));
+    return actionErrorState(friendlyAuthError(result.error));
   }
 
   if (!result.data.user) {
-    return authErrorState("No se pudo iniciar la sesion.");
+    return actionErrorState("No se pudo iniciar la sesion.");
   }
 
   const profile = await data.services.profiles

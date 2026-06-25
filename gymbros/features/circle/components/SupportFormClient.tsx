@@ -70,7 +70,9 @@ export function SupportFormClient({ members }: SupportFormClientProps) {
           Llegó. Acabas de aparecer por alguien.
         </p>
       ) : (
-        <FormStatus state={state} />
+        <div className="mt-3">
+          <FormStatus state={state} />
+        </div>
       )}
     </form>
   );

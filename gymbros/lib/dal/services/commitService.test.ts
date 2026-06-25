@@ -94,6 +94,24 @@ describe("CommitService", () => {
     });
   });
 
+  it("publishCommitWithReflection forwards the user's reflection type so Protected stays reachable", async () => {
+    const { commits, reflections, rpc } = makeRepos();
+    const service = new CommitService(commits, reflections, rpc);
+
+    await service.publishCommitWithReflection(commit.userId, {
+      title: commit.title,
+      reflectionContent: reflection.content,
+      reflectionType: "emotional",
+    });
+
+    expect(reflections.createReflection).toHaveBeenCalledWith(commit.userId, {
+      commitId: commit.id,
+      content: reflection.content,
+      type: "emotional",
+      visibility: "circle",
+    });
+  });
+
   it("publishCommitWithReflection returns commit even when reflection creation fails", async () => {
     const { commits, reflections, rpc } = makeRepos();
     reflections.createReflection.mockRejectedValue(new Error("DB error"));

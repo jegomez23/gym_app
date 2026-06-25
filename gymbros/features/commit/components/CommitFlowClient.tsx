@@ -1,11 +1,7 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useActionState, useEffect, useMemo, useState } from "react";
-import type { FormEvent } from "react";
-import { useForm } from "react-hook-form";
+import { useActionState, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { z } from "zod";
 
 import { AppButton } from "@/components/ui/AppButton";
 import { AppCard } from "@/components/ui/AppCard";
@@ -14,25 +10,9 @@ import { Icon, type IconName } from "@/components/ui/Icon";
 import { PillOption } from "@/components/ui/PillOption";
 import { FormStatus } from "@/features/shared";
 import { initialActionState } from "@/features/shared/actionState";
+import type { ReflectionType } from "@/lib/dal";
 
 import { publishCommitAction } from "../actions/publishCommit";
-
-const commitFormSchema = z.object({
-  title: z.string().trim().min(1, "Nombra la accion.").max(150),
-  type: z.string().trim().max(50).optional(),
-  durationMinutes: z.coerce
-    .number()
-    .int()
-    .positive()
-    .optional()
-    .or(z.literal("")),
-  intensity: z.enum(["light", "steady", "deep"]),
-  note: z.string().trim().max(500).optional(),
-  reflectionContent: z.string().trim().max(300).optional(),
-  visibility: z.enum(["private", "circle", "public"]),
-});
-
-type CommitFormValues = z.input<typeof commitFormSchema>;
 
 const trainingOptions = [
   { value: "training", label: "Entrenamiento" },
@@ -58,6 +38,15 @@ const visibilityOptions = [
   { value: "circle", label: "Circulo" },
   { value: "public", label: "Publico" },
 ] as const;
+
+// Optional, never mandatory: the user's own quiet classification of their note.
+// "Emoción" is what makes the Protected state reachable from their own words.
+const reflectionTypeOptions = [
+  { value: "identity", label: "Identidad" },
+  { value: "process", label: "Proceso" },
+  { value: "emotional", label: "Emoción" },
+  { value: "technical", label: "Técnica" },
+] as const satisfies ReadonlyArray<{ value: ReflectionType; label: string }>;
 
 type TrainingType = (typeof trainingOptions)[number]["value"];
 type IntensityType = (typeof intensityOptions)[number]["value"];
@@ -109,6 +98,8 @@ function FeelingTile({
   );
 }
 
+// The act is sealed. This moment rests until the user chooses to leave it —
+// it never auto-advances (Interaction System: nothing rushes, the interface waits).
 function ShowingUpMoment({
   name,
   identityStatement,
@@ -192,42 +183,23 @@ export function CommitFlowClient({
   const [direction, setDirection] = useState<"forward" | "back">("forward");
   const [showDuration, setShowDuration] = useState(false);
 
-  // The act is sealed: hold a quiet moment of recognition before returning home.
-  const celebrating = actionState.status === "success";
+  // One source of truth: plain controlled state for the fields that drive the UI,
+  // native named inputs for the rest. The Server Action's Zod schema is the single
+  // validation boundary — no client-side form library duplicating it.
+  const [title, setTitle] = useState("");
+  const [trainingType, setTrainingType] = useState<TrainingType>("training");
+  const [intensity, setIntensity] = useState<IntensityType>("steady");
+  const [visibility, setVisibility] = useState<VisibilityType>("circle");
+  const [reflectionType, setReflectionType] = useState<ReflectionType | null>(
+    null
+  );
+
+  const recognized = actionState.status === "success";
 
   function goToStep(next: number) {
     setDirection(next > step ? "forward" : "back");
     setStep(Math.min(Math.max(next, 0), 2));
   }
-
-  function finishCelebration() {
-    router.push("/");
-  }
-
-  useEffect(() => {
-    if (!celebrating) {
-      return;
-    }
-
-    const timeout = setTimeout(() => router.push("/"), 2800);
-    return () => clearTimeout(timeout);
-  }, [celebrating, router]);
-  const [title, setTitle] = useState("");
-  const [trainingType, setTrainingType] = useState<TrainingType>("training");
-  const [intensity, setIntensity] = useState<IntensityType>("steady");
-  const [visibility, setVisibility] = useState<VisibilityType>("circle");
-  const form = useForm<CommitFormValues>({
-    resolver: zodResolver(commitFormSchema),
-    defaultValues: {
-      title: "",
-      type: "training",
-      durationMinutes: "",
-      intensity: "steady",
-      note: "",
-      reflectionContent: "",
-      visibility: "circle",
-    },
-  });
 
   const canContinue = useMemo(() => {
     if (step === 0) {
@@ -241,51 +213,29 @@ export function CommitFlowClient({
     return true;
   }, [intensity, step, title, trainingType]);
 
-  const titleField = form.register("title");
-
-  function selectTrainingType(value: TrainingType) {
-    setTrainingType(value);
-    form.setValue("type", value, { shouldValidate: true });
-  }
-
-  function selectIntensity(value: IntensityType) {
-    setIntensity(value);
-    form.setValue("intensity", value, { shouldValidate: true });
-  }
-
-  function selectVisibility(value: VisibilityType) {
-    setVisibility(value);
-    form.setValue("visibility", value, { shouldValidate: true });
-  }
-
-  async function guardSubmit(event: FormEvent<HTMLFormElement>) {
-    const isValid = await form.trigger();
-    if (!isValid) {
-      event.preventDefault();
-    }
+  // Tapping the active type again clears it — the classification stays optional.
+  function toggleReflectionType(value: ReflectionType) {
+    setReflectionType((current) => (current === value ? null : value));
   }
 
   const copy = stepCopy[step];
 
   return (
-    <form
-      action={formAction}
-      className="flex flex-col gap-5"
-      onSubmit={guardSubmit}
-    >
-      {celebrating && (
+    <form action={formAction} className="flex flex-col gap-5">
+      {recognized && (
         <ShowingUpMoment
           identityStatement={identityStatement}
           name={name}
-          onDone={finishCelebration}
+          onDone={() => router.push("/")}
         />
       )}
       <input name="type" type="hidden" value={trainingType} />
       <input name="intensity" type="hidden" value={intensity} />
       <input name="visibility" type="hidden" value={visibility} />
+      <input name="reflectionType" type="hidden" value={reflectionType ?? ""} />
       <ProgressIndicator currentStep={step} />
 
-      <AppCard className="min-h-[25rem]" level="hero">
+      <AppCard className="min-h-100" level="hero">
         <div
           className={`flex h-full flex-col ${
             direction === "forward"
@@ -317,12 +267,10 @@ export function CommitFlowClient({
               <Field htmlFor="commit-title" label="¿Qué hiciste?">
                 <Input
                   id="commit-title"
+                  name="title"
+                  onChange={(event) => setTitle(event.target.value)}
                   placeholder="Tren inferior, vuelta a empezar"
-                  {...titleField}
-                  onChange={(event) => {
-                    titleField.onChange(event);
-                    setTitle(event.target.value);
-                  }}
+                  value={title}
                 />
               </Field>
               <div className="flex flex-wrap gap-2">
@@ -331,7 +279,7 @@ export function CommitFlowClient({
                     active={trainingType === option.value}
                     key={option.value}
                     label={option.label}
-                    onClick={() => selectTrainingType(option.value)}
+                    onClick={() => setTrainingType(option.value)}
                   />
                 ))}
               </div>
@@ -347,27 +295,18 @@ export function CommitFlowClient({
                     icon={option.icon}
                     key={option.value}
                     label={option.label}
-                    onClick={() => selectIntensity(option.value)}
+                    onClick={() => setIntensity(option.value)}
                   />
                 ))}
               </div>
               {showDuration ? (
-                <Field
-                  error={
-                    form.formState.errors.durationMinutes
-                      ? "Ingresa un número positivo o deja el campo vacío."
-                      : undefined
-                  }
-                  htmlFor="commit-duration"
-                  label="Duración en minutos"
-                >
+                <Field htmlFor="commit-duration" label="Duración en minutos">
                   <Input
                     autoFocus
                     id="commit-duration"
                     inputMode="numeric"
-                    invalid={Boolean(form.formState.errors.durationMinutes)}
+                    name="durationMinutes"
                     placeholder="45"
-                    {...form.register("durationMinutes")}
                   />
                 </Field>
               ) : (
@@ -388,23 +327,38 @@ export function CommitFlowClient({
                 aria-label="Nota personal"
                 className="min-h-32"
                 maxLength={500}
+                name="note"
                 placeholder="Hoy aparecí porque..."
-                {...form.register("note")}
               />
               <Textarea
                 aria-label="Nota para tu yo del futuro"
                 className="min-h-32"
                 maxLength={300}
+                name="reflectionContent"
                 placeholder="Algo que quieras recordar más adelante (opcional)"
-                {...form.register("reflectionContent")}
               />
+              <div>
+                <p className="text-label uppercase text-secondary-text">
+                  ¿Qué tipo de nota es? · opcional
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {reflectionTypeOptions.map((option) => (
+                    <PillOption
+                      active={reflectionType === option.value}
+                      key={option.value}
+                      label={option.label}
+                      onClick={() => toggleReflectionType(option.value)}
+                    />
+                  ))}
+                </div>
+              </div>
               <div className="flex flex-wrap gap-2">
                 {visibilityOptions.map((option) => (
                   <PillOption
                     active={visibility === option.value}
                     key={option.value}
                     label={option.label}
-                    onClick={() => selectVisibility(option.value)}
+                    onClick={() => setVisibility(option.value)}
                   />
                 ))}
               </div>

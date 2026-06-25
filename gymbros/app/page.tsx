@@ -19,8 +19,8 @@ export default async function TodayHubPage() {
             notifications={viewModel.notifications}
             presence={viewModel.presence}
             profile={viewModel.profile}
-            progress={viewModel.progress}
             recentSupports={viewModel.recentSupports}
+            state={viewModel.state}
           />
         ) : (
           <StateMessage

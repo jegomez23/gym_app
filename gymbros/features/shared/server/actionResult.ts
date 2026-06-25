@@ -4,6 +4,11 @@ import { AppError } from "@/lib/dal/errors";
 import type { ActionState } from "../actionState";
 
 export function actionErrorState(error: unknown): ActionState {
+  // An explicit human message (e.g. a validation copy or a friendlyAuthError result).
+  if (typeof error === "string") {
+    return { status: "error", message: error };
+  }
+
   if (error instanceof AppError) {
     return {
       status: "error",

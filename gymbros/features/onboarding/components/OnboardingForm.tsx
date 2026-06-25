@@ -4,8 +4,8 @@ import { useActionState } from "react";
 
 import { AppButton } from "@/components/ui/AppButton";
 import { Field, Input, Textarea } from "@/components/ui/Field";
-import { AuthStatus } from "@/features/auth/components/AuthStatus";
-import { initialAuthActionState } from "@/lib/auth/actionState";
+import { FormStatus } from "@/features/shared";
+import { initialActionState } from "@/features/shared/actionState";
 
 import { createProfileAction } from "../actions/createProfile";
 
@@ -24,7 +24,7 @@ export function OnboardingForm({
 }: OnboardingFormProps) {
   const [state, formAction, pending] = useActionState(
     createProfileAction,
-    initialAuthActionState
+    initialActionState
   );
 
   return (
@@ -85,7 +85,7 @@ export function OnboardingForm({
       <input name="timezone" type="hidden" value={defaultTimezone} />
       <input name="locale" type="hidden" value={defaultLocale} />
       <input name="visibilityPreference" type="hidden" value="circle" />
-      <AuthStatus state={state} />
+      <FormStatus state={state} />
       <AppButton loading={pending} type="submit">
         {pending ? "Entrando" : "Entrar a Gym Circle"}
       </AppButton>

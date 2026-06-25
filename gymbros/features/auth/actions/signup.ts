@@ -4,19 +4,18 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { createDomainDataLayer } from "@/lib/dal";
-import {
-  authErrorState,
-  authSuccessState,
-  friendlyAuthError,
-  signUpSchema,
-  type AuthActionState,
-} from "@/lib/auth";
+import { friendlyAuthError, signUpSchema } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import type { ActionState } from "@/features/shared/actionState";
+import {
+  actionErrorState,
+  actionSuccessState,
+} from "@/features/shared/server/actionResult";
 
 export async function signupAction(
-  _previousState: AuthActionState,
+  _previousState: ActionState,
   formData: FormData
-): Promise<AuthActionState> {
+): Promise<ActionState> {
   const parsed = signUpSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
@@ -24,12 +23,12 @@ export async function signupAction(
   });
 
   if (!parsed.success) {
-    return authErrorState("Revisa los datos para crear tu cuenta.");
+    return actionErrorState("Revisa los datos para crear tu cuenta.");
   }
 
   const supabase = await createClient();
   if (!supabase) {
-    return authErrorState("Supabase no esta configurado.");
+    return actionErrorState("Supabase no esta configurado.");
   }
 
   const origin = (await headers()).get("origin") ?? "";
@@ -44,11 +43,11 @@ export async function signupAction(
   });
 
   if (result.error) {
-    return authErrorState(friendlyAuthError(result.error));
+    return actionErrorState(friendlyAuthError(result.error));
   }
 
   if (!result.data.session) {
-    return authSuccessState(
+    return actionSuccessState(
       "Cuenta creada. Revisa tu email para confirmar el acceso."
     );
   }

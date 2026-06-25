@@ -4,15 +4,15 @@ import { useActionState } from "react";
 
 import { AppButton } from "@/components/ui/AppButton";
 import { Field, Input } from "@/components/ui/Field";
-import { initialAuthActionState } from "@/lib/auth/actionState";
+import { FormStatus } from "@/features/shared";
+import { initialActionState } from "@/features/shared/actionState";
 
 import { signupAction } from "../actions/signup";
-import { AuthStatus } from "./AuthStatus";
 
 export function SignupForm() {
   const [state, formAction, pending] = useActionState(
     signupAction,
-    initialAuthActionState
+    initialActionState
   );
 
   return (
@@ -45,7 +45,7 @@ export function SignupForm() {
           type="password"
         />
       </Field>
-      <AuthStatus state={state} />
+      <FormStatus state={state} />
       <AppButton loading={pending} type="submit">
         {pending ? "Creando" : "Crear cuenta"}
       </AppButton>

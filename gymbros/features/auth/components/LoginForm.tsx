@@ -5,10 +5,10 @@ import Link from "next/link";
 
 import { AppButton } from "@/components/ui/AppButton";
 import { Field, Input } from "@/components/ui/Field";
-import { initialAuthActionState } from "@/lib/auth/actionState";
+import { FormStatus } from "@/features/shared";
+import { initialActionState } from "@/features/shared/actionState";
 
 import { loginAction } from "../actions/login";
-import { AuthStatus } from "./AuthStatus";
 
 type LoginFormProps = {
   returnTo?: string;
@@ -17,7 +17,7 @@ type LoginFormProps = {
 export function LoginForm({ returnTo = "/" }: LoginFormProps) {
   const [state, formAction, pending] = useActionState(
     loginAction,
-    initialAuthActionState
+    initialActionState
   );
 
   return (
@@ -51,7 +51,7 @@ export function LoginForm({ returnTo = "/" }: LoginFormProps) {
           Olvide mi contrasena
         </Link>
       </div>
-      <AuthStatus state={state} />
+      <FormStatus state={state} />
       <AppButton loading={pending} type="submit">
         {pending ? "Entrando" : "Entrar"}
       </AppButton>

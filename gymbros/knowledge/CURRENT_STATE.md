@@ -23,7 +23,7 @@ foundation. Route-level mock state has been removed.
 | TypeScript       | `6.0.3`, strict enabled                                           |
 | Styling          | Tailwind CSS `4` via `@tailwindcss/postcss`                       |
 | Backend SDK      | `@supabase/supabase-js` `2.106.2`, `@supabase/ssr` `0.12.0`       |
-| Validation/forms | Zod `4.4.3`, React Hook Form `7.79.0`, Hookform resolvers `5.4.0` |
+| Validation/forms | Zod `4.4.3` (server-side, the validation boundary)              |
 | Realtime         | Supabase Realtime postgres_changes channels (`useSupabase`)       |
 | Client state     | React local state only for current UI interactions                |
 | Testing          | Vitest `4.1.9`, Testing Library, jsdom                            |
@@ -34,7 +34,11 @@ Planned but not installed: shadcn/ui, Drizzle ORM, Playwright. TanStack Query
 was removed in Phase 13: it was installed but had zero `useQuery`/`useMutation`
 consumers. Client server-state needs are met by Server Actions plus Supabase
 Realtime + `router.refresh()`. Reinstall only when client-side caching or
-optimistic UI is genuinely required.
+optimistic UI is genuinely required. React Hook Form + `@hookform/resolvers`
+were removed in Phase 31 for the same reason: the commit flow was the last
+consumer, and it was triple-tracking state (local + RHF + hidden inputs) while
+the Server Action's Zod schema was already the real validation boundary. Forms
+now use plain controlled state + native inputs validated on the server.
 
 ## Implementation Reality
 

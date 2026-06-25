@@ -9,6 +9,7 @@ import type {
   CommitDetail,
   PaginationOptions,
   Reflection,
+  ReflectionType,
 } from "../types";
 
 type CommitDataAccess = {
@@ -48,7 +49,10 @@ export class CommitService {
 
   async publishCommitWithReflection(
     profileId: string,
-    input: PublishCommitInput & { reflectionContent?: string | null }
+    input: PublishCommitInput & {
+      reflectionContent?: string | null;
+      reflectionType?: ReflectionType | null;
+    }
   ): Promise<Commit> {
     const commit = await this.commits.publishCommit(profileId, input);
     const reflectionContent = input.reflectionContent?.trim();
@@ -59,7 +63,10 @@ export class CommitService {
         .createReflection(profileId, {
           commitId: commit.id,
           content: reflectionContent,
-          type: "process",
+          // The user's own classification when given; "process" stays the default
+          // so an untyped note keeps its prior behavior. This is what makes the
+          // Protected state reachable: an "emotional" note is now preserved.
+          type: input.reflectionType ?? "process",
           visibility: commit.visibility === "private" ? "private" : "circle",
         })
         .catch(() => undefined);

@@ -4,15 +4,15 @@ import { useActionState } from "react";
 
 import { AppButton } from "@/components/ui/AppButton";
 import { Field, Input } from "@/components/ui/Field";
-import { initialAuthActionState } from "@/lib/auth/actionState";
+import { FormStatus } from "@/features/shared";
+import { initialActionState } from "@/features/shared/actionState";
 
 import { resetPasswordAction } from "../actions/resetPassword";
-import { AuthStatus } from "./AuthStatus";
 
 export function ResetPasswordForm() {
   const [state, formAction, pending] = useActionState(
     resetPasswordAction,
-    initialAuthActionState
+    initialActionState
   );
 
   return (
@@ -37,7 +37,7 @@ export function ResetPasswordForm() {
           type="password"
         />
       </Field>
-      <AuthStatus state={state} />
+      <FormStatus state={state} />
       <AppButton loading={pending} type="submit">
         {pending ? "Actualizando" : "Actualizar contraseña"}
       </AppButton>

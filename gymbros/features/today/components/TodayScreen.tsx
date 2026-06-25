@@ -10,23 +10,22 @@ import type {
   Commit,
   Notification,
   Profile,
-  ProgressSummary,
   Support,
 } from "@/lib/dal";
+import type { DerivedState } from "@/lib/state/deriveState";
 
 type TodayScreenProps = {
   profile: Profile;
   commits: Commit[];
-  progress: ProgressSummary;
   presence: CirclePresence[];
   memberships: CircleMembership[];
   recentSupports: Support[];
   notifications: Notification[];
+  // The person's state is derived once, on the server. This screen consumes it.
+  state: DerivedState;
 };
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
-// A pause long enough that the return deserves to be welcomed, not measured.
-const RETURN_AFTER_DAYS = 4;
 
 function firstName(name: string) {
   return name.trim().split(" ")[0] || name;
@@ -74,14 +73,124 @@ function presenceLine(
   return "Tu círculo está en silencio. Hoy puedes empezar tú.";
 }
 
+function TodayHero({
+  state,
+  name,
+  identityStatement,
+}: {
+  state: DerivedState["state"];
+  name: string;
+  identityStatement: string | null;
+}) {
+  switch (state) {
+    case "returning":
+      // The sacred arrival: their own words, returned where they matter most.
+      return (
+        <>
+          <p className="text-label uppercase text-accent">
+            Bienvenido de vuelta
+          </p>
+          <h2 className="mt-3 text-display text-primary-text">
+            La base sigue ahí.
+          </h2>
+          {identityStatement ? (
+            <>
+              <p className="mt-4 max-w-80 text-body italic leading-7 text-primary-text">
+                “{identityStatement}”
+              </p>
+              <p className="mt-3 max-w-80 text-body text-secondary-text">
+                {name}, sigues siendo esa persona.
+              </p>
+            </>
+          ) : (
+            <p className="mt-3 max-w-80 text-body text-secondary-text">
+              {name}, no empezamos de cero. Sigues siendo quien estabas
+              eligiendo ser.
+            </p>
+          )}
+        </>
+      );
+    case "beginning":
+      return (
+        <>
+          <p className="text-label uppercase text-accent">Tu primer paso</p>
+          <h2 className="mt-3 text-display text-primary-text">
+            Empieza a dejar evidencia.
+          </h2>
+          <p className="mt-3 max-w-80 text-body text-secondary-text">
+            {name}, la primera vez que apareces, el archivo empieza a recordar
+            quién eres.
+          </p>
+        </>
+      );
+    case "protected":
+      // Reverence and restraint: nothing heavy, nothing to prove. Just presence.
+      return (
+        <>
+          <p className="text-label uppercase text-secondary-text">Estás aquí</p>
+          <h2 className="mt-3 text-display text-primary-text">
+            No hay nada que demostrar hoy.
+          </h2>
+          <p className="mt-3 max-w-80 text-body text-secondary-text">
+            {name}, aparecer ya es suficiente. Tómate el tiempo que necesites.
+          </p>
+        </>
+      );
+    case "resting":
+      // A pause, not a lapse. The door stays open without a word of pressure.
+      return (
+        <>
+          <p className="text-label uppercase text-secondary-text">
+            La puerta sigue abierta
+          </p>
+          <h2 className="mt-3 text-display text-primary-text">
+            Cuando quieras, aquí sigue.
+          </h2>
+          <p className="mt-3 max-w-80 text-body text-secondary-text">
+            {name}, descansar también es parte de esto. Nada se perdió.
+          </p>
+        </>
+      );
+    case "supported":
+      // A human word arrived. Point toward the person, not a number.
+      return (
+        <>
+          <p className="text-label uppercase text-accent">Te acompañaron</p>
+          <h2 className="mt-3 text-display text-primary-text">
+            Alguien te vio aparecer.
+          </h2>
+          <p className="mt-3 max-w-80 text-body text-secondary-text">
+            {name}, no estás haciendo esto en silencio.
+          </p>
+        </>
+      );
+    case "building":
+    default:
+      return (
+        <>
+          <p className="text-label uppercase text-secondary-text">
+            Quien estás siendo
+          </p>
+          <h2 className="mt-3 text-display text-primary-text">
+            Sigues apareciendo.
+          </h2>
+          <p className="mt-3 max-w-80 text-body text-secondary-text">
+            {name}, hoy no se trata de hacer más. Se trata de aparecer con
+            intención.
+          </p>
+        </>
+      );
+  }
+}
+
 export function TodayScreen({
   profile,
   commits,
-  progress,
   presence,
   memberships,
   recentSupports,
   notifications,
+  state,
 }: TodayScreenProps) {
   const latestCommit = commits[0];
   const pendingInvitations = memberships.filter(
@@ -90,10 +199,8 @@ export function TodayScreen({
   );
 
   const name = firstName(profile.name);
-  const gap = daysSince(progress.lastCommitAt);
-  const isReturning =
-    progress.totalCommits > 0 && gap !== null && gap >= RETURN_AFTER_DAYS;
-  const isFirstTime = progress.totalCommits === 0;
+  // Protected is the one state where we hold back evidence of achievement.
+  const isProtected = state.state === "protected";
 
   const present = showedUpToday(presence);
   const anyRecent =
@@ -105,56 +212,11 @@ export function TodayScreen({
       <AppCard className="relative overflow-hidden" level="hero">
         <div className="absolute -right-10 top-6 h-28 w-28 rounded-full bg-accent-soft blur-3xl" />
         <div className="relative">
-          {isReturning ? (
-            <>
-              <p className="text-label uppercase text-accent">
-                Bienvenido de vuelta
-              </p>
-              <h2 className="mt-3 text-display text-primary-text">
-                La base sigue ahí.
-              </h2>
-              {profile.identityStatement ? (
-                <>
-                  {/* Their own words, returned at the moment they matter most. */}
-                  <p className="mt-4 max-w-80 text-body italic leading-7 text-primary-text">
-                    “{profile.identityStatement}”
-                  </p>
-                  <p className="mt-3 max-w-80 text-body text-secondary-text">
-                    {name}, sigues siendo esa persona.
-                  </p>
-                </>
-              ) : (
-                <p className="mt-3 max-w-80 text-body text-secondary-text">
-                  {name}, no empezamos de cero. Sigues siendo quien estabas
-                  eligiendo ser.
-                </p>
-              )}
-            </>
-          ) : isFirstTime ? (
-            <>
-              <p className="text-label uppercase text-accent">Tu primer paso</p>
-              <h2 className="mt-3 text-display text-primary-text">
-                Empieza a dejar evidencia.
-              </h2>
-              <p className="mt-3 max-w-80 text-body text-secondary-text">
-                {name}, la primera vez que apareces, el archivo empieza a
-                recordar quién eres.
-              </p>
-            </>
-          ) : (
-            <>
-              <p className="text-label uppercase text-secondary-text">
-                Quien estás siendo
-              </p>
-              <h2 className="mt-3 text-display text-primary-text">
-                Sigues apareciendo.
-              </h2>
-              <p className="mt-3 max-w-80 text-body text-secondary-text">
-                {name}, hoy no se trata de hacer más. Se trata de aparecer con
-                intención.
-              </p>
-            </>
-          )}
+          <TodayHero
+            identityStatement={profile.identityStatement}
+            name={name}
+            state={state.state}
+          />
 
           <Link className="mt-6 block" href="/commit">
             <AppButton className="w-full">Aparecer hoy</AppButton>
@@ -198,7 +260,7 @@ export function TodayScreen({
         )}
       </AppCard>
 
-      {latestCommit ? (
+      {latestCommit && !isProtected ? (
         <DomainCommitCard commit={latestCommit} eyebrow="Tu última evidencia" />
       ) : null}
 

@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 
 import { AppButton } from "@/components/ui/AppButton";
 import { Field, Input, Select, Textarea } from "@/components/ui/Field";
-import { AuthStatus } from "@/features/auth/components/AuthStatus";
-import { initialAuthActionState } from "@/lib/auth/actionState";
+import { FormStatus } from "@/features/shared";
+import { initialActionState } from "@/features/shared/actionState";
 import type { Profile } from "@/lib/dal";
 
 import { updateProfileAction } from "../actions/updateProfile";
@@ -19,7 +19,7 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
   const router = useRouter();
   const [state, formAction, pending] = useActionState(
     updateProfileAction,
-    initialAuthActionState
+    initialActionState
   );
 
   useEffect(() => {
@@ -89,7 +89,7 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
           <option value="public">Público — cualquiera</option>
         </Select>
       </Field>
-      <AuthStatus state={state} />
+      <FormStatus state={state} />
       <AppButton loading={pending} type="submit" variant="secondary">
         {pending ? "Guardando" : "Guardar perfil"}
       </AppButton>

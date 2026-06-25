@@ -3,8 +3,8 @@
 import { useActionState, useState } from "react";
 
 import { AppButton } from "@/components/ui/AppButton";
-import { AuthStatus } from "@/features/auth/components/AuthStatus";
-import { initialAuthActionState } from "@/lib/auth/actionState";
+import { FormStatus } from "@/features/shared";
+import { initialActionState } from "@/features/shared/actionState";
 
 import { deleteProfileAction } from "../actions/deleteProfile";
 
@@ -12,7 +12,7 @@ export function DeleteAccountForm() {
   const [confirming, setConfirming] = useState(false);
   const [state, formAction, pending] = useActionState(
     deleteProfileAction,
-    initialAuthActionState
+    initialActionState
   );
 
   if (!confirming) {
@@ -48,7 +48,7 @@ export function DeleteAccountForm() {
           {pending ? "Eliminando" : "Confirmar"}
         </AppButton>
       </div>
-      <AuthStatus state={state} />
+      <FormStatus state={state} />
     </form>
   );
 }

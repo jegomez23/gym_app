@@ -2,23 +2,21 @@
 
 import { redirect } from "next/navigation";
 
-import {
-  authErrorState,
-  friendlyAuthError,
-  type AuthActionState,
-} from "@/lib/auth";
+import { friendlyAuthError } from "@/lib/auth";
 import { requireProfile } from "@/lib/auth/session";
+import type { ActionState } from "@/features/shared/actionState";
+import { actionErrorState } from "@/features/shared/server/actionResult";
 
 export async function deleteProfileAction(
-  _previousState: AuthActionState,
+  _previousState: ActionState,
   _formData: FormData
-): Promise<AuthActionState> {
+): Promise<ActionState> {
   try {
     const context = await requireProfile();
     await context.data.services.profiles.softDeleteProfile(context.profile.id);
     await context.data.services.auth.signOut();
   } catch (error) {
-    return authErrorState(friendlyAuthError(error));
+    return actionErrorState(friendlyAuthError(error));
   }
 
   redirect("/login");

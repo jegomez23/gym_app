@@ -4,15 +4,15 @@ import { useActionState } from "react";
 
 import { AppButton } from "@/components/ui/AppButton";
 import { Field, Input } from "@/components/ui/Field";
-import { initialAuthActionState } from "@/lib/auth/actionState";
+import { FormStatus } from "@/features/shared";
+import { initialActionState } from "@/features/shared/actionState";
 
 import { forgotPasswordAction } from "../actions/forgotPassword";
-import { AuthStatus } from "./AuthStatus";
 
 export function ForgotPasswordForm() {
   const [state, formAction, pending] = useActionState(
     forgotPasswordAction,
-    initialAuthActionState
+    initialActionState
   );
 
   return (
@@ -26,7 +26,7 @@ export function ForgotPasswordForm() {
           type="email"
         />
       </Field>
-      <AuthStatus state={state} />
+      <FormStatus state={state} />
       <AppButton loading={pending} type="submit">
         {pending ? "Enviando" : "Enviar enlace"}
       </AppButton>

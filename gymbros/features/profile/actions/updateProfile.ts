@@ -2,19 +2,18 @@
 
 import { revalidatePath } from "next/cache";
 
-import {
-  authErrorState,
-  authSuccessState,
-  friendlyAuthError,
-  updateProfileFormSchema,
-  type AuthActionState,
-} from "@/lib/auth";
+import { friendlyAuthError, updateProfileFormSchema } from "@/lib/auth";
 import { requireProfile } from "@/lib/auth/session";
+import type { ActionState } from "@/features/shared/actionState";
+import {
+  actionErrorState,
+  actionSuccessState,
+} from "@/features/shared/server/actionResult";
 
 export async function updateProfileAction(
-  _previousState: AuthActionState,
+  _previousState: ActionState,
   formData: FormData
-): Promise<AuthActionState> {
+): Promise<ActionState> {
   const parsed = updateProfileFormSchema.safeParse({
     username: formData.get("username") || undefined,
     name: formData.get("name") || undefined,
@@ -27,7 +26,7 @@ export async function updateProfileAction(
   });
 
   if (!parsed.success) {
-    return authErrorState("Revisa los cambios de perfil.");
+    return actionErrorState("Revisa los cambios de perfil.");
   }
 
   try {
@@ -40,8 +39,8 @@ export async function updateProfileAction(
     revalidatePath("/circle");
     revalidatePath("/profile");
 
-    return authSuccessState("Perfil actualizado.");
+    return actionSuccessState("Perfil actualizado.");
   } catch (error) {
-    return authErrorState(friendlyAuthError(error));
+    return actionErrorState(friendlyAuthError(error));
   }
 }

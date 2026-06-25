@@ -17,6 +17,9 @@ const formSchema = z.object({
   intensity: z.enum(["light", "steady", "deep"]).nullable(),
   note: z.string().trim().max(500).nullable(),
   reflectionContent: z.string().trim().max(300).nullable(),
+  reflectionType: z
+    .enum(["technical", "emotional", "identity", "process"])
+    .nullable(),
   visibility: z.enum(["private", "circle", "public"]),
 });
 
@@ -42,6 +45,7 @@ export async function publishCommitAction(
       intensity: nullableText(formData.get("intensity")),
       note: nullableText(formData.get("note")),
       reflectionContent: nullableText(formData.get("reflectionContent")),
+      reflectionType: nullableText(formData.get("reflectionType")),
       visibility: formData.get("visibility") ?? "private",
     });
 
@@ -55,6 +59,7 @@ export async function publishCommitAction(
         note: parsed.note,
         visibility: parsed.visibility,
         reflectionContent: parsed.reflectionContent,
+        reflectionType: parsed.reflectionType,
       }
     );
 
