@@ -18,8 +18,8 @@ silent.
 
 The **Memory Engine** is the product capability that returns a user's own evidence
 to them at meaningful moments — their own commits, reflections, supports, and the
-identity statement they wrote — so the product *remembers them*, not their
-statistics. (A dedicated `MEMORY_ENGINE.md` describing the *what* in full is
+identity statement they wrote — so the product _remembers them_, not their
+statistics. (A dedicated `MEMORY_ENGINE.md` describing the _what_ in full is
 forthcoming; this paragraph states the concept inline so this document stands on its
 own.)
 
@@ -43,8 +43,8 @@ invisible. A wrong surfaced memory is felt, and erodes trust that took years to
 earn. The hard part is not recall — it is restraint.
 
 **Why forgetting is necessary.** Total recall is noise. Meaning requires scarcity. A
-memory that is always available is wallpaper. The engine's act of *choosing not to
-surface* the other 99.9% of evidence is what gives the rare surfaced memory its
+memory that is always available is wallpaper. The engine's act of _choosing not to
+surface_ the other 99.9% of evidence is what gives the rare surfaced memory its
 weight. Forgetting on the user's behalf — reversibly, since the evidence still lives
 in the Archive — is a feature, not a limitation.
 
@@ -54,7 +54,7 @@ trying to take your attention" — the felt quality the ten-year vision is built
 engine says.
 
 **When showing nothing creates more trust than showing something.** Whenever no
-candidate clears the absolute bar of *true + meaningful + timely right now*. A
+candidate clears the absolute bar of _true + meaningful + timely right now_. A
 forced memory feels algorithmic and cheapens every future one. Absence feels
 respectful and protects the rare hit.
 
@@ -74,17 +74,17 @@ Each category is built only from evidence that already exists: commits; reflecti
 typed `identity | emotional | process | technical`; supports; `identity_statement`;
 circle join dates; and firsts/gaps derived from the immutable log.
 
-| Category | Purpose | Emotional value | Risk | Lifetime | Ideal moments | Priority |
-|---|---|---|---|---|---|---|
-| **Identity** (the vow + identity-type reflections) | Reconnect the user to the self they chose | Highest | Low (their own words) | Permanent, appreciates | Quiet Return, Commit recognition, Profile | 1 |
-| **Return** (evidence the foundation survived a gap) | Make "la base sigue ahí" literal proof | Highest, at the most important moment (Bible Pt 6) | High — mishandled = guilt about absence | Born only on a real return; appreciates into a returns-archive | Quiet Return **only** | 1 (context-bound) |
-| **Origin / Beginning** (first commit, first reflection, first showing-up) | Show distance traveled; then vs now | Very high, grows with age | Mild if framed as decline ("you used to…") — forbidden framing | Dormant early, sacred after ~90d–1y | Milestones, return, Profile | 2 |
-| **Reflection** (user's own action→meaning words) | The user's voice outranks ours | High | `emotional` type can carry pain | Appreciates as words age | Commit recognition, Archive | 2 |
-| **Turning-point** (hardest week, longest-gap return, season of change) | The narrative of becoming | Very high, only legible after time | Inferring significance the user never claimed — be conservative | Emerges only after years | Rare, deep milestones | 2 |
-| **Support** (human words received from circle) | Proof that becoming is witnessed (emotional peak) | High | Cross-user privacy; reliving | Medium, mild appreciation | Rare, on return or low period | 3 |
-| **Circle / Relationship** ("the person who never stopped," shared history) | Belonging — not becoming alone | High | Other person's privacy; comparison | Appreciates with relationship age | Circle surface, milestones | 3 |
-| **Quiet victory** (showing up on a low day, the unremarkable commit) | Honor presence over performance | Medium, quietly powerful | Low | Medium | Today, occasional | 4 |
-| **Foundation** (accumulated mass of evidence) | The base they built, as evidence not count | Medium | **High** — slips into statistics/streaks | Grows | Profile, milestones | 5 (heavily guarded) |
+| Category                                                                   | Purpose                                           | Emotional value                                    | Risk                                                            | Lifetime                                                       | Ideal moments                             | Priority            |
+| -------------------------------------------------------------------------- | ------------------------------------------------- | -------------------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------------- | ----------------------------------------- | ------------------- |
+| **Identity** (the vow + identity-type reflections)                         | Reconnect the user to the self they chose         | Highest                                            | Low (their own words)                                           | Permanent, appreciates                                         | Quiet Return, Commit recognition, Profile | 1                   |
+| **Return** (evidence the foundation survived a gap)                        | Make "la base sigue ahí" literal proof            | Highest, at the most important moment (Bible Pt 6) | High — mishandled = guilt about absence                         | Born only on a real return; appreciates into a returns-archive | Quiet Return **only**                     | 1 (context-bound)   |
+| **Origin / Beginning** (first commit, first reflection, first showing-up)  | Show distance traveled; then vs now               | Very high, grows with age                          | Mild if framed as decline ("you used to…") — forbidden framing  | Dormant early, sacred after ~90d–1y                            | Milestones, return, Profile               | 2                   |
+| **Reflection** (user's own action→meaning words)                           | The user's voice outranks ours                    | High                                               | `emotional` type can carry pain                                 | Appreciates as words age                                       | Commit recognition, Archive               | 2                   |
+| **Turning-point** (hardest week, longest-gap return, season of change)     | The narrative of becoming                         | Very high, only legible after time                 | Inferring significance the user never claimed — be conservative | Emerges only after years                                       | Rare, deep milestones                     | 2                   |
+| **Support** (human words received from circle)                             | Proof that becoming is witnessed (emotional peak) | High                                               | Cross-user privacy; reliving                                    | Medium, mild appreciation                                      | Rare, on return or low period             | 3                   |
+| **Circle / Relationship** ("the person who never stopped," shared history) | Belonging — not becoming alone                    | High                                               | Other person's privacy; comparison                              | Appreciates with relationship age                              | Circle surface, milestones                | 3                   |
+| **Quiet victory** (showing up on a low day, the unremarkable commit)       | Honor presence over performance                   | Medium, quietly powerful                           | Low                                                             | Medium                                                         | Today, occasional                         | 4                   |
+| **Foundation** (accumulated mass of evidence)                              | The base they built, as evidence not count        | Medium                                             | **High** — slips into statistics/streaks                        | Grows                                                          | Profile, milestones                       | 5 (heavily guarded) |
 
 **Categories that must never exist:** streak memories, comparison memories (vs
 others or vs a "better" past self), performance-record memories (PRs as
@@ -96,30 +96,30 @@ achievement), and absence / "missed day" memories. All are banned by `PRINCIPLES
 
 Two stages. **Stage A — eligibility gates** are binary and ruthless; failing any one
 disqualifies a candidate. **Stage B — scoring** ranks the survivors, and only the
-single top candidate that *also* clears an absolute meaning threshold surfaces. If
+single top candidate that _also_ clears an absolute meaning threshold surfaces. If
 none clears, the output is silence — the most common result.
 
 ### Variables that should exist
 
-- **Truthfulness** *(gate)* — is the connection to *now* real, or a coincidence
+- **Truthfulness** _(gate)_ — is the connection to _now_ real, or a coincidence
   dressed as meaning? Low truth disqualifies. Trust is the moat.
-- **Context fit** *(gate)* — does this memory belong in *this* moment? A return
+- **Context fit** _(gate)_ — does this memory belong in _this_ moment? A return
   memory outside a return is disqualified, not merely penalized.
-- **Potential emotional harm** *(gate)* — pain requires explicit protection; high
+- **Potential emotional harm** _(gate)_ — pain requires explicit protection; high
   harm disqualifies regardless of every other score.
-- **Cooldown / already-resurfaced** *(gate + penalty)* — recently surfaced memories
+- **Cooldown / already-resurfaced** _(gate + penalty)_ — recently surfaced memories
   are excluded for a long window; prevents wallpaper.
 - **Identity relevance** — how directly the memory connects to the user's stated
   becoming. Highest positive weight; it is the core purpose.
 - **Reflection / language richness** — a memory carrying the user's own vivid words
   outranks a bare commit. Weight toward their voice (Principle 13).
-- **Age / maturation** — older evidence is often *more* valuable (distance
+- **Age / maturation** — older evidence is often _more_ valuable (distance
   traveled). Positive weight — the opposite of a recency-ranked feed.
 - **Recency penalty** — very recent evidence is not memory yet; it is still present.
   Penalize the near term so memory never means "what you just did."
 - **Life / relationship significance** — turning points and long relationships score
   higher, applied conservatively.
-- **Future significance** — would this matter *more* later? If yes, the engine may
+- **Future significance** — would this matter _more_ later? If yes, the engine may
   withhold it now (it has patience; see Rule 10).
 - **Rarity / surprise** — a memory the user has likely forgotten lands harder than
   one fresh in mind. Mild positive — surprise must serve truth, never stimulation.
@@ -145,21 +145,21 @@ not good enough — and nothing appears.
 
 ## Part 4 — Context Engine
 
-| Context | Memory appears? | Max frequency | Ideal types | Forbidden types |
-|---|---|---|---|---|
-| Opening Today (normal) | Usually silence | ~1 / week ceiling | Quiet victory, identity | Return, heavy emotional |
-| **Quiet Return** (after a real gap) | **Yes — prime moment** | Each genuine return | Return, identity | Statistics, comparison, anything implying loss |
-| After leaving evidence (Commit recognition) | Yes, lightweight | Vary; not every time | Identity/reflection echo of the vow the act proves | Heavy pain, foundation counts |
-| Starting new evidence | Silence | — | none | everything (keep the sacred act frictionless) |
-| Opening Archive | Memory is *pull* here; rare gentle header only | Very low | Origin, reflection | Push interruptions |
-| Opening Profile | Yes, low frequency (it is a mirror) | Low | Identity, origin | Numbers-as-headline |
-| Receiving support | Silence (the live support is the moment) | — | none | anything that buries the live moment |
-| Sending support | Silence (focus on the other person) | — | none | everything |
-| Circle milestone (long connection) | Rare | Very low | Circle / relationship | Comparison between members |
-| Season / turning point | Very rare, only after years | Yearly-ish ceiling | Turning-point, origin | Forced "wrapped" recap |
-| First evidence | **No** (nothing to remember yet) | — | none (invitation instead) | all memory |
-| Hundredth evidence | Guarded or silence | Once | Foundation as evidence | "100!" count, streak |
-| One / three / ten years later | Sacred, rare | Once each | Origin, return-archive | Automated anniversary push |
+| Context                                     | Memory appears?                                | Max frequency        | Ideal types                                        | Forbidden types                                |
+| ------------------------------------------- | ---------------------------------------------- | -------------------- | -------------------------------------------------- | ---------------------------------------------- |
+| Opening Today (normal)                      | Usually silence                                | ~1 / week ceiling    | Quiet victory, identity                            | Return, heavy emotional                        |
+| **Quiet Return** (after a real gap)         | **Yes — prime moment**                         | Each genuine return  | Return, identity                                   | Statistics, comparison, anything implying loss |
+| After leaving evidence (Commit recognition) | Yes, lightweight                               | Vary; not every time | Identity/reflection echo of the vow the act proves | Heavy pain, foundation counts                  |
+| Starting new evidence                       | Silence                                        | —                    | none                                               | everything (keep the sacred act frictionless)  |
+| Opening Archive                             | Memory is _pull_ here; rare gentle header only | Very low             | Origin, reflection                                 | Push interruptions                             |
+| Opening Profile                             | Yes, low frequency (it is a mirror)            | Low                  | Identity, origin                                   | Numbers-as-headline                            |
+| Receiving support                           | Silence (the live support is the moment)       | —                    | none                                               | anything that buries the live moment           |
+| Sending support                             | Silence (focus on the other person)            | —                    | none                                               | everything                                     |
+| Circle milestone (long connection)          | Rare                                           | Very low             | Circle / relationship                              | Comparison between members                     |
+| Season / turning point                      | Very rare, only after years                    | Yearly-ish ceiling   | Turning-point, origin                              | Forced "wrapped" recap                         |
+| First evidence                              | **No** (nothing to remember yet)               | —                    | none (invitation instead)                          | all memory                                     |
+| Hundredth evidence                          | Guarded or silence                             | Once                 | Foundation as evidence                             | "100!" count, streak                           |
+| One / three / ten years later               | Sacred, rare                                   | Once each            | Origin, return-archive                             | Automated anniversary push                     |
 
 **Governing rule:** the more sacred and light the action (starting evidence, first
 commit), the more silence wins. The more reflective the pause (return, profile,
@@ -172,7 +172,7 @@ archive), the more a memory may belong.
 1. **Safety first.** A harm-flagged memory is excluded unless the context is
    explicitly protective. Pain never surfaces casually.
 2. **Context gate.** A memory must fit the moment or it does not appear.
-3. **Truth gate.** No real connection to *now* → silence.
+3. **Truth gate.** No real connection to _now_ → silence.
 4. **The user's own words outrank any generated framing.** Always.
 5. **Category order:** Identity ≻ Reflection ≻ Support ≻ Circle ≻ Quiet victory ≻
    Foundation. (Supports never outrank identity. Origins outrank statistics —
@@ -183,7 +183,7 @@ archive), the more a memory may belong.
 8. **Silence beats a weak memory.** Top candidate below the absolute threshold →
    nothing.
 9. **Explainability.** The engine must always be able to state, internally and
-   auditably, *why* it selected. No unexplainable selection ships. (This is the guard
+   auditably, _why_ it selected. No unexplainable selection ships. (This is the guard
    against "feels algorithmic / feels random.")
 10. **Patience.** A memory that will matter more later may be withheld now — do not
     spend a one-year memory on day forty.
@@ -207,30 +207,30 @@ archive), the more a memory may belong.
   immediately and totally. No memory outlives its source.
 
 **Why memories appreciate instead of decay:** distance. A first reflection means
-little at day two and everything at year two. The engine is *built to hold evidence
-dormant* precisely so it can appreciate. Time is the asset, and dormancy is how the
+little at day two and everything at year two. The engine is _built to hold evidence
+dormant_ precisely so it can appreciate. Time is the asset, and dormancy is how the
 asset compounds.
 
 ---
 
 ## Part 7 — Failure Modes
 
-| Failure | Why it happens | How the engine prevents it |
-|---|---|---|
-| Too repetitive | No cooldown | Strong already-resurfaced penalty + hard cooldown (Rule 6) |
-| Too predictable | Fixed cadence / slot | No schedule; discovered, not delivered; context-driven and variable |
-| Feels algorithmic | Visible pattern, too frequent, generic | Rarity, truth gate, explainability (Rule 9), the user's own words |
-| Feels manipulative | Timed to re-engage; emotional spikes | Banned engagement variables; harm gate; calmness weight |
-| Feels random | No tie to context | Context gate + truth gate; randomness is disqualified by design |
-| Feels like social media | Comparison, feed, others' lives | Private-only; no comparison variable; one-at-a-time; no scroll |
-| Feels like Timehop | Automatic "on this day" date recap | No calendar-triggered surfacing; memory is tied to meaning, not the date |
-| Feels like a quote app | Generic content, not the user's | Only the user's own evidence ever surfaces (ZenQuotes already rejected) |
-| Feels like engagement optimization | Success measured in opens | Success metric is trust, not engagement; banned variables |
-| Feels like therapy | Interpreting feelings, prompting processing | Present evidence plainly; never interpret; never prompt |
-| Feels like journaling | Asking to write/review entries | Memory is a push of the past, not a writing surface; Archive stays separate |
-| Feels like nostalgia | Past for its own sake | Truth gate — memory must connect to *now* and serve identity, not sentiment |
-| Feels like guilt | Surfacing absence as loss | Absence is never punished; gaps only ever frame a warm return |
-| Feels like comparison | Vs others or vs a better past self | Comparison and decline framing are banned |
+| Failure                            | Why it happens                              | How the engine prevents it                                                  |
+| ---------------------------------- | ------------------------------------------- | --------------------------------------------------------------------------- |
+| Too repetitive                     | No cooldown                                 | Strong already-resurfaced penalty + hard cooldown (Rule 6)                  |
+| Too predictable                    | Fixed cadence / slot                        | No schedule; discovered, not delivered; context-driven and variable         |
+| Feels algorithmic                  | Visible pattern, too frequent, generic      | Rarity, truth gate, explainability (Rule 9), the user's own words           |
+| Feels manipulative                 | Timed to re-engage; emotional spikes        | Banned engagement variables; harm gate; calmness weight                     |
+| Feels random                       | No tie to context                           | Context gate + truth gate; randomness is disqualified by design             |
+| Feels like social media            | Comparison, feed, others' lives             | Private-only; no comparison variable; one-at-a-time; no scroll              |
+| Feels like Timehop                 | Automatic "on this day" date recap          | No calendar-triggered surfacing; memory is tied to meaning, not the date    |
+| Feels like a quote app             | Generic content, not the user's             | Only the user's own evidence ever surfaces (ZenQuotes already rejected)     |
+| Feels like engagement optimization | Success measured in opens                   | Success metric is trust, not engagement; banned variables                   |
+| Feels like therapy                 | Interpreting feelings, prompting processing | Present evidence plainly; never interpret; never prompt                     |
+| Feels like journaling              | Asking to write/review entries              | Memory is a push of the past, not a writing surface; Archive stays separate |
+| Feels like nostalgia               | Past for its own sake                       | Truth gate — memory must connect to _now_ and serve identity, not sentiment |
+| Feels like guilt                   | Surfacing absence as loss                   | Absence is never punished; gaps only ever frame a warm return               |
+| Feels like comparison              | Vs others or vs a better past self          | Comparison and decline framing are banned                                   |
 
 ---
 
@@ -246,7 +246,7 @@ treat pain reverently; surface one memory at a time.
 
 - **Protect users** with a harm gate, conservative significance, and zero inference
   of unstated feelings.
-- **Protect trust** by making truthfulness a *gate*, not a weight — one manipulative
+- **Protect trust** by making truthfulness a _gate_, not a weight — one manipulative
   memory costs years of earned trust.
 - **Protect silence** structurally: thresholds are set so most moments produce
   nothing. Silence is a first-class output, not a fallback.
@@ -272,7 +272,7 @@ treat pain reverently; surface one memory at a time.
   inheritance.
 
 **It evolves without changing philosophy.** The gates and the silence-default never
-change; only the *pool* of eligible, appreciated memories grows. The engine does not
+change; only the _pool_ of eligible, appreciated memories grows. The engine does not
 get louder over time — it gets wiser, because it has more true things to choose from.
 
 - **Possible only after years:** turning points, the returns-archive, decade origins.
@@ -284,22 +284,22 @@ get louder over time — it gets wiser, because it has more true things to choos
 
 ## Part 10 — Competitive Analysis
 
-| Product | Optimizes for | Why Gym Circle differs |
-|---|---|---|
-| Apple Photos / Google Photos Memories | Delight + re-engagement via ML clustering and auto-montages, on a cadence | GC: truth + identity, the user's words, rarity; no ML inference; meaningful over pretty |
-| Spotify Wrapped | Shareability, virality, an annual dopamine/marketing spike; stats as spectacle | GC: anti-viral, private, never a stats recap, no annual performance |
-| Readwise | Spaced-repetition resurfacing of highlights (others' words), cadence-based | GC: the user's *own* words, meaning-triggered not spaced, silence by default |
-| Stoic | Curated external wisdom + mood tracking + prompts | GC: rejected external content (ZenQuotes), no mood inference, no prompting |
-| Day One | Journaling — user writes and browses; "On this day" date recap | GC: not a writing surface; memory is meaning-pushed, not date-pushed |
-| Timehop | Pure date-based nostalgia recap as an engagement hook | GC: explicitly the anti-Timehop; no calendar trigger |
-| Facebook Memories | Re-engagement + ad surface; surfaces regardless of emotional safety | GC: harm gate, reverence, never re-engagement |
+| Product                               | Optimizes for                                                                  | Why Gym Circle differs                                                                  |
+| ------------------------------------- | ------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- |
+| Apple Photos / Google Photos Memories | Delight + re-engagement via ML clustering and auto-montages, on a cadence      | GC: truth + identity, the user's words, rarity; no ML inference; meaningful over pretty |
+| Spotify Wrapped                       | Shareability, virality, an annual dopamine/marketing spike; stats as spectacle | GC: anti-viral, private, never a stats recap, no annual performance                     |
+| Readwise                              | Spaced-repetition resurfacing of highlights (others' words), cadence-based     | GC: the user's _own_ words, meaning-triggered not spaced, silence by default            |
+| Stoic                                 | Curated external wisdom + mood tracking + prompts                              | GC: rejected external content (ZenQuotes), no mood inference, no prompting              |
+| Day One                               | Journaling — user writes and browses; "On this day" date recap                 | GC: not a writing surface; memory is meaning-pushed, not date-pushed                    |
+| Timehop                               | Pure date-based nostalgia recap as an engagement hook                          | GC: explicitly the anti-Timehop; no calendar trigger                                    |
+| Facebook Memories                     | Re-engagement + ad surface; surfaces regardless of emotional safety            | GC: harm gate, reverence, never re-engagement                                           |
 
 **What they optimize:** attention, delight, virality, cadence, completeness.
 **What Gym Circle optimizes:** truth, identity, calm, rarity, the user's own voice.
 
 **Why it is harder to build.** The easy path is ML + cadence + completeness — and
-everyone takes it. Gym Circle forbids all three. It must select by *meaning* with
-*restraint*, judged by *trust* rather than metrics, with no engagement A/B test
+everyone takes it. Gym Circle forbids all three. It must select by _meaning_ with
+_restraint_, judged by _trust_ rather than metrics, with no engagement A/B test
 allowed. Building for "shows almost nothing, but the rare thing is true" is far
 harder than "show something delightful every day."
 
@@ -313,31 +313,31 @@ restraint is the moat.
 ## Part 11 — Future Architecture (responsibilities and boundaries; no code)
 
 - **Context Engine** — detects the current moment (return, recognition, archive-open,
-  …) and its constraints (max frequency, allowed/forbidden types). *Boundary:* knows
-  *where/when*, never *what*. *Why:* selection depends on context.
+  …) and its constraints (max frequency, allowed/forbidden types). _Boundary:_ knows
+  _where/when_, never _what_. _Why:_ selection depends on context.
 - **Eligibility Engine** — reduces all evidence to the small candidate set passing the
-  hard gates (age, cooldown, context fit, source visibility, deletion). *Boundary:*
-  filters; does not rank or judge meaning depth. *Why:* cheap reduction before
+  hard gates (age, cooldown, context fit, source visibility, deletion). _Boundary:_
+  filters; does not rank or judge meaning depth. _Why:_ cheap reduction before
   expensive judgment; this is where forgetting is enforced.
 - **Memory Selection Engine** — scores eligible candidates on the meaning dimensions
   and picks at most one that clears the absolute threshold, else returns silence.
-  *Boundary:* chooses; does not render or fetch raw data. *Why:* the judgment core.
+  _Boundary:_ chooses; does not render or fetch raw data. _Why:_ the judgment core.
 - **Memory Policy Engine** — owns the rules, weights, thresholds, and priority
-  hierarchy (Parts 3 & 5) as declarative, versioned policy. *Boundary:* defines *how*
-  to judge; Selection executes it. *Why:* the philosophy must be auditable and
+  hierarchy (Parts 3 & 5) as declarative, versioned policy. _Boundary:_ defines _how_
+  to judge; Selection executes it. _Why:_ the philosophy must be auditable and
   evolvable without rewriting logic — ten-year governance.
 - **Safety Layer** — a cross-cutting veto: harm gate, pain protection, audience and
-  visibility checks, comparison/guilt/decline bans. *Boundary:* can only *remove*
-  candidates or block surfacing, never add. *Why:* ethics must be unbypassable and
+  visibility checks, comparison/guilt/decline bans. _Boundary:_ can only _remove_
+  candidates or block surfacing, never add. _Why:_ ethics must be unbypassable and
   independent of scoring.
 - **Future Memory Ledger** — append-only record of what was surfaced, to whom, when,
   and what was deliberately withheld for later. Powers cooldown, rarity, and patience.
-  *Boundary:* bookkeeping of IDs/timestamps only — no feelings, no scores about the
-  person. *Why:* rarity and non-repetition require a memory-of-memory. This is the only
+  _Boundary:_ bookkeeping of IDs/timestamps only — no feelings, no scores about the
+  person. _Why:_ rarity and non-repetition require a memory-of-memory. This is the only
   genuinely new persistence the capability needs, and it stores metadata, not emotion.
 - **Selection Pipeline** — orchestrates Context → Eligibility → Selection (via Policy)
-  → Safety → (surface or silence) → Ledger. *Boundary:* wiring only, no judgment of its
-  own. *Why:* one ordered path, with silence as a first-class output.
+  → Safety → (surface or silence) → Ledger. _Boundary:_ wiring only, no judgment of its
+  own. _Why:_ one ordered path, with silence as a first-class output.
 
 All reads come from existing immutable evidence (commits, reflections, supports,
 `identity_statement`, circle). No new domain tables are required except the Ledger,
@@ -350,8 +350,8 @@ performance proves otherwise."
 
 **If the Product Bible is the heart of Gym Circle, the Memory Selection Engine is its
 conscience** — the faculty that decides, in each moment, whether returning a piece of
-the user's past serves who they are becoming or violates it. The Bible says *remember
-who they are becoming*; this engine is the mechanism that does the remembering
+the user's past serves who they are becoming or violates it. The Bible says _remember
+who they are becoming_; this engine is the mechanism that does the remembering
 responsibly, one decision at a time. It is where philosophy stops being a value and
 becomes a verdict.
 
@@ -376,4 +376,4 @@ preserved. An engagement metric must never be added.
   extends into selection ethics.
 - `VOICE.md` — how a surfaced memory must speak when it speaks at all.
 - `DATABASE.md` — memory as a derived concept; the immutable evidence substrate.
-- `MEMORY_ENGINE.md` — the *what* of memory (forthcoming; concept stated inline above).
+- `MEMORY_ENGINE.md` — the _what_ of memory (forthcoming; concept stated inline above).

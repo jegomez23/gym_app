@@ -155,7 +155,7 @@ This maps how the user should _feel_, not what they should see.
 - **Return after failure.** Welcomed home. The foundation is still there. The
   app behaves as if they never left and never doubted them. This is the single
   most important feeling in the product, and it must always be warm. The decision
-  of *which* piece of their own past returns at this moment — and the rule that it
+  of _which_ piece of their own past returns at this moment — and the rule that it
   must never imply loss — is governed by `MEMORY_SELECTION_ENGINE.md`.
 
 - **First Support.** Moved. Someone they trust said human words about their

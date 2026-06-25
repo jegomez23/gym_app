@@ -8,15 +8,13 @@ export const dynamic = "force-dynamic";
 export default async function CommitFlowPage() {
   const { profile, data } = await requireProfile();
 
-  // Surface the user's most recent reflection as memory, not history.
-  const journey = await data.services.journey
-    .getJourney(profile.id, { limit: 5 })
-    .catch(() => []);
-  const lastReflection =
-    journey
-      .flatMap((item) => item.reflections)
-      .map((reflection) => reflection.content)
-      .find((content) => content.trim().length > 0) ?? null;
+  // Starting evidence is a silent, frictionless moment (Memory Selection Engine
+  // Part 4) — no memory is surfaced here. The only thing we read is whether this is
+  // the user's first time, so the recognition that follows can tell the truth.
+  const progress = await data.services.journey
+    .getProgressSummary(profile.id)
+    .catch(() => null);
+  const isFirstCommit = (progress?.totalCommits ?? 0) === 0;
 
   return (
     <AppShell>
@@ -27,7 +25,7 @@ export default async function CommitFlowPage() {
       >
         <CommitFlowClient
           identityStatement={profile.identityStatement}
-          lastReflection={lastReflection}
+          isFirstCommit={isFirstCommit}
           name={profile.name}
         />
       </ScreenContainer>

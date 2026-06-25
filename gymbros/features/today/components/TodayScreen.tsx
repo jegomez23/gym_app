@@ -12,6 +12,7 @@ import type {
   Profile,
   Support,
 } from "@/lib/dal";
+import type { SelectedMemory } from "@/lib/memory/selectMemory";
 import type { DerivedState } from "@/lib/state/deriveState";
 
 type TodayScreenProps = {
@@ -23,6 +24,8 @@ type TodayScreenProps = {
   notifications: Notification[];
   // The person's state is derived once, on the server. This screen consumes it.
   state: DerivedState;
+  // At most one memory the Memory Selection Engine chose to return, or null.
+  memory: SelectedMemory | null;
 };
 
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
@@ -77,14 +80,18 @@ function TodayHero({
   state,
   name,
   identityStatement,
+  memory,
 }: {
   state: DerivedState["state"];
   name: string;
   identityStatement: string | null;
+  memory: SelectedMemory | null;
 }) {
   switch (state) {
     case "returning":
-      // The sacred arrival: their own words, returned where they matter most.
+      // The sacred arrival: their own words, returned where they matter most. One
+      // memory only — a selected past reflection when the engine returned one, else
+      // the vow they wrote, else a plain warm line. Never two at once.
       return (
         <>
           <p className="text-label uppercase text-accent">
@@ -93,7 +100,16 @@ function TodayHero({
           <h2 className="mt-3 text-display text-primary-text">
             La base sigue ahí.
           </h2>
-          {identityStatement ? (
+          {memory ? (
+            <>
+              <p className="mt-4 max-w-80 text-body italic leading-7 text-primary-text">
+                “{memory.content}”
+              </p>
+              <p className="mt-3 max-w-80 text-body text-secondary-text">
+                {name}, son tus palabras. Sigues siendo esa persona.
+              </p>
+            </>
+          ) : identityStatement ? (
             <>
               <p className="mt-4 max-w-80 text-body italic leading-7 text-primary-text">
                 “{identityStatement}”
@@ -191,6 +207,7 @@ export function TodayScreen({
   recentSupports,
   notifications,
   state,
+  memory,
 }: TodayScreenProps) {
   const latestCommit = commits[0];
   const pendingInvitations = memberships.filter(
@@ -214,6 +231,7 @@ export function TodayScreen({
         <div className="relative">
           <TodayHero
             identityStatement={profile.identityStatement}
+            memory={memory}
             name={name}
             state={state.state}
           />

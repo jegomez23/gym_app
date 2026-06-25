@@ -31,7 +31,7 @@ and what evolution is allowed to mean) → `knowledge/MEMORY_SELECTION_ENGINE.md
 (how one memory is chosen) → implementation. The philosophy governs the selector;
 the selector governs the implementation; never the reverse.
 
-For how the product *behaves* in every interaction (the feel: calm, certainty,
+For how the product _behaves_ in every interaction (the feel: calm, certainty,
 warmth, dignity, continuity, restraint), `knowledge/INTERACTION_SYSTEM.md` is the
 canonical behavior layer, and `knowledge/STATE_SYSTEM.md` defines the finite set of
 human states the product serves (where the person is, derived from evidence — never

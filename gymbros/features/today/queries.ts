@@ -3,6 +3,7 @@ import "server-only";
 import { redirect } from "next/navigation";
 
 import { getUserContext } from "@/lib/auth/session";
+import { selectMemory } from "@/lib/memory/selectMemory";
 import { deriveState } from "@/lib/state/deriveState";
 
 export async function getTodayViewModel() {
@@ -70,6 +71,20 @@ export async function getTodayViewModel() {
     latestSupportReceivedAt,
   });
 
+  // The Memory Selection Engine decides whether one of the user's own past
+  // reflections returns at this moment — silence unless the gates pass. The
+  // candidate pool is the same Journey window already loaded above (no new read).
+  const memory = selectMemory({
+    state: state.state,
+    reflections: journey
+      .flatMap((item) => item.reflections)
+      .map((reflection) => ({
+        content: reflection.content,
+        type: reflection.type,
+        createdAt: reflection.createdAt,
+      })),
+  });
+
   return {
     status: "ready" as const,
     profile,
@@ -80,5 +95,6 @@ export async function getTodayViewModel() {
     recentSupports,
     notifications,
     state,
+    memory,
   };
 }

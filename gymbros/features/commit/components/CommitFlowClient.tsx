@@ -103,14 +103,20 @@ function FeelingTile({
 function ShowingUpMoment({
   name,
   identityStatement,
+  isFirstCommit,
   onDone,
 }: {
   name: string;
   identityStatement?: string | null;
+  isFirstCommit: boolean;
   onDone: () => void;
 }) {
   const firstName = name.trim().split(" ")[0] || name;
   const vow = identityStatement?.trim();
+  // The first proof is named as the first; every one after is "one more". The
+  // recognition is the same calm size either way — effort is met with proportion,
+  // not escalation (Interaction System). Only the words tell the truth of the moment.
+  const proof = isFirstCommit ? "tu primera prueba" : "una prueba más";
 
   return (
     <button
@@ -124,7 +130,7 @@ function ShowingUpMoment({
       </span>
       <div className="animate-rise">
         <p className="text-label uppercase text-secondary-text">
-          Quedó registrado
+          {isFirstCommit ? "Tu primera evidencia" : "Quedó registrado"}
         </p>
         <h2 className="mt-3 text-display text-primary-text">Apareciste.</h2>
         {vow ? (
@@ -134,12 +140,12 @@ function ShowingUpMoment({
               “{vow}”
             </p>
             <p className="mx-auto mt-3 max-w-80 text-body text-secondary-text">
-              {firstName}, una prueba más.
+              {firstName}, {proof}.
             </p>
           </>
         ) : (
           <p className="mx-auto mt-3 max-w-80 text-body text-secondary-text">
-            {firstName}, una prueba más de quién estás eligiendo ser.
+            {firstName}, {proof} de quién estás eligiendo ser.
           </p>
         )}
       </div>
@@ -168,11 +174,11 @@ function ProgressIndicator({ currentStep }: { currentStep: number }) {
 export function CommitFlowClient({
   name,
   identityStatement,
-  lastReflection,
+  isFirstCommit = false,
 }: {
   name: string;
   identityStatement?: string | null;
-  lastReflection?: string | null;
+  isFirstCommit?: boolean;
 }) {
   const router = useRouter();
   const [actionState, formAction, pending] = useActionState(
@@ -183,10 +189,15 @@ export function CommitFlowClient({
   const [direction, setDirection] = useState<"forward" | "back">("forward");
   const [showDuration, setShowDuration] = useState(false);
 
-  // One source of truth: plain controlled state for the fields that drive the UI,
-  // native named inputs for the rest. The Server Action's Zod schema is the single
+  // One source of truth per field: controlled state mirrored to an always-mounted
+  // hidden input for everything that must survive across steps, and native inputs
+  // only for values local to the submit step (note, reflection). Because steps are
+  // unmounted as the user advances, any value collected on an earlier step must be
+  // serialized from a hidden input that is rendered outside the step — otherwise it
+  // is missing from FormData at submit. The Server Action's Zod schema is the single
   // validation boundary — no client-side form library duplicating it.
   const [title, setTitle] = useState("");
+  const [durationMinutes, setDurationMinutes] = useState("");
   const [trainingType, setTrainingType] = useState<TrainingType>("training");
   const [intensity, setIntensity] = useState<IntensityType>("steady");
   const [visibility, setVisibility] = useState<VisibilityType>("circle");
@@ -218,17 +229,40 @@ export function CommitFlowClient({
     setReflectionType((current) => (current === value ? null : value));
   }
 
+  // Before the final step, the only single-line inputs (title, duration) would
+  // implicitly submit the form on Enter — on a mobile keyboard's "Go" key, that
+  // seals the commit prematurely with defaults. Enter advances the flow instead;
+  // it never publishes. (Textareas keep their newline; the submit step is untouched.)
+  function handleKeyDown(event: React.KeyboardEvent<HTMLFormElement>) {
+    const target = event.target as HTMLElement;
+    if (event.key !== "Enter" || target.tagName === "TEXTAREA" || step >= 2) {
+      return;
+    }
+
+    event.preventDefault();
+    if (canContinue) {
+      goToStep(step + 1);
+    }
+  }
+
   const copy = stepCopy[step];
 
   return (
-    <form action={formAction} className="flex flex-col gap-5">
+    <form
+      action={formAction}
+      className="flex flex-col gap-5"
+      onKeyDown={handleKeyDown}
+    >
       {recognized && (
         <ShowingUpMoment
           identityStatement={identityStatement}
+          isFirstCommit={isFirstCommit}
           name={name}
           onDone={() => router.push("/")}
         />
       )}
+      <input name="title" type="hidden" value={title} />
+      <input name="durationMinutes" type="hidden" value={durationMinutes} />
       <input name="type" type="hidden" value={trainingType} />
       <input name="intensity" type="hidden" value={intensity} />
       <input name="visibility" type="hidden" value={visibility} />
@@ -254,20 +288,9 @@ export function CommitFlowClient({
 
           {step === 0 && (
             <div className="mt-8 flex flex-col gap-5">
-              {lastReflection && (
-                <div className="rounded-md border border-white/6 bg-white/3 p-4">
-                  <p className="text-label uppercase text-secondary-text">
-                    La última vez escribiste
-                  </p>
-                  <p className="mt-2 text-body italic leading-6 text-primary-text">
-                    “{lastReflection}”
-                  </p>
-                </div>
-              )}
               <Field htmlFor="commit-title" label="¿Qué hiciste?">
                 <Input
                   id="commit-title"
-                  name="title"
                   onChange={(event) => setTitle(event.target.value)}
                   placeholder="Tren inferior, vuelta a empezar"
                   value={title}
@@ -305,8 +328,9 @@ export function CommitFlowClient({
                     autoFocus
                     id="commit-duration"
                     inputMode="numeric"
-                    name="durationMinutes"
+                    onChange={(event) => setDurationMinutes(event.target.value)}
                     placeholder="45"
+                    value={durationMinutes}
                   />
                 </Field>
               ) : (

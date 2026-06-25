@@ -88,7 +88,7 @@ If a future idea resembles anything on this list, it is rejected without debate.
 **Memory and resurfacing.** When a feature returns the user's own past to them
 (reflections, the identity statement, supports, origins, returns), these principles
 are extended into selection ethics by `MEMORY_SELECTION_ENGINE.md`, the canonical
-owner of *how memory decides what to surface and when to stay silent*. No
+owner of _how memory decides what to surface and when to stay silent_. No
 memory-surfacing work satisfies these principles unless it satisfies that document.
 
 ---

@@ -32,7 +32,7 @@ Philosophy does not die in a single decision. It erodes through a hundred reason
 ones, each defensible in isolation, each made locally without seeing the whole.
 
 A memory system without governance drifts predictably, because every local incentive
-points the same way — toward *more*:
+points the same way — toward _more_:
 
 - It becomes a **recommendation engine** the first time "which memory" is answered by
   "which one performed best" instead of "which one is most true."
@@ -41,19 +41,19 @@ points the same way — toward *more*:
 - It becomes a **nostalgia engine** the first time a memory is shown because it feels
   nice rather than because it is timely and true.
 - It becomes a **personalization engine** the first time the system models what the
-  user *wants to see* instead of reflecting who they are becoming.
+  user _wants to see_ instead of reflecting who they are becoming.
 
-None of these is chosen. Each is *arrived at*, one optimization at a time, by capable
+None of these is chosen. Each is _arrived at_, one optimization at a time, by capable
 people doing their jobs well. The product manager who asks for a weekly recap, the
 engineer who lowers a threshold because the surfacing rate looks low, the designer who
 adds a second memory "while we're here" — none of them is wrong locally. Collectively
 they replace an **identity engine** with an attention engine, and no one can point to
 the moment it happened.
 
-Governance exists to make the global cost of local decisions visible *before* they are
+Governance exists to make the global cost of local decisions visible _before_ they are
 made. It protects future engineers from the most dangerous thing in product work: a
 sequence of individually reasonable choices that together destroy the product. It is
-the memory of *why* the constraints exist, written down so that a person who never met
+the memory of _why_ the constraints exist, written down so that a person who never met
 the founders cannot accidentally optimize the soul out of the product.
 
 ---
@@ -67,54 +67,54 @@ For each: why it exists, what is lost if it disappears, which Product Bible / Pr
 it protects.
 
 1. **Silence remains the default, forever.**
-   - *Why:* scarcity is what gives a surfaced memory weight; an always-on memory is
+   - _Why:_ scarcity is what gives a surfaced memory weight; an always-on memory is
      wallpaper.
-   - *If it disappears:* the product becomes a feed, and the rare true memory is
+   - _If it disappears:_ the product becomes a feed, and the rare true memory is
      drowned in noise it can no longer be distinguished from.
-   - *Protects:* Principles 10 (calm over engagement) and 17 (silence is allowed).
+   - _Protects:_ Principles 10 (calm over engagement) and 17 (silence is allowed).
 
 2. **Truth always outranks delight.**
-   - *Why:* a memory that is pleasant but not true is a manipulation the user cannot
+   - _Why:_ a memory that is pleasant but not true is a manipulation the user cannot
      detect, which is worse than one they can.
-   - *If it disappears:* the engine starts manufacturing nice moments, and trust —
+   - _If it disappears:_ the engine starts manufacturing nice moments, and trust —
      the entire asset — quietly dies.
-   - *Protects:* Principle 20 (trust is the moat); Selection Engine truth gate.
+   - _Protects:_ Principle 20 (trust is the moat); Selection Engine truth gate.
 
 3. **Identity always outranks engagement.**
-   - *Why:* the product exists to reflect who the user is becoming, not to increase
+   - _Why:_ the product exists to reflect who the user is becoming, not to increase
      time in app.
-   - *If it disappears:* every decision tilts toward attention, and the product
+   - _If it disappears:_ every decision tilts toward attention, and the product
      becomes indistinguishable from the ones it was built to refuse.
-   - *Protects:* Product Bible Part 2 (the core belief); Principle 1.
+   - _Protects:_ Product Bible Part 2 (the core belief); Principle 1.
 
 4. **The user's words always outrank generated copy.**
-   - *Why:* a resurfaced reflection in the user's own voice is stronger than anything
+   - _Why:_ a resurfaced reflection in the user's own voice is stronger than anything
      we could write, and it cannot be faked.
-   - *If it disappears:* the product starts speaking *for* the user instead of
-     *reminding* them, and assigns identity instead of reflecting it.
-   - *Protects:* Principle 13 (the user's own words outrank ours); Principle 19.
+   - _If it disappears:_ the product starts speaking _for_ the user instead of
+     _reminding_ them, and assigns identity instead of reflecting it.
+   - _Protects:_ Principle 13 (the user's own words outrank ours); Principle 19.
 
 5. **One memory is always better than many.**
-   - *Why:* a single true thing is received; a stream is scrolled.
-   - *If it disappears:* memory becomes a list, a list becomes a feed, a feed becomes
+   - _Why:_ a single true thing is received; a stream is scrolled.
+   - _If it disappears:_ memory becomes a list, a list becomes a feed, a feed becomes
      an algorithm.
-   - *Protects:* Principles 15 (meaning over functionality) and 16 (remove before
+   - _Protects:_ Principles 15 (meaning over functionality) and 16 (remove before
      adding); Selection Engine Rule 7.
 
 6. **Memory never exists to increase opens.**
-   - *Why:* the moment surfacing is justified by re-engagement, the engine has changed
+   - _Why:_ the moment surfacing is justified by re-engagement, the engine has changed
      masters.
-   - *If it disappears:* memory becomes a notification hook, and the app starts wanting
+   - _If it disappears:_ memory becomes a notification hook, and the app starts wanting
      the user's attention instead of their continuity.
-   - *Protects:* Principle 10; Product Bible Part 10 (it wants their continuity, not
+   - _Protects:_ Principle 10; Product Bible Part 10 (it wants their continuity, not
      their attention).
 
 7. **Memory never manipulates behavior.**
-   - *Why:* returning someone their own past is a power that must serve them, never the
+   - _Why:_ returning someone their own past is a power that must serve them, never the
      product's metrics.
-   - *If it disappears:* memory becomes behavioral design pointed at the user, which is
+   - _If it disappears:_ memory becomes behavioral design pointed at the user, which is
      a betrayal of the most intimate data they gave us.
-   - *Protects:* Principle 20; Selection Engine Part 8 (ethical guardrails).
+   - _Protects:_ Principle 20; Selection Engine Part 8 (ethical guardrails).
 
 These seven are the spine. Everything in Parts 3–9 exists to keep them intact under
 pressure.
@@ -125,32 +125,32 @@ pressure.
 
 The memory system **must** be allowed to improve, or governance becomes ossification.
 But evolution has a precise meaning here: **getting better at the same thing**, never
-*becoming a different thing*.
+_becoming a different thing_.
 
 **Allowed — this is healthy evolution:**
 
-- Adding a new *context* in which a memory may appear (subject to the Decision
+- Adding a new _context_ in which a memory may appear (subject to the Decision
   Framework in Part 4).
-- Improving *selection quality* — better judgment about which memory is most true and
+- Improving _selection quality_ — better judgment about which memory is most true and
   timely.
-- *Refining thresholds* in the direction of more restraint, or to fix a measured
+- _Refining thresholds_ in the direction of more restraint, or to fix a measured
   harm.
-- Improving the *Safety Layer* — more protection for pain, privacy, and consent.
-- Adding *explainability* — making the engine's reasoning more auditable.
+- Improving the _Safety Layer_ — more protection for pain, privacy, and consent.
+- Adding _explainability_ — making the engine's reasoning more auditable.
 - Retiring categories or contexts that proved to dilute meaning.
 
 **Forbidden — this is drift wearing the costume of progress:**
 
-- Lowering a threshold to *increase surfacing*. (Restraint is never the bug.)
+- Lowering a threshold to _increase surfacing_. (Restraint is never the bug.)
 - Increasing frequency because "users liked it." (Liking is engagement, not truth.)
 - Adding a feed, a recap, a stream, or any multi-memory surface.
 - Adding infinite or browsable push-history (the Archive is pull; it stays pull).
-- Introducing recommendation or behavioral models that optimize what the user *wants
-  to see*.
+- Introducing recommendation or behavioral models that optimize what the user _wants
+  to see_.
 - Optimizing, reporting on, or A/B-testing against any engagement metric.
 
-**The definition of evolution inside Gym Circle:** the system may grow *wiser* — more
-precise, more careful, more true — but it must never grow *louder*. Any change whose
+**The definition of evolution inside Gym Circle:** the system may grow _wiser_ — more
+precise, more careful, more true — but it must never grow _louder_. Any change whose
 effect is "more memories, more often, to more effect on behavior" is not evolution. It
 is reversion to the mean of every other app, and it is rejected.
 
@@ -167,7 +167,7 @@ a flag.
 2. **Does this improve identity?** (Does it help the user recognize who they are
    becoming?)
 3. **Does this preserve calm?** (Will it leave the experience as quiet as it found it,
-   or quieter? If it *reduces* calm, it fails here.)
+   or quieter? If it _reduces_ calm, it fails here.)
 4. **Does this avoid increasing attention-seeking?** (If its mechanism of action is
    "the user opens the app more," it fails.)
 5. **Would this still exist if engagement metrics disappeared tomorrow?** (If the only
@@ -191,24 +191,24 @@ small, well-meant, locally-correct improvements. Each of the following has sunk
 products that began with better intentions than most:
 
 - **"We'll just show one more memory."** Sounds harmless — it is one. But it breaks
-  "one memory is always better than many" (Principle 5 of Part 2), and *one more* has
+  "one memory is always better than many" (Principle 5 of Part 2), and _one more_ has
   no natural stopping point. The second memory makes the third reasonable.
 - **"We'll notify them more often."** Sounds caring — we have something to share. But
   it converts memory into a notification hook (Immutable Principle 6) and trains the
   user to expect a cadence, which silence can no longer interrupt meaningfully.
 - **"We'll add a weekly recap."** Sounds valuable — users love recaps. But a recap is
-  a feed on a timer; it is Spotify Wrapped by installments, and it replaces *discovered*
-  with *delivered*.
+  a feed on a timer; it is Spotify Wrapped by installments, and it replaces _discovered_
+  with _delivered_.
 - **"We'll surface the funniest / most-liked reflection."** Sounds delightful. But
   "funniest" and "most-liked" are engagement signals; the moment they enter selection,
   truth has been outranked by delight (Immutable Principle 2).
 - **"We'll optimize the timing for when they're most likely to open it."** Sounds like
-  good craft. But optimizing for opens *is* the engagement engine; the mechanism is now
+  good craft. But optimizing for opens _is_ the engagement engine; the mechanism is now
   attention, not meaning (Immutable Principles 3 and 6).
 
 Every one of these is reasonable. That is precisely why they are dangerous: a rule that
-only blocked *obviously bad* ideas would be unnecessary. Governance exists to stop the
-*reasonable* ideas that are individually small and collectively fatal. Each one spends
+only blocked _obviously bad_ ideas would be unnecessary. Governance exists to stop the
+_reasonable_ ideas that are individually small and collectively fatal. Each one spends
 a little trust to buy a little engagement — a trade that always looks good on the
 dashboard and is always wrong.
 
@@ -245,7 +245,7 @@ okay?" but "is this memory worth a withdrawal from a budget that took years to b
 ## Part 7 — Memory Review Process
 
 No memory-related feature ships without passing an explicit, written review. This is a
-*product* and *ethics* review, not a technical one — code quality is necessary but not
+_product_ and _ethics_ review, not a technical one — code quality is necessary but not
 sufficient. The reviewer answers each, in writing, and a single failure blocks the
 ship:
 
@@ -256,20 +256,20 @@ ship:
 - **Calm.** Does the experience remain as quiet after this ships as before? Name what
   it adds to the surface.
 - **Silence.** Is silence still the default outcome? Show the conditions under which
-  this feature surfaces *nothing*, and confirm they are the common case.
+  this feature surfaces _nothing_, and confirm they are the common case.
 - **The user's words.** Where words appear, are they the user's? If generated copy is
   present, justify why the user's own words could not serve instead.
 - **Explainability.** For any memory this feature can surface, can the engine state why
   it was chosen? Demonstrate the reason.
 - **Safety.** How does this handle pain, privacy, deletion, and audience? Show the
-  failure mode where a heavy or private memory is *correctly suppressed*.
+  failure mode where a heavy or private memory is _correctly suppressed_.
 - **Trust budget.** Does this, on balance, deposit or withdraw trust? Be honest about
   weak-memory cases.
 - **Future regret.** Imagine explaining this feature to a user who has trusted the
   product for ten years. Would you be proud of it or apologize for it?
 
 The review is archived with the policy version it shipped under (Part 8). A feature
-that cannot pass review is not "not ready" — it is *not Gym Circle*, and rebuilding it
+that cannot pass review is not "not ready" — it is _not Gym Circle_, and rebuilding it
 to pass is the only path forward.
 
 ---
@@ -278,7 +278,7 @@ to pass is the only path forward.
 
 The Memory Engine evolves through **explicit, named policy versions**, never through
 silent behavioral tweaks. A hidden change to selection behavior is forbidden even if it
-is an improvement, because the *manner* of change is itself a governance concern: a
+is an improvement, because the _manner_ of change is itself a governance concern: a
 system that can change invisibly can drift invisibly.
 
 - Selection behavior is governed by a versioned policy: **Selection Policy v1, v2, …**
@@ -290,7 +290,7 @@ system that can change invisibly can drift invisibly.
     Immutable Principle the change serves — and confirmation it violates none.)
 - Threshold and weight changes are policy changes. They are never "tuning"; they are
   governed, versioned, and explained.
-- A future engineer must always be able to reconstruct the *history of judgment* — to
+- A future engineer must always be able to reconstruct the _history of judgment_ — to
   see not just what the engine does today, but the reasoned path of how it got there
   and what was deliberately refused along the way.
 
@@ -313,7 +313,7 @@ proves, years later, that it changed only in ways it can defend.
   optimized a budget that decays; Gym Circle compounded one that lasts. The moat is now
   measurable in retention that owes nothing to manipulation — users who stay because
   the product holds something true, not because it nags. The Immutable Principles have
-  not moved an inch, and that stability *is* the brand.
+  not moved an inch, and that stability _is_ the brand.
 
 - **Year 10.** The engine is wiser, not louder. It holds a decade of a person's own
   evidence and returns the right sliver rarely and truly. A competitor copying the app

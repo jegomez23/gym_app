@@ -1,5 +1,5 @@
-import { RouteSkeleton } from "@/components/layout/RouteSkeleton";
+import { CommitSkeleton } from "@/components/layout/RouteSkeleton";
 
 export default function Loading() {
-  return <RouteSkeleton />;
+  return <CommitSkeleton />;
 }

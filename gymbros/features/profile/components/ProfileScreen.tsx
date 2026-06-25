@@ -1,5 +1,6 @@
 import { AppButton } from "@/components/ui/AppButton";
 import { AppCard } from "@/components/ui/AppCard";
+import { Avatar } from "@/components/ui/Avatar";
 import { logoutAction } from "@/features/auth/actions/logout";
 import type { Profile } from "@/lib/dal";
 
@@ -9,15 +10,6 @@ import { ProfileEditForm } from "./ProfileEditForm";
 type ProfileScreenProps = {
   profile: Profile;
 };
-
-function initials(name: string) {
-  return name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("");
-}
 
 function buildingSince(value: string) {
   return new Intl.DateTimeFormat("es", {
@@ -47,18 +39,7 @@ export function ProfileScreen({ profile }: ProfileScreenProps) {
         )}
 
         <div className="mt-8 flex items-center gap-4 border-t border-white/8 pt-6">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-accent-soft text-heading font-semibold text-accent">
-            {profile.avatarUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                alt=""
-                className="h-full w-full rounded-full object-cover"
-                src={profile.avatarUrl}
-              />
-            ) : (
-              initials(profile.name) || "GC"
-            )}
-          </div>
+          <Avatar name={profile.name} size={56} src={profile.avatarUrl} />
           <div>
             <p className="text-body font-medium text-primary-text">
               {profile.name}

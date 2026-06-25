@@ -5,7 +5,7 @@ Question: How should Gym Circle behave during every interaction?
 Last reviewed: 2026-06-24 (Phase 26 — Emotional Interaction System)
 
 This document is canon. It is the **behavior layer** of Gym Circle — the invisible
-rules that govern how every interaction should *feel*, independent of visual design,
+rules that govern how every interaction should _feel_, independent of visual design,
 animation specs, or components. `PRODUCT_BIBLE.md` defines why the product exists;
 `VOICE.md` defines how it speaks; `PRINCIPLES.md` defines what it refuses to become;
 the memory documents define what it remembers. **This document defines how it
@@ -22,7 +22,7 @@ hierarchy above it (`PRODUCT_BIBLE.md` → `VOICE.md` → `PRINCIPLES.md`) wins 
 ## Part 1 — The Feeling
 
 Every interaction in Gym Circle should leave a person feeling a specific set of
-*qualities* — not emotions to be performed, but a steady texture the product never
+_qualities_ — not emotions to be performed, but a steady texture the product never
 breaks:
 
 - **Calm.** Nothing competes for them. The interaction lowers their pulse rather than
@@ -43,7 +43,7 @@ breaks:
   is what makes the rare moment land and what signals the app is not trying to take
   something.
 
-Why these: each is the *opposite* of what an engagement product cultivates (urgency,
+Why these: each is the _opposite_ of what an engagement product cultivates (urgency,
 doubt, flattery, performance, novelty, excess). The interaction system exists to make
 these qualities inevitable and their opposites impossible.
 
@@ -54,85 +54,85 @@ these qualities inevitable and their opposites impossible.
 These are immutable. Every interaction must satisfy all of them.
 
 1. **Nothing rushes.**
-   - *Why:* haste manufactures anxiety; the sacred act of showing up must feel
+   - _Why:_ haste manufactures anxiety; the sacred act of showing up must feel
      unhurried.
-   - *Example:* a screen lets the user arrive and breathe before asking anything.
-   - *Anti-example:* a countdown, an auto-advancing flow, a "complete in 2 minutes."
+   - _Example:_ a screen lets the user arrive and breathe before asking anything.
+   - _Anti-example:_ a countdown, an auto-advancing flow, a "complete in 2 minutes."
 
 2. **Nothing celebrates loudly.**
-   - *Why:* recognition names the person; celebration rates the achievement.
-   - *Example:* "Apareciste." after a commit.
-   - *Anti-example:* confetti, "🎉 Session complete!", a triumphant sound.
+   - _Why:_ recognition names the person; celebration rates the achievement.
+   - _Example:_ "Apareciste." after a commit.
+   - _Anti-example:_ confetti, "🎉 Session complete!", a triumphant sound.
 
 3. **Nothing asks twice.**
-   - *Why:* every prompt is a cost imposed on the user; repetition is disrespect.
-   - *Example:* a confirmed action is trusted and not re-queried.
-   - *Anti-example:* "Are you sure?" after an already-deliberate action; repeated
+   - _Why:_ every prompt is a cost imposed on the user; repetition is disrespect.
+   - _Example:_ a confirmed action is trusted and not re-queried.
+   - _Anti-example:_ "Are you sure?" after an already-deliberate action; repeated
      onboarding nags.
 
 4. **Nothing blames.**
-   - *Why:* shame is corrosion, not motivation; absence is held, never punished.
-   - *Example:* a return is met with "La base sigue ahí."
-   - *Anti-example:* "You've missed 6 days," a broken-streak warning, a red mark.
+   - _Why:_ shame is corrosion, not motivation; absence is held, never punished.
+   - _Example:_ a return is met with "La base sigue ahí."
+   - _Anti-example:_ "You've missed 6 days," a broken-streak warning, a red mark.
 
 5. **Silence is allowed.**
-   - *Why:* not every moment needs feedback; the most respectful response is often
+   - _Why:_ not every moment needs feedback; the most respectful response is often
      nothing.
-   - *Example:* an ordinary open that surfaces nothing and simply lets the user be.
-   - *Anti-example:* a tip, a nudge, or a "did you know?" filling a quiet moment.
+   - _Example:_ an ordinary open that surfaces nothing and simply lets the user be.
+   - _Anti-example:_ a tip, a nudge, or a "did you know?" filling a quiet moment.
 
 6. **Confirmation matters.**
-   - *Why:* a sacred act must be felt to have landed; the user should never wonder if
+   - _Why:_ a sacred act must be felt to have landed; the user should never wonder if
      it counted.
-   - *Example:* a quiet, certain beat of recognition that the evidence was sealed.
-   - *Anti-example:* a silent state change with no acknowledgment, or an over-loud toast.
+   - _Example:_ a quiet, certain beat of recognition that the evidence was sealed.
+   - _Anti-example:_ a silent state change with no acknowledgment, or an over-loud toast.
 
 7. **The interface waits.**
-   - *Why:* the product moves at the user's pace, not its own; it does not pull.
-   - *Example:* the next step appears only when the user reaches for it.
-   - *Anti-example:* auto-redirects, forced tours, modals that interrupt.
+   - _Why:_ the product moves at the user's pace, not its own; it does not pull.
+   - _Example:_ the next step appears only when the user reaches for it.
+   - _Anti-example:_ auto-redirects, forced tours, modals that interrupt.
 
 8. **People matter more than numbers.**
-   - *Why:* the product witnesses; it does not measure. A human word outranks any count.
-   - *Example:* "Te vieron hoy." with a person attached.
-   - *Anti-example:* "+1 support", "3 interactions", a tally of reactions.
+   - _Why:_ the product witnesses; it does not measure. A human word outranks any count.
+   - _Example:_ "Te vieron hoy." with a person attached.
+   - _Anti-example:_ "+1 support", "3 interactions", a tally of reactions.
 
 9. **Identity before activity.**
-   - *Why:* the product reflects who the user is becoming before it shows what they
+   - _Why:_ the product reflects who the user is becoming before it shows what they
      did.
-   - *Example:* the identity statement anchors a screen; activity is secondary.
-   - *Anti-example:* a dashboard of metrics as the first thing a user sees.
+   - _Example:_ the identity statement anchors a screen; activity is secondary.
+   - _Anti-example:_ a dashboard of metrics as the first thing a user sees.
 
 10. **The interaction disappears once its purpose is fulfilled.**
-    - *Why:* the product wants the user's continuity, not their attention; it gets out
+    - _Why:_ the product wants the user's continuity, not their attention; it gets out
       of the way.
-    - *Example:* after recognition, the moment rests and releases the user to their
+    - _Example:_ after recognition, the moment rests and releases the user to their
       life.
-    - *Anti-example:* "while you're here…", suggested next actions, an attention loop.
+    - _Anti-example:_ "while you're here…", suggested next actions, an attention loop.
 
 11. **One anchor per moment.**
-    - *Why:* a single clear thing that matters is a form of calm; equal shouting is
+    - _Why:_ a single clear thing that matters is a form of calm; equal shouting is
       noise.
-    - *Example:* one primary action or one piece of recognition per screen.
-    - *Anti-example:* a wall of equally weighted cards, three competing CTAs.
+    - _Example:_ one primary action or one piece of recognition per screen.
+    - _Anti-example:_ a wall of equally weighted cards, three competing CTAs.
 
 12. **Effort is met with proportion, not escalation.**
-    - *Why:* the response to showing up is steady recognition, never an inflating
+    - _Why:_ the response to showing up is steady recognition, never an inflating
       reward.
-    - *Example:* the hundredth commit is recognized as quietly as the first.
-    - *Anti-example:* bigger animations, louder praise, or tiers that grow with use.
+    - _Example:_ the hundredth commit is recognized as quietly as the first.
+    - _Anti-example:_ bigger animations, louder praise, or tiers that grow with use.
 
 13. **The user is never made to perform.**
-    - *Why:* the product is private evidence, not a stage; nothing is built to be
+    - _Why:_ the product is private evidence, not a stage; nothing is built to be
       shown off.
-    - *Example:* actions feel like they are *for the user*, witnessed by a few.
-    - *Anti-example:* share prompts, public-facing flair, anything that invites display.
+    - _Example:_ actions feel like they are _for the user_, witnessed by a few.
+    - _Anti-example:_ share prompts, public-facing flair, anything that invites display.
 
 14. **Trust the user's deliberate action.**
-    - *Why:* friction belongs only before irreversible harm, never before ordinary
+    - _Why:_ friction belongs only before irreversible harm, never before ordinary
       intent.
-    - *Example:* a commit is recorded the moment the user means it.
-    - *Anti-example:* gating a light, honest act behind confirmations and forms.
+    - _Example:_ a commit is recorded the moment the user means it.
+    - _Anti-example:_ gating a light, honest act behind confirmations and forms.
 
 ---
 
@@ -186,29 +186,29 @@ the philosophy.)
   a beat of stillness and recognition; everywhere else, motion disappears into the
   background.
 
-The test for any motion: *does this tell the user something true that they need to
-know right now?* If not, it should not move.
+The test for any motion: _does this tell the user something true that they need to
+know right now?_ If not, it should not move.
 
 ---
 
 ## Part 5 — Feedback Philosophy
 
-Every action returns something — but the *kind* of feedback determines what the user
+Every action returns something — but the _kind_ of feedback determines what the user
 feels. Gym Circle classifies feedback by emotional purpose, and chooses the highest
 form available:
 
 - **Identity feedback.** Names who the user is becoming. ("Apareciste." / "Una prueba
-  más de quién estás eligiendo ser.") *Purpose:* convert action into self-recognition.
+  más de quién estás eligiendo ser.") _Purpose:_ convert action into self-recognition.
   This is the highest form; prefer it whenever possible.
 - **Memory feedback.** Returns the user's own past — a reflection, an origin, a vow.
-  *Purpose:* prove the foundation is real and still there. Governed by
+  _Purpose:_ prove the foundation is real and still there. Governed by
   `MEMORY_SELECTION_ENGINE.md`; rare and true by design.
 - **Human feedback.** Carries another person and their words. ("Te vieron hoy.")
-  *Purpose:* the felt proof that becoming is witnessed — the emotional peak. Never a
+  _Purpose:_ the felt proof that becoming is witnessed — the emotional peak. Never a
   count, always a person.
 - **System feedback.** Confirms an act landed (a commit sealed, a setting saved).
-  *Purpose:* certainty — the user never wonders if it counted. Quiet and brief.
-- **Error feedback.** See Part 7. *Purpose:* preserve dignity and offer a way forward.
+  _Purpose:_ certainty — the user never wonders if it counted. Quiet and brief.
+- **Error feedback.** See Part 7. _Purpose:_ preserve dignity and offer a way forward.
 
 The ordering is deliberate: when more than one form is available, identity and human
 feedback outrank system feedback, and the user's own words (memory) outrank anything
@@ -232,7 +232,7 @@ breath. A dense interface says "attend to all of this"; an open one says "rest."
 states are invitations, not voids — they hold the door open ("Tu primera evidencia
 empieza aquí.") rather than reporting absence.
 
-**Why pauses are part of trust.** Every moment the product *could* speak and chooses
+**Why pauses are part of trust.** Every moment the product _could_ speak and chooses
 not to is a small deposit of trust — proof that it is not trying to take attention. A
 product that fills every silence trains the user to tune it out; a product that
 respects silence earns the rare moment it does speak. Pauses are how the interface
@@ -273,7 +273,7 @@ that the product had their back, not that it turned on them.
 
 ## Part 8 — Human Presence
 
-Another person should be *felt*, never *broadcast*. This is the line between a circle
+Another person should be _felt_, never _broadcast_. This is the line between a circle
 and a feed.
 
 - **Never a feed.** Presence is not a scroll of everyone's activity. There is no
@@ -305,7 +305,7 @@ a billboard listing everyone's whereabouts.
 
 ## Part 9 — Future Compatibility
 
-The interaction philosophy is a layer of *behavior*, not platform — so it survives
+The interaction philosophy is a layer of _behavior_, not platform — so it survives
 platform changes. Any future surface is tested against it, not the other way around:
 
 - **Voice.** Fits only if it stays calm, brief, and unhurried — recognition spoken,
@@ -326,8 +326,8 @@ platform changes. Any future surface is tested against it, not the other way aro
   a tally or a daily guilt reminder. A notification that exists to drive an open fails
   the trust budget in `MEMORY_GOVERNANCE.md`.
 
-**Why it survives platform changes.** Because it constrains *how things must feel*, not
-*what device they run on*. Calm, certainty, warmth, dignity, continuity, and restraint
+**Why it survives platform changes.** Because it constrains _how things must feel_, not
+_what device they run on_. Calm, certainty, warmth, dignity, continuity, and restraint
 are demands any surface can meet or fail. New technology does not get a philosophical
 exemption; it inherits the same behavior contract. The interaction system is therefore
 forward-compatible by construction: it tells the next platform how to behave before
@@ -337,11 +337,11 @@ that platform exists.
 
 ## Part 10 — Final Verdict
 
-- The **Product Bible** defines *why*.
-- **Voice** defines *language*.
-- **Principles** define *limits*.
-- **Memory** defines *remembrance*.
-- **Interaction** defines *behavior*.
+- The **Product Bible** defines _why_.
+- **Voice** defines _language_.
+- **Principles** define _limits_.
+- **Memory** defines _remembrance_.
+- **Interaction** defines _behavior_.
 
 Without interaction, philosophy stays invisible. A value no one can feel is just a
 sentence in a document. The interaction system is where Gym Circle's beliefs become

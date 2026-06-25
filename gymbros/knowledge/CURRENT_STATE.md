@@ -16,19 +16,19 @@ foundation. Route-level mock state has been removed.
 
 ## Installed Stack
 
-| Area             | Current reality                                                   |
-| ---------------- | ----------------------------------------------------------------- |
-| Framework        | Next.js `16.2.7`                                                  |
-| React            | `19.2.4`                                                          |
-| TypeScript       | `6.0.3`, strict enabled                                           |
-| Styling          | Tailwind CSS `4` via `@tailwindcss/postcss`                       |
-| Backend SDK      | `@supabase/supabase-js` `2.106.2`, `@supabase/ssr` `0.12.0`       |
-| Validation/forms | Zod `4.4.3` (server-side, the validation boundary)              |
-| Realtime         | Supabase Realtime postgres_changes channels (`useSupabase`)       |
-| Client state     | React local state only for current UI interactions                |
-| Testing          | Vitest `4.1.9`, Testing Library, jsdom                            |
-| Formatting       | Prettier `3.8.4`, EditorConfig                                    |
-| Database tooling | Supabase CLI dependency and versioned MVP migrations exist        |
+| Area             | Current reality                                             |
+| ---------------- | ----------------------------------------------------------- |
+| Framework        | Next.js `16.2.7`                                            |
+| React            | `19.2.4`                                                    |
+| TypeScript       | `6.0.3`, strict enabled                                     |
+| Styling          | Tailwind CSS `4` via `@tailwindcss/postcss`                 |
+| Backend SDK      | `@supabase/supabase-js` `2.106.2`, `@supabase/ssr` `0.12.0` |
+| Validation/forms | Zod `4.4.3` (server-side, the validation boundary)          |
+| Realtime         | Supabase Realtime postgres_changes channels (`useSupabase`) |
+| Client state     | React local state only for current UI interactions          |
+| Testing          | Vitest `4.1.9`, Testing Library, jsdom                      |
+| Formatting       | Prettier `3.8.4`, EditorConfig                              |
+| Database tooling | Supabase CLI dependency and versioned MVP migrations exist  |
 
 Planned but not installed: shadcn/ui, Drizzle ORM, Playwright. TanStack Query
 was removed in Phase 13: it was installed but had zero `useQuery`/`useMutation`
@@ -115,6 +115,94 @@ Current code shape:
   state is derived from evidence, never inferred emotion. It sits below the
   Interaction System and above implementation: implementation begins from a human
   state, not a screen. No code, schema, UI, or Server Action added.
+- Phase 33 (Perception Audit — Arrival) is **built**. `components/layout/RouteSkeleton.tsx`
+  now exports per-route arrival skeletons (`RouteSkeleton` for Today, plus
+  `CommitSkeleton`, `ArchiveSkeleton`, `ProfileSkeleton`, `CircleSkeleton`), each
+  reusing the exact `AppCard` shells of the screen it stands in for so the real
+  content swaps in without the frame jumping — only text fills. The anxious
+  Tailwind `animate-pulse` was replaced by a single calm `.skeleton` shimmer
+  (globals.css `@keyframes shimmer`, ~2.4s, all placeholders sweep in unison),
+  which `prefers-reduced-motion` resolves to a still fill. This is the
+  Interaction System's motion/silence philosophy applied to first paint: the
+  screen arrives, it does not "load".
+- Phase 34 (Perception Audit — Arrival, cont.) is **built**. It removed the
+  route-transition double-motion: after the (now matched-shell) skeleton settled
+  the layout, the screen used to re-enact an entrance — `ScreenContainer` rose its
+  header and hero (`animate-rise`) and stagger-rose its body (`.stagger-children`,
+  translateY per child). Static shimmer → sequential slide-in was the seam. The
+  per-element stagger/rise was replaced by one in-place crossfade on the screen
+  root (`--animate-arrive` / `@keyframes arrive`, pure opacity 0.5→1, no transform,
+  floored so the swap never dips to dark). The `.stagger-children` CSS block and
+  its eight `nth-child` delay rules were deleted (obsolete). `animate-rise` remains
+  only where motion communicates a real event (status reveal, commit recognition,
+  auth form). The screen now settles into focus; it no longer re-enters.
+- Phase 35 (Commit publish bug + Avatar reveal) is **built**. Bug: the commit flow
+  (`CommitFlowClient`) renders steps with `{step === N && ...}`, so step 0's `title`
+  input and step 1's `durationMinutes` input were unmounted by the time the submit
+  button (only on step 2) fired — native FormData captured neither, so every publish
+  failed the server `title.min(1)` Zod check and silently dropped duration. Root
+  cause was architectural: those two values lived in step-local native inputs while
+  the genuinely cross-step fields already used controlled-state + always-mounted
+  hidden inputs. Fix made the pattern uniform: `title` and `durationMinutes` are now
+  controlled state mirrored to hidden inputs outside the step conditionals, with the
+  visible inputs no longer carrying `name` (single serialization source). Regression
+  locked by `CommitFlowClient.test.tsx`. Perception: `Avatar` is now a client
+  component that fades a photo in over the initials placeholder (`--duration-base`
+  opacity transition, cached-image `complete` check, reduced-motion → instant) so a
+  face never snaps in. `ProfileScreen`'s duplicate inline `<img>` avatar and its
+  orphaned `initials()` helper were deleted in favor of `Avatar` (size-aware
+  initials), making `Avatar` the single avatar implementation across Today, Circle,
+  and Profile.
+- Phase 36 (Commit Enter-submit guard) is **built**. On steps 0/1 the commit flow
+  has exactly one single-line input and no submit button, so a mobile keyboard's
+  "Go" key implicitly submitted the form — sealing the commit prematurely with
+  default feeling/visibility and no note (a "nothing rushes / the interface waits"
+  violation, exposed once Phase 35 made the form always validate). `CommitFlowClient`
+  now handles `Enter` on the form: outside textareas and before the submit step it
+  advances the flow (when valid) instead of publishing. Locked by a second
+  `CommitFlowClient.test.tsx` case. Phase 36 also **rejected** building route-level
+  View Transitions: experimental/library cost and reduced-motion complexity outweigh
+  a benefit that is borderline-decorative under the Interaction System (stillness is
+  the resting state). The remaining seams are now low-impact or high-cost; further
+  perception work is product-led, not engineering-led.
+- Phase 37 (Memory Selection Engine — first activation) is **built** (was design-only
+  through Phase 24). `lib/memory/selectMemory.ts` is a pure, deterministic,
+  explainable selector mirroring `deriveState`: given the human state and the user's
+  own reflections it returns at most one memory or `null` (silence is the default).
+  v1 surfaces a memory in exactly one context — the Quiet Return (`state ===
+"returning"`) — because that is the only moment whose rarity is guaranteed by the
+  gap itself, so it needs no surfacing ledger to prevent repetition. Gates honored:
+  context (return-only), safety (never an `emotional` reflection casually),
+  truth/recency (`MEMORY_MIN_AGE_DAYS = 4`), category priority (Identity ≻
+  Reflection), age-appreciates within a tier. Wired through `features/today/queries.ts`
+  (candidate pool is the Journey window already loaded — no new DB read) into the
+  Today returning hero, which now shows the user's selected past words **in place of**
+  the static identity-statement vow (one memory at a time, never added alongside).
+  Falls back to the vow, then a plain line, when the engine returns silence. Tested by
+  `lib/memory/selectMemory.test.ts`. **Missing dependency for the next capability:**
+  the Future Memory Ledger (append-only record of what was surfaced/withheld,
+  MEMORY_SELECTION_ENGINE.md Part 11). Without it, normal-Today / Profile / Commit-
+  recognition surfacing cannot enforce cooldown, rarity, or patience and would become
+  wallpaper — so those contexts intentionally stay silent here.
+- Phase 38 (First Commit journey — made coherent end to end) is **built**. Two
+  incoherences were fixed. (1) The recognition (`ShowingUpMoment`) said "una prueba
+  más" ("one more proof") even for the very first commit — false. `app/commit/page.tsx`
+  now reads `getProgressSummary` to pass `isFirstCommit`, and the recognition tells the
+  truth: "tu primera prueba" / eyebrow "Tu primera evidencia" on the first, "una prueba
+  más" / "Quedó registrado" after. The visual treatment is identical either way —
+  effort is met with proportion, not escalation; only the words change. (2) The commit
+  flow surfaced a raw `lastReflection` memory on step 0 (the sacred _start_), bypassing
+  the Memory Selection Engine and violating its Part 4 rule that starting evidence must
+  be silent. That ungoverned surfacing was **deleted** — the step-0 memory block, the
+  `lastReflection` prop on `CommitFlowClient`, and the page's `getJourney`/lastReflection
+  computation. The start is now silent and frictionless; memory belongs only at
+  recognition (the identity-vow echo, already governed). This supersedes the Phase 20
+  note above ("the Commit flow resurfaces the last reflection as memory"), which is no
+  longer true. **What still prevents this journey from feeling complete:** after the
+  first commit, Today derives `building` ("Sigues apareciendo"), which reads slightly
+  off for someone who has shown up exactly once — a dedicated just-started nuance would
+  need either a new derived state or a totalCommits===1 branch in `deriveState`, not
+  added here to avoid speculative state.
 - Circle and Notifications use client Supabase Realtime hooks
   (`useCircleRealtime`, `useNotificationsRealtime`) that refresh the server tree
   on `postgres_changes`. `app/providers.tsx` exposes the browser Supabase client

@@ -16,6 +16,7 @@ export default async function TodayHubPage() {
           <TodayScreen
             commits={viewModel.commits}
             memberships={viewModel.memberships}
+            memory={viewModel.memory}
             notifications={viewModel.notifications}
             presence={viewModel.presence}
             profile={viewModel.profile}

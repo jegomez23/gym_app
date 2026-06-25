@@ -14,21 +14,21 @@ tree in CLAUDE.md to load only what the task needs.
 
 Each canonical file answers one important question:
 
-| File               | Question                                    |
-| ------------------ | ------------------------------------------- |
-| `CURRENT_STATE.md` | What is true today?                         |
-| `PRINCIPLES.md`    | What must not be violated?                  |
-| `DOMAIN.md`        | What does the product language mean?        |
-| `ARCHITECTURE.md`  | How is the software organized?              |
-| `DATABASE.md`      | How is data modeled and protected?          |
-| `MAP.md`           | What context should I load for a task?      |
-| `MEMORY_GOVERNANCE.md` | How does the memory system evolve without drifting? |
-| `MEMORY_SELECTION_ENGINE.md` | How does memory decide what to return? |
-| `INTERACTION_SYSTEM.md` | How should the product behave during every interaction? |
-| `STATE_SYSTEM.md`  | Where is the person, and how should the product behave there? |
-| `PLAYBOOKS.md`     | How should common work be performed?        |
-| `MEMORY.md`        | What durable lessons must not be forgotten? |
-| `decisions/`       | Why were major choices made?                |
+| File                         | Question                                                      |
+| ---------------------------- | ------------------------------------------------------------- |
+| `CURRENT_STATE.md`           | What is true today?                                           |
+| `PRINCIPLES.md`              | What must not be violated?                                    |
+| `DOMAIN.md`                  | What does the product language mean?                          |
+| `ARCHITECTURE.md`            | How is the software organized?                                |
+| `DATABASE.md`                | How is data modeled and protected?                            |
+| `MAP.md`                     | What context should I load for a task?                        |
+| `MEMORY_GOVERNANCE.md`       | How does the memory system evolve without drifting?           |
+| `MEMORY_SELECTION_ENGINE.md` | How does memory decide what to return?                        |
+| `INTERACTION_SYSTEM.md`      | How should the product behave during every interaction?       |
+| `STATE_SYSTEM.md`            | Where is the person, and how should the product behave there? |
+| `PLAYBOOKS.md`               | How should common work be performed?                          |
+| `MEMORY.md`                  | What durable lessons must not be forgotten?                   |
+| `decisions/`                 | Why were major choices made?                                  |
 
 ## Authority
 

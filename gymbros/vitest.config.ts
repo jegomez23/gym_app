@@ -9,6 +9,9 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": new URL(".", import.meta.url).pathname,
+      // Neutralize the server-only guard so Server Action helpers are testable.
+      "server-only": new URL("./test/empty-module.ts", import.meta.url)
+        .pathname,
     },
   },
 });
