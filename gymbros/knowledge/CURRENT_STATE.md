@@ -350,6 +350,156 @@ Current code shape:
   "Nota personal" (stored on the commit) vs "Nota para tu yo del futuro" (a typed
   reflection) are easy to confuse, and a `reflectionType` chosen without reflection text
   is silently dropped — clarifying that relationship is the next UX pass.
+- Phase 47 (Commit flow — one note, writing before classification) is **done**. Human-
+  experience audit of the Commit journey (no schema/entity/form-structure lens — only how
+  it feels to a first-time person). Decisive finding: step 2 showed **two empty textareas**
+  — "Nota personal" (→ `commits.note`) and "Nota para tu yo del futuro" (→ a `reflection`)
+  — which is the **data model leaking two homes into one human act**. A person journaling
+  writes one thing; two boxes force a "which one? what's the difference?" decision that is
+  the machine's split, not theirs. Merged to **one note**. The written words now feed the
+  **reflection** (`reflectionContent`) — the canonical home the State Engine and Memory
+  Selection Engine actually read — so no engine weakens (every branch, threshold, and test
+  in `deriveState`/`selectMemory`/the reflection pipeline is untouched; `emotional`→
+  Protected and `identity`-priority remain live). `commits.note` is simply no longer
+  written from the flow (column kept; legacy notes still render). The optional reflection-
+  **type** picker (Identidad/Proceso/Emoción/Técnica) now appears **only after** the user
+  has written words — "Writing comes before classification / reflection before metadata"
+  made literal — which also **structurally eliminates** the Phase 46 next-opportunity bug
+  (a type can no longer be chosen and silently dropped with no note). `DomainCommitCard`
+  was de-duplicated: it rendered `commit.note` **and** the first reflection as two blocks;
+  it now shows the user's words once (prefer legacy `note`, else the reflection), with a
+  secondary block only for a legacy commit whose reflection genuinely differs. The
+  second textarea, its `note` controlled state, and its hidden input were deleted (delete
+  UI before adding UI); the Server Action is unchanged (`note` resolves to `null`). Tests
+  updated: single-note back-navigation persistence + a new "type appears only after words"
+  case (`CommitFlowClient.test.tsx`). Visibility (Privado/Círculo/Público) and the step-0
+  training-type pills were audited and **kept** — they are genuine human choices, not
+  machine metadata. **Next opportunity:** Protected is now only reachable when a reflection
+  carries `emotional`, which a human self-tag is a weak source for; deriving the "heavy day"
+  signal from real evidence (never inferred emotion — STATE_SYSTEM hard boundary) rather
+  than a pill is the honest long-term path.
+- Phase 48 (Onboarding unblocked — remote DB migration drift + error-leak) is **done**.
+  Reported via screenshot: onboarding showed "Database operation failed" and never
+  completed. Diagnosed from Supabase logs, not guessed — the postgres service log had
+  **zero error rows** (ruling out a constraint crash logged at DB level), but the api
+  (PostgREST) log showed the onboarding submit as `PATCH /rest/v1/profiles … | 400`
+  twice. Root cause: the **remote DB was three migrations behind the repo** (applied
+  through `20260623_0001_social_core`; missing `20260624_0001_identity_statement`,
+  `20260625_0001_progress_summary_lifetime`, `20260625_0002_shared_presence`). The
+  onboarding PATCH writes `identity_statement`, a column that **did not exist** on the
+  remote `profiles` table → PostgREST 400 → mapped to the generic `DatabaseError`. Fix:
+  applied all three pending (idempotent, additive) migrations to the remote project; the
+  DB now matches the repo (16/16). Secondary, in-code: `friendlyAuthError`
+  (`lib/auth/session.ts`) returned the raw `AppError.message` for any non-conflict code,
+  leaking machine English ("Database operation failed", "Not authorized for this
+  operation") straight to users — a Voice violation across its 10 callers. Now every code
+  maps to a calm human Spanish line and the underlying cause is `console.error`-logged
+  server-side, so a swallowed database/infrastructure failure stays diagnosable instead of
+  invisible. **Process note:** the recurring trap is migrations committed to the repo but
+  not pushed to the hosted project — run `supabase db push` (or apply via MCP) as part of
+  shipping any phase that adds a migration. **Known minor:** the onboarding Username field
+  still triggers the browser-native "Completa este campo" tooltip (system chrome, not the
+  product Voice) — a small future polish, not a blocker.
+- Phase 49 (Commit becomes Evidence — documenting an active life) is **done**. Audit
+  question: "What deserves to become evidence?" The product treated evidence as
+  synonymous with a gym session. Decisive finding: **the data model is already a general
+  evidence model** — `commits.type` is free text (`z.string().max(50)`, DB check `len ≤
+  50`) with **zero behavioral coupling** anywhere (grep confirms nothing branches on a
+  type value; it is only a fallback display title), and the product already speaks
+  "evidencia" ("Dejar evidencia", "Convierte lo que hiciste en evidencia…"). So the only
+  thing gym-locking the product was the **UI taxonomy and one nav label**, not the
+  architecture. **Chosen direction:** keep the `commits` model (no new table, no
+  migration, no schema change — the frozen MVP contract stands) and broaden the surface.
+  The activity kinds went from gym-shaped (`training/mobility/cardio/recovery/nutrition/
+  mind`) to active-life-shaped (`Entrenamiento/Correr/Bici/Montaña/Caminar/Movilidad/
+  Mente`); `trainingOptions`/`TrainingType`/`trainingType` were renamed
+  `activityOptions`/`ActivityKind`/`activityKind`; the gym-only nav center label
+  `aria-label="Registrar sesión"` became `"Dejar evidencia"`; the step-0 placeholder
+  de-gymmed. **Rejected:** renaming the `commits` table to `evidence` (fights the
+  guarded table contract for zero user-visible gain — the table name is implementation),
+  and a new `activity_kind` enum column (would *narrow* a field that is intentionally
+  open). A run, a climb, a recovery walk are now first-class evidence. No schema/DAL/
+  Server-Action change; old commits with legacy types still render (free text). **Explore
+  tab — audited, deliberately NOT built.** Moving Archive into Profile would free a nav
+  slot for an Explore destination (knowledge / stories / public evidence / places to
+  train), but there is **no content model** for any of it, and a hollow discovery surface
+  fails the brief's own gate ("Does this deepen someone's practice? If not, do not build
+  it") and risks the feed/engagement shape the product refuses. Recommended as its own
+  phase, gated on first defining what "curated, not addictive" content actually is. The
+  public-evidence half also needs RLS for cross-user public reads + a non-infinite
+  surface — real product-risk design, not a small change.
+- Phase 50 (Profile becomes identity; Explore proven-not-ready) is **done**. Audit
+  question: "If I didn't train today, why would I still open Gym Circle?" — the answer was
+  weak. The brief challenged Phase 49's claim that Explore needs a new content model ("Can
+  Explore emerge from existing evidence? Reuse before inventing"). **Investigated the RLS
+  substrate and proved the real boundary:** `commits_select_public_authenticated`
+  (`20260622_0009_rls.sql`) **already lets any authenticated user read every public
+  commit** — public *evidence* is fully supported. But profiles have only own/circle
+  select policies (**no public-profile policy**), so a public commit **cannot be
+  attributed to its author** — "people" is unsupported; reflections are `private|circle`
+  only (**never public by design**), so "reflections" discovery is impossible; and there
+  is **no location/geo data**, so "places" cannot exist. Therefore *public evidence alone
+  is not enough* — Explore as specified (evidence + people + places + reflections) is
+  **not buildable from existing architecture** and was **deliberately not built** (proof
+  above; near-zero public content compounds it, and a stranger-evidence wall is the feed
+  shape the product refuses). The smallest real prerequisite is a `profiles_select_public`
+  policy **plus** identity-rich profiles worth discovering — which is the build this phase
+  did instead. **Built: Profile as identity, not settings.** The profile was a mirror +
+  edit form; it answered "what's my vow / edit me", not "who is this person?". It now leads
+  with identity and shows **the life the person is building** — a recent glimpse of their
+  own evidence (`getJourney` limit 5) and its rhythm (`describeCadence`), rendered with the
+  existing `DomainCommitCard`; the edit form and account actions **recede beneath** a
+  hairline so settings are the tail, not the body. No statistics (the brief: prefer story/
+  evidence/memory/place over numbers — and Phase 23 already stripped tallies). Pure reuse:
+  `getProfileViewModel` now loads the same journey+progress the Archive reads (no new
+  query, entity, table, RLS, or Server Action); memory was intentionally **not** surfaced
+  here because cross-context memory surfacing is gated on the unbuilt Future Memory Ledger
+  (Phase 37). The app now begins to feel **inhabited** — your own life held in the surface
+  — without becoming busier or addictive. **Next opportunity:** Explore is now one policy
+  away conceptually — add `profiles_select_public` (read only public-`visibility_preference`
+  profiles), then build a single finite, unranked surface of recent public evidence
+  attributed to its author. Only worth it once enough people share publicly; until then it
+  is a calm empty room. **Minor:** `ProfileSkeleton` (`RouteSkeleton.tsx`) no longer mirrors
+  the new evidence section — a small Phase 33 shell-match follow-up, cosmetic only.
+- Phase 51 (Evidence expresses its movement; Explore re-proven not-ready) is **done**.
+  Product (not component) audit of "what meaningful actions exist besides leaving
+  evidence?" (support a member, invite/accept circle, propose/accept shared presence, set
+  identity, choose visibility, classify a reflection) and "which deepens practice most
+  while respecting every principle and reusing what exists?". Winner: **none of the
+  relational actions — the evidence itself was under-expressed.** Concrete finding:
+  `DomainCommitCard` computed `title = commit.title || commit.type`, so the Phase 49
+  movement vocabulary (run/ride/hike/walk/…) was **invisible whenever a title existed** —
+  a run, a hike and a climb all rendered identically. The texture of an active life was
+  recorded and thrown away, which is *why* the record felt flat between pieces. **Built:
+  evidence now expresses its movement**, the smallest truthful change that adds life to
+  every surface at once (Today, Archive, Profile, Circle) with zero new architecture. One
+  shared movement vocabulary was extracted to `features/shared/activityKinds.ts`
+  (`activityKinds` + `ActivityKind` + `activityKindLabel`): the commit flow's picker and
+  the card now read the **same list** (CommitFlowClient's local `activityOptions` was
+  deleted). The card shows the discipline quietly — riding the meta line next to the date
+  when a title was written (`Correr · 12 jun`), or becoming the title when none was — and
+  `activityKindLabel` returns **silence over a raw machine key** (unknown free-text → null,
+  never "crossfit" shown literally) while still labelling legacy kinds (cardio/recovery/
+  nutrition) so no past evidence is orphaned. The `"Commit"` fallback title became
+  `"Evidencia"` (Phase 49 language). Locked by `features/shared/activityKinds.test.ts`
+  (current vocab, legacy mapping, silence). **Explore — re-audited against the broader
+  candidate list (movement disciplines, people, shared presence, circles, memories,
+  identity, saved/collections/highlights) and re-proven not-ready with the same hard
+  architectural evidence as Phase 50:** the only cross-user-readable substrate is public
+  commits (`commits_select_public_authenticated`); profiles have **no public select
+  policy** (no attribution → no "people"), reflections are `private|circle` only (no public
+  memories), and saved/collections/highlights/routines/places are **entities that do not
+  exist** — building any would be inventing, which the brief forbade. Every honest
+  discovery primitive either needs a new RLS policy or a new entity, so no empty shell was
+  built. **Identity re-audit:** Phase 50's evidence-on-profile plus this movement
+  expression now make the profile read as a portrait (each piece of the life shows its
+  discipline), so no further profile build was needed. **UX:** the movement label is the
+  evidence-presentation polish the brief asked for — information, not decoration; no icons
+  added (none existed and a 7-glyph set would have been decorative). **Next opportunity:**
+  the single highest-leverage unlock for any discovery remains one migration —
+  `profiles_select_public` (read public-`visibility_preference` profiles) — after which the
+  smallest truthful Explore is recent public evidence attributed to its author, finite and
+  unranked; still worth building only once people actually share publicly.
 - Circle and Notifications use client Supabase Realtime hooks
   (`useCircleRealtime`, `useNotificationsRealtime`) that refresh the server tree
   on `postgres_changes`. `app/providers.tsx` exposes the browser Supabase client

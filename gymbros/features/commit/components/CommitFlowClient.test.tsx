@@ -37,7 +37,7 @@ describe("CommitFlowClient", () => {
     expect(hiddenTitle?.value).toBe("Tren inferior");
   });
 
-  it("preserves the note and reflection when navigating back from the submit step", () => {
+  it("preserves the note when navigating back from the submit step", () => {
     render(<CommitFlowClient name="Juan" />);
 
     fireEvent.change(screen.getByLabelText("¿Qué hiciste?"), {
@@ -46,23 +46,40 @@ describe("CommitFlowClient", () => {
     fireEvent.click(screen.getByRole("button", { name: "Continuar" })); // → step 1
     fireEvent.click(screen.getByRole("button", { name: "Continuar" })); // → step 2
 
-    fireEvent.change(screen.getByLabelText("Nota personal"), {
+    fireEvent.change(screen.getByLabelText("Tu nota"), {
       target: { value: "Hoy aparecí porque importa." },
     });
-    fireEvent.change(screen.getByLabelText("Nota para tu yo del futuro"), {
-      target: { value: "Recuerda este día." },
-    });
 
-    // "Volver" unmounts the submit step; returning to it used to wipe both fields.
+    // "Volver" unmounts the submit step; returning to it used to wipe the note.
     fireEvent.click(screen.getByRole("button", { name: "Volver" })); // → step 1
     fireEvent.click(screen.getByRole("button", { name: "Continuar" })); // → step 2
 
-    expect(screen.getByLabelText("Nota personal")).toHaveValue(
+    expect(screen.getByLabelText("Tu nota")).toHaveValue(
       "Hoy aparecí porque importa."
     );
-    expect(screen.getByLabelText("Nota para tu yo del futuro")).toHaveValue(
-      "Recuerda este día."
-    );
+  });
+
+  it("reveals the note type only after words are written (writing before classification)", () => {
+    render(<CommitFlowClient name="Juan" />);
+
+    fireEvent.change(screen.getByLabelText("¿Qué hiciste?"), {
+      target: { value: "Tren inferior" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Continuar" })); // → step 1
+    fireEvent.click(screen.getByRole("button", { name: "Continuar" })); // → step 2
+
+    // No words yet → no classification to drop.
+    expect(
+      screen.queryByRole("button", { name: "Identidad" })
+    ).not.toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("Tu nota"), {
+      target: { value: "Hoy me costó pero aparecí." },
+    });
+
+    expect(
+      screen.getByRole("button", { name: "Identidad" })
+    ).toBeInTheDocument();
   });
 
   it("advances on Enter from a single-line step instead of publishing", () => {

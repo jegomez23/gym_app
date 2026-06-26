@@ -89,11 +89,23 @@ export async function requireProfile(): Promise<ProfileContext> {
 
 export function friendlyAuthError(error: unknown) {
   if (error instanceof AppError) {
-    if (error.code === "conflict") {
-      return "Ese username ya esta en uso.";
+    // AppError.message is machine English ("Database operation failed", "Not
+    // authorized for this operation") and must never reach a person (Voice). Map
+    // every code to a calm human line; log the real cause server-side so a swallowed
+    // database/infrastructure failure stays diagnosable instead of invisible.
+    switch (error.code) {
+      case "conflict":
+        return "Ese username ya esta en uso.";
+      case "authorization_error":
+        return "Tu sesion expiro. Vuelve a entrar e intentalo.";
+      case "rate_limit":
+        return "Demasiados intentos. Espera un momento e intentalo de nuevo.";
+      case "validation_error":
+        return "Revisa los datos antes de continuar.";
+      default:
+        console.error("[friendlyAuthError]", error.code, error.cause ?? error);
+        return "No se pudo completar la accion. Intentalo de nuevo.";
     }
-
-    return error.message;
   }
 
   const message =

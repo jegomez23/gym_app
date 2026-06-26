@@ -59,7 +59,7 @@ export function BottomNav() {
 
         <Link
           aria-current={commitActive ? "page" : undefined}
-          aria-label="Registrar sesión"
+          aria-label="Dejar evidencia"
           className={`-mt-7 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-accent text-[#111410] shadow-glow transition duration-(--duration-fast) ease-out-soft hover:bg-accent-hover active:scale-95 ${
             commitActive
               ? "ring-2 ring-white/30 ring-offset-2 ring-offset-background"

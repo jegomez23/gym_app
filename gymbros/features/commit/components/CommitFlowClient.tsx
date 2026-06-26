@@ -8,20 +8,15 @@ import { AppCard } from "@/components/ui/AppCard";
 import { Field, Input, Textarea } from "@/components/ui/Field";
 import { Icon, type IconName } from "@/components/ui/Icon";
 import { PillOption } from "@/components/ui/PillOption";
-import { FormStatus } from "@/features/shared";
+import {
+  activityKinds,
+  type ActivityKind,
+  FormStatus,
+} from "@/features/shared";
 import { initialActionState } from "@/features/shared/actionState";
 import type { ReflectionType } from "@/lib/dal";
 
 import { publishCommitAction } from "../actions/publishCommit";
-
-const trainingOptions = [
-  { value: "training", label: "Entrenamiento" },
-  { value: "mobility", label: "Movilidad" },
-  { value: "cardio", label: "Cardio" },
-  { value: "recovery", label: "Recuperacion" },
-  { value: "nutrition", label: "Nutricion" },
-  { value: "mind", label: "Mente" },
-] as const;
 
 const intensityOptions = [
   { value: "light", label: "Ligero", icon: "feeling-light" },
@@ -48,7 +43,6 @@ const reflectionTypeOptions = [
   { value: "technical", label: "Técnica" },
 ] as const satisfies ReadonlyArray<{ value: ReflectionType; label: string }>;
 
-type TrainingType = (typeof trainingOptions)[number]["value"];
 type IntensityType = (typeof intensityOptions)[number]["value"];
 type VisibilityType = (typeof visibilityOptions)[number]["value"];
 
@@ -64,9 +58,10 @@ const stepCopy = [
     subtitle: "Sin puntuación. Solo el tono honesto del momento.",
   },
   {
-    eyebrow: "Una nota para después",
-    title: "Deja una nota para tu yo del futuro.",
-    subtitle: "Opcional. Algo que quieras recordar más adelante.",
+    eyebrow: "Tu nota",
+    title: "Escribe sobre hoy.",
+    subtitle:
+      "Opcional. Por qué apareciste, cómo fue, lo que quieras recordar.",
   },
 ] as const;
 
@@ -197,10 +192,12 @@ export function CommitFlowClient({
   // schema is the single validation boundary — no client-side form library duplicates it.
   const [title, setTitle] = useState("");
   const [durationMinutes, setDurationMinutes] = useState("");
-  const [trainingType, setTrainingType] = useState<TrainingType>("training");
+  const [activityKind, setActivityKind] = useState<ActivityKind>("training");
   const [intensity, setIntensity] = useState<IntensityType>("steady");
   const [visibility, setVisibility] = useState<VisibilityType>("circle");
-  const [note, setNote] = useState("");
+  // One note, not two. The written words live in the reflection — the canonical
+  // home the State Engine and Memory Selection Engine read. (The old second box,
+  // `note` → commits.note, was the data model leaking two homes into one human act.)
   const [reflectionContent, setReflectionContent] = useState("");
   const [reflectionType, setReflectionType] = useState<ReflectionType | null>(
     null
@@ -215,7 +212,7 @@ export function CommitFlowClient({
 
   const canContinue = useMemo(() => {
     if (step === 0) {
-      return Boolean(title.trim()) && Boolean(trainingType);
+      return Boolean(title.trim()) && Boolean(activityKind);
     }
 
     if (step === 1) {
@@ -223,7 +220,7 @@ export function CommitFlowClient({
     }
 
     return true;
-  }, [intensity, step, title, trainingType]);
+  }, [intensity, step, title, activityKind]);
 
   // Tapping the active type again clears it — the classification stays optional.
   function toggleReflectionType(value: ReflectionType) {
@@ -264,10 +261,9 @@ export function CommitFlowClient({
       )}
       <input name="title" type="hidden" value={title} />
       <input name="durationMinutes" type="hidden" value={durationMinutes} />
-      <input name="type" type="hidden" value={trainingType} />
+      <input name="type" type="hidden" value={activityKind} />
       <input name="intensity" type="hidden" value={intensity} />
       <input name="visibility" type="hidden" value={visibility} />
-      <input name="note" type="hidden" value={note} />
       <input name="reflectionContent" type="hidden" value={reflectionContent} />
       <input name="reflectionType" type="hidden" value={reflectionType ?? ""} />
       <ProgressIndicator currentStep={step} />
@@ -295,17 +291,17 @@ export function CommitFlowClient({
                 <Input
                   id="commit-title"
                   onChange={(event) => setTitle(event.target.value)}
-                  placeholder="Tren inferior, vuelta a empezar"
+                  placeholder="Carrera al amanecer, sin prisa"
                   value={title}
                 />
               </Field>
               <div className="flex flex-wrap gap-2">
-                {trainingOptions.map((option) => (
+                {activityKinds.map((option) => (
                   <PillOption
-                    active={trainingType === option.value}
+                    active={activityKind === option.value}
                     key={option.value}
                     label={option.label}
-                    onClick={() => setTrainingType(option.value)}
+                    onClick={() => setActivityKind(option.value)}
                   />
                 ))}
               </div>
@@ -351,36 +347,33 @@ export function CommitFlowClient({
           {step === 2 && (
             <div className="mt-8 flex flex-col gap-5">
               <Textarea
-                aria-label="Nota personal"
-                className="min-h-32"
-                maxLength={500}
-                onChange={(event) => setNote(event.target.value)}
-                placeholder="Hoy aparecí porque..."
-                value={note}
-              />
-              <Textarea
-                aria-label="Nota para tu yo del futuro"
-                className="min-h-32"
+                aria-label="Tu nota"
+                className="min-h-40"
                 maxLength={300}
                 onChange={(event) => setReflectionContent(event.target.value)}
-                placeholder="Algo que quieras recordar más adelante (opcional)"
+                placeholder="Hoy aparecí porque..."
                 value={reflectionContent}
               />
-              <div>
-                <p className="text-label uppercase text-secondary-text">
-                  ¿Qué tipo de nota es? · opcional
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {reflectionTypeOptions.map((option) => (
-                    <PillOption
-                      active={reflectionType === option.value}
-                      key={option.value}
-                      label={option.label}
-                      onClick={() => toggleReflectionType(option.value)}
-                    />
-                  ))}
+              {/* Writing comes before classification: the type only appears once
+                  there are words to classify. No words, no type — so a type can
+                  never be chosen and silently dropped without a note. */}
+              {reflectionContent.trim() && (
+                <div>
+                  <p className="text-label uppercase text-secondary-text">
+                    ¿Qué tipo de nota es? · opcional
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {reflectionTypeOptions.map((option) => (
+                      <PillOption
+                        active={reflectionType === option.value}
+                        key={option.value}
+                        label={option.label}
+                        onClick={() => toggleReflectionType(option.value)}
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
               <div className="flex flex-wrap gap-2">
                 {visibilityOptions.map((option) => (
                   <PillOption
