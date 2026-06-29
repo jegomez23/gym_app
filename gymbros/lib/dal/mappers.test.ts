@@ -19,6 +19,7 @@ describe("DAL mappers", () => {
         avatar_url: null,
         bio: "Building quietly",
         identity_statement: "Alguien que aparece.",
+        chapter: "Preparando mi primera 10K.",
         visibility_preference: "circle",
         onboarding_completed: true,
         timezone: "Europe/Madrid",
@@ -45,6 +46,7 @@ describe("DAL mappers", () => {
         note: null,
         visibility: "circle",
         evidence: ["45 minutes"],
+        chapter: null,
         created_at: "2026-06-22T08:01:00.000Z",
         deleted_at: null,
       })

@@ -33,6 +33,9 @@ describe("Supabase MVP migrations", () => {
       "20260624_0001_identity_statement.sql",
       "20260625_0001_progress_summary_lifetime.sql",
       "20260625_0002_shared_presence.sql",
+      "20260629_0001_chapter.sql",
+      "20260629_0002_profiles_select_public.sql",
+      "20260629_0003_commit_chapter.sql",
     ]);
   });
 
@@ -62,6 +65,37 @@ describe("Supabase MVP migrations", () => {
     );
     expect(identity).toContain("profiles_identity_statement_length_check");
     expect(identity).not.toMatch(/create table/i);
+  });
+
+  it("adds the nullable chapter field only", () => {
+    const chapter = migration("20260629_0001_chapter.sql");
+
+    expect(chapter).toContain("add column if not exists chapter text");
+    expect(chapter).toContain("profiles_chapter_length_check");
+    expect(chapter).not.toMatch(/create table/i);
+  });
+
+  it("stamps evidence with its season as a nullable column, never a new table", () => {
+    const commitChapter = migration("20260629_0003_commit_chapter.sql");
+
+    expect(commitChapter).toContain(
+      "alter table public.commits\n  add column if not exists chapter text"
+    );
+    expect(commitChapter).toContain("commits_chapter_length_check");
+    expect(commitChapter).not.toMatch(/create table/i);
+  });
+
+  it("makes public profiles discoverable for attribution, as a policy only", () => {
+    const publicProfiles = migration(
+      "20260629_0002_profiles_select_public.sql"
+    );
+
+    expect(publicProfiles).toContain(
+      "create policy profiles_select_public on public.profiles"
+    );
+    expect(publicProfiles).toContain("visibility_preference = 'public'");
+    expect(publicProfiles).not.toMatch(/create table/i);
+    expect(publicProfiles).not.toMatch(/add column/i);
   });
 
   it("adds profile lifecycle fields without adding non-MVP tables", () => {

@@ -50,6 +50,28 @@ export function ProfileEditForm({ profile }: ProfileEditFormProps) {
           placeholder="Alguien que aparece, incluso los días difíciles."
         />
       </div>
+      {/* The present season — what you're living right now. Distinct from the vow:
+          this one is meant to change when the chapter does. */}
+      <div className="mb-5 flex flex-col gap-2">
+        <label
+          className="text-body font-medium text-primary-text"
+          htmlFor="profile-chapter"
+        >
+          En qué andas ahora
+        </label>
+        <p className="text-caption text-secondary-text">
+          El capítulo que estás viviendo: una carrera, una vuelta, una montaña.
+          Cámbialo cuando cambie. Déjalo vacío si no hay ninguno.
+        </p>
+        <Textarea
+          className="min-h-20 text-body leading-7"
+          defaultValue={profile.chapter ?? ""}
+          id="profile-chapter"
+          maxLength={140}
+          name="chapter"
+          placeholder="Volviendo despacio después de la lesión."
+        />
+      </div>
       <Field
         helper="Solo minúsculas, números y guion bajo. Te pueden invitar por este nombre."
         htmlFor="profile-username"

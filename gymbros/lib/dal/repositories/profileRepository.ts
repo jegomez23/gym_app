@@ -49,6 +49,7 @@ export class ProfileRepository {
       avatar_url: parsedInput.data.avatarUrl,
       bio: parsedInput.data.bio,
       identity_statement: parsedInput.data.identityStatement,
+      chapter: parsedInput.data.chapter,
       visibility_preference: parsedInput.data.visibilityPreference,
       onboarding_completed: parsedInput.data.onboardingCompleted,
       timezone: parsedInput.data.timezone,
@@ -133,6 +134,9 @@ export class ProfileRepository {
       ...(parsedInput.data.bio !== undefined && { bio: parsedInput.data.bio }),
       ...(parsedInput.data.identityStatement !== undefined && {
         identity_statement: parsedInput.data.identityStatement,
+      }),
+      ...(parsedInput.data.chapter !== undefined && {
+        chapter: parsedInput.data.chapter,
       }),
       ...(parsedInput.data.visibilityPreference !== undefined && {
         visibility_preference: parsedInput.data.visibilityPreference,

@@ -14,6 +14,7 @@ import {
   JourneyService,
   NotificationService,
   ProfileService,
+  ReflectionService,
 } from "./services";
 import { type DomainDataClient, requireDomainDataClient } from "./client";
 
@@ -50,6 +51,7 @@ export function createDomainDataLayer(client: DomainDataClient | null) {
     ),
     journey: new JourneyService(rpc),
     notifications: new NotificationService(repositories.notifications),
+    reflections: new ReflectionService(repositories.reflections),
   };
 
   return {

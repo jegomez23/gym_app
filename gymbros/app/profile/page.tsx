@@ -18,6 +18,7 @@ export default async function ProfilePage() {
         <ProfileScreen
           cadence={viewModel.cadence}
           evidence={viewModel.evidence}
+          memory={viewModel.memory}
           profile={viewModel.profile}
         />
       </ScreenContainer>

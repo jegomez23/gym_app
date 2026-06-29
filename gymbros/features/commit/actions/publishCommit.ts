@@ -58,6 +58,10 @@ export async function publishCommitAction(
         intensity: parsed.intensity,
         note: parsed.note,
         visibility: parsed.visibility,
+        // The season this evidence belongs to is ambient context, not a question —
+        // stamped automatically from the profile's current chapter so the sacred act
+        // stays light (Principle 12). Null when no season is set.
+        chapter: context.profile.chapter,
         reflectionContent: parsed.reflectionContent,
         reflectionType: parsed.reflectionType,
       }

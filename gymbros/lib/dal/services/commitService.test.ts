@@ -14,6 +14,7 @@ const commit: Commit = {
   note: null,
   visibility: "circle",
   evidence: [],
+  chapter: null,
   createdAt: "2026-06-22T08:01:00.000Z",
   deletedAt: null,
 };
@@ -38,6 +39,7 @@ function makeRepos() {
       listCommitsForProfile: vi.fn(),
       changeCommitVisibility: vi.fn(),
       removeCommit: vi.fn(),
+      listRecentPublicCommits: vi.fn(),
     },
     reflections: {
       createReflection: vi.fn().mockResolvedValue(reflection),

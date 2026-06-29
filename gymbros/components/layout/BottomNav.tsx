@@ -11,10 +11,13 @@ type NavItem = {
   icon: IconName;
 };
 
-// Commit sits in the center as the product's defining act.
+// Commit sits in the center as the product's defining act. The four destinations
+// around it are: now (Hoy), the world (Explorar), yours (Círculo), you (Perfil).
+// The Archive is a deeper view of your own evidence, reached from the Profile where
+// your evidence already lives — it is not a top-level destination.
 const leftItems: NavItem[] = [
   { href: "/", label: "Hoy", icon: "today" },
-  { href: "/archive", label: "Archivo", icon: "archive" },
+  { href: "/explore", label: "Explorar", icon: "compass" },
 ];
 
 const rightItems: NavItem[] = [

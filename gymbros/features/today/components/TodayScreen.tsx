@@ -86,11 +86,13 @@ function TodayHero({
   state,
   name,
   identityStatement,
+  chapter,
   memory,
 }: {
   state: DerivedState["state"];
   name: string;
   identityStatement: string | null;
+  chapter: string | null;
   memory: SelectedMemory | null;
 }) {
   switch (state) {
@@ -188,6 +190,9 @@ function TodayHero({
       );
     case "building":
     default:
+      // The steady, everyday state. When the person has named the season they
+      // are in, the screen reflects it back in their own words (principle 13);
+      // otherwise it holds the plain recognition. Never both.
       return (
         <>
           <p className="text-label uppercase text-secondary-text">
@@ -196,10 +201,21 @@ function TodayHero({
           <h2 className="mt-3 text-display text-primary-text">
             Sigues apareciendo.
           </h2>
-          <p className="mt-3 max-w-80 text-body text-secondary-text">
-            {name}, hoy no se trata de hacer más. Se trata de aparecer con
-            intención.
-          </p>
+          {chapter ? (
+            <>
+              <p className="mt-4 max-w-80 text-body italic leading-7 text-primary-text">
+                “{chapter}”
+              </p>
+              <p className="mt-3 max-w-80 text-body text-secondary-text">
+                {name}, en eso estás ahora.
+              </p>
+            </>
+          ) : (
+            <p className="mt-3 max-w-80 text-body text-secondary-text">
+              {name}, hoy no se trata de hacer más. Se trata de aparecer con
+              intención.
+            </p>
+          )}
         </>
       );
   }
@@ -343,6 +359,7 @@ export function TodayScreen({
         <div className="absolute -right-10 top-6 h-28 w-28 rounded-full bg-accent-soft blur-3xl" />
         <div className="relative">
           <TodayHero
+            chapter={profile.chapter}
             identityStatement={profile.identityStatement}
             memory={memory}
             name={name}

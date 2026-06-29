@@ -20,6 +20,7 @@ export async function updateProfileAction(
     avatarUrl: formData.get("avatarUrl") || undefined,
     bio: formData.get("bio") || undefined,
     identityStatement: formData.get("identityStatement") ?? undefined,
+    chapter: formData.get("chapter") ?? undefined,
     visibilityPreference: formData.get("visibilityPreference") || undefined,
     timezone: formData.get("timezone") || undefined,
     locale: formData.get("locale") || undefined,

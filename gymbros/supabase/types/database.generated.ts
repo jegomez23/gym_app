@@ -17,6 +17,7 @@ export type Database = {
           avatar_url: string | null;
           bio: string | null;
           identity_statement: string | null;
+          chapter: string | null;
           visibility_preference: "private" | "circle" | "public";
           onboarding_completed: boolean;
           timezone: string;
@@ -32,6 +33,7 @@ export type Database = {
           avatar_url?: string | null;
           bio?: string | null;
           identity_statement?: string | null;
+          chapter?: string | null;
           visibility_preference?: "private" | "circle" | "public";
           onboarding_completed?: boolean;
           timezone?: string;
@@ -47,6 +49,7 @@ export type Database = {
           avatar_url?: string | null;
           bio?: string | null;
           identity_statement?: string | null;
+          chapter?: string | null;
           visibility_preference?: "private" | "circle" | "public";
           onboarding_completed?: boolean;
           timezone?: string;
@@ -77,6 +80,7 @@ export type Database = {
           note: string | null;
           visibility: "private" | "circle" | "public";
           evidence: Json;
+          chapter: string | null;
           created_at: string;
           deleted_at: string | null;
         };
@@ -91,6 +95,7 @@ export type Database = {
           note?: string | null;
           visibility?: "private" | "circle" | "public";
           evidence?: Json;
+          chapter?: string | null;
           created_at?: string;
           deleted_at?: string | null;
         };
@@ -105,6 +110,7 @@ export type Database = {
           note?: string | null;
           visibility?: "private" | "circle" | "public";
           evidence?: Json;
+          chapter?: string | null;
           created_at?: string;
           deleted_at?: string | null;
         };

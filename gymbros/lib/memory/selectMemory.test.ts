@@ -94,4 +94,74 @@ describe("selectMemory", () => {
     });
     expect(result?.content).toBe(oldIdentity.content);
   });
+
+  describe("profile origin (Policy v2)", () => {
+    it("returns an aged origin on the profile mirror, with its date", () => {
+      const result = selectMemory({
+        context: "profile",
+        reflections: [oldIdentity],
+        now: NOW,
+      });
+      expect(result).toEqual({
+        kind: "reflection",
+        content: oldIdentity.content,
+        reason: "profile-origin-identity",
+        createdAt: oldIdentity.createdAt,
+      });
+    });
+
+    it("stays silent until a reflection has aged into an origin (30 days)", () => {
+      const recentEnoughForReturn: MemoryCandidate = {
+        content: "Hace tres semanas.",
+        type: "identity",
+        createdAt: daysAgo(21),
+      };
+      // Old enough for a Quiet Return, not yet old enough to be a profile origin.
+      expect(
+        selectMemory({
+          context: "profile",
+          reflections: [recentEnoughForReturn],
+          now: NOW,
+        })
+      ).toBeNull();
+      expect(
+        selectMemory({
+          state: "returning",
+          reflections: [recentEnoughForReturn],
+          now: NOW,
+        })
+      ).not.toBeNull();
+    });
+
+    it("never echoes the vow already shown on the hero", () => {
+      const vowAsReflection: MemoryCandidate = {
+        content: "Soy quien aparece.",
+        type: "identity",
+        createdAt: daysAgo(60),
+      };
+      expect(
+        selectMemory({
+          context: "profile",
+          identityStatement: "Soy quien aparece.",
+          reflections: [vowAsReflection],
+          now: NOW,
+        })
+      ).toBeNull();
+    });
+
+    it("never surfaces pain casually on the mirror (safety gate)", () => {
+      const oldEmotional: MemoryCandidate = {
+        content: "Fue un año muy duro.",
+        type: "emotional",
+        createdAt: daysAgo(90),
+      };
+      expect(
+        selectMemory({
+          context: "profile",
+          reflections: [oldEmotional],
+          now: NOW,
+        })
+      ).toBeNull();
+    });
+  });
 });

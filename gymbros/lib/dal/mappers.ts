@@ -75,6 +75,7 @@ export function mapProfile(row: Tables<"profiles">): Profile {
     avatarUrl: row.avatar_url,
     bio: row.bio,
     identityStatement: row.identity_statement,
+    chapter: row.chapter,
     visibilityPreference: row.visibility_preference,
     onboardingCompleted: row.onboarding_completed,
     timezone: row.timezone,
@@ -97,6 +98,7 @@ export function mapCommit(row: Tables<"commits">): Commit {
     note: row.note,
     visibility: row.visibility,
     evidence: toEvidence(row.evidence),
+    chapter: row.chapter,
     createdAt: row.created_at,
     deletedAt: row.deleted_at,
   };
@@ -182,6 +184,9 @@ export function mapJourneyItem(row: JourneyTimelineRow): JourneyItem {
     note: row.note,
     visibility: row.visibility,
     evidence: toEvidence(row.evidence),
+    // The journey RPC does not carry chapter; the Archive resolves a commit's season
+    // from listCommitsForProfile instead. Null here keeps the type honest.
+    chapter: null,
     createdAt: row.recorded_at,
     deletedAt: null,
     reflections: parseReflectionSummaries(row.reflections),
@@ -224,6 +229,7 @@ export function mapCommitDetail(row: CommitDetailRow): CommitDetail {
     note: row.note,
     visibility: row.visibility,
     evidence: toEvidence(row.evidence),
+    chapter: null,
     createdAt: row.created_at,
     deletedAt: null,
     reflections: parseReflectionSummaries(row.reflections),

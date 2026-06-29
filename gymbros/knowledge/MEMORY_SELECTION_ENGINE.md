@@ -368,6 +368,30 @@ preserved. An engagement metric must never be added.
 
 ---
 
+## Selection Policy Versions
+
+Per `MEMORY_GOVERNANCE.md` Part 8, selection behavior changes through explicit, named,
+permanently-recorded versions — never silent tweaks. Each records what changed, why, and
+which principle justified it (and that it violates none).
+
+- **v1 — Quiet Return (Phase 37).** Surfaces one of the user's own reflections in exactly
+  one context: the Quiet Return (`state === "returning"`). Chosen because the gap itself
+  guarantees rarity, so no Future Memory Ledger is needed. _Justified by:_ Bible Part 6
+  (return is the anchor moment), Principle 13.
+
+- **v2 — Profile origin (Phase 56).** Adds one **pull** context: the Profile mirror, which
+  returns one of the user's **oldest** words (their origin) when it has aged past
+  `MEMORY_PROFILE_MIN_AGE_DAYS` (30), excluding the vow already shown on the hero. _Why:_
+  it deepens identity on a surface the user deliberately opened, returning their earliest
+  voice with the distance that gives it meaning. _Justified by:_ Bible Part 6, Principles
+  13/15, Part 4 (Profile: "Yes — Identity, origin"). _Violates none_ — notably not
+  Immutable 6 ("memory never exists to increase opens"): it is a pull, not a push, so no
+  ledger is required (the ledger gates pushes only). The everyday Today **push** remains
+  deliberately unbuilt, because justifying it as "a reason to open" fails Decision-
+  Framework Q4 / Immutable 6.
+
+---
+
 ## Reference Sources
 
 - `PRODUCT_BIBLE.md` — why the product exists (highest source of truth); Part 6 (the

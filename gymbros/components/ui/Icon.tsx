@@ -23,7 +23,8 @@ export type IconName =
   | "feeling-steady"
   | "feeling-deep"
   | "shield"
-  | "send";
+  | "send"
+  | "compass";
 
 type IconProps = SVGProps<SVGSVGElement> & {
   name: IconName;
@@ -77,6 +78,12 @@ const paths: Record<IconName, React.ReactNode> = {
   "feeling-deep": <path d="M17 5a7 7 0 1 0 2 9 5.5 5.5 0 0 1-2-9Z" />,
   shield: <path d="M12 3.5l7 2.5v5c0 4.5-3 7.5-7 9.5-4-2-7-5-7-9.5V6Z" />,
   send: <path d="M5 12 19 5l-5 14-3-6Z" />,
+  compass: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M15.5 8.5 13 13l-4.5 2.5L11 11Z" />
+    </>
+  ),
 };
 
 export function Icon({ name, size = 24, ...props }: IconProps) {

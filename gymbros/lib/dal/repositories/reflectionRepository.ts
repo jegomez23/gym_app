@@ -65,6 +65,33 @@ export class ReflectionRepository {
     return rows.map(mapReflection);
   }
 
+  async listOldestReflectionsForProfile(
+    profileId: string,
+    limit = 12
+  ): Promise<Reflection[]> {
+    const parsedId = uuidSchema.safeParse(profileId);
+    if (!parsedId.success) {
+      throw toValidationError(parsedId.error);
+    }
+
+    // The user's own oldest words, for the Profile origin memory. RLS
+    // (reflections_select_own) scopes this to the owner; ascending order surfaces
+    // the beginning, not the recent. Bounded — never an unbounded scan.
+    const safeLimit = Math.min(Math.max(1, Math.floor(limit)), 50);
+
+    const rows = unwrapList(
+      await this.client
+        .from("reflections")
+        .select("*")
+        .eq("user_id", parsedId.data)
+        .is("deleted_at", null)
+        .order("created_at", { ascending: true })
+        .limit(safeLimit)
+    );
+
+    return rows.map(mapReflection);
+  }
+
   async editReflection(input: EditReflectionInput): Promise<Reflection> {
     const parsedInput = editReflectionSchema.safeParse(input);
     if (!parsedInput.success) {

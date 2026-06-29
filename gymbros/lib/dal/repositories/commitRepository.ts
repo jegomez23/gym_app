@@ -46,6 +46,7 @@ export class CommitRepository {
       note: parsedInput.data.note,
       visibility: parsedInput.data.visibility,
       evidence: parsedInput.data.evidence,
+      chapter: parsedInput.data.chapter,
     };
 
     const row = unwrapData(
@@ -98,6 +99,27 @@ export class CommitRepository {
     if (parsedOptions.data.before) {
       query = query.lt("recorded_at", parsedOptions.data.before);
     }
+
+    return unwrapList(await query).map(mapCommit);
+  }
+
+  async listRecentPublicCommits(limit = 30): Promise<Commit[]> {
+    // The world's public documentation, across every user. RLS
+    // (commits_select_public_authenticated) is the boundary — this can only ever
+    // return commits explicitly marked public. Finite by design: a single bounded
+    // read, no cursor, no infinite scroll.
+    const parsedLimit = paginationSchema.shape.limit.safeParse(limit);
+    if (!parsedLimit.success) {
+      throw toValidationError(parsedLimit.error);
+    }
+
+    const query = this.client
+      .from("commits")
+      .select("*")
+      .eq("visibility", "public")
+      .is("deleted_at", null)
+      .order("recorded_at", { ascending: false })
+      .limit(parsedLimit.data ?? 30);
 
     return unwrapList(await query).map(mapCommit);
   }

@@ -17,7 +17,7 @@ export default async function ArchivePage() {
       >
         <ArchiveScreen
           cadence={viewModel.cadence}
-          journey={viewModel.journey}
+          seasons={viewModel.seasons}
         />
       </ScreenContainer>
     </AppShell>

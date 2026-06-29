@@ -12,6 +12,7 @@ const profile: Profile = {
   avatarUrl: null,
   bio: null,
   identityStatement: null,
+  chapter: null,
   visibilityPreference: "circle",
   onboardingCompleted: true,
   timezone: "UTC",

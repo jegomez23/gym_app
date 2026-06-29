@@ -500,6 +500,272 @@ Current code shape:
   `profiles_select_public` (read public-`visibility_preference` profiles) — after which the
   smallest truthful Explore is recent public evidence attributed to its author, finite and
   unranked; still worth building only once people actually share publicly.
+- Phase 52 (The chapter — a life in movement, not only workouts) is **done**. Audit
+  question: "What part of an active life has nowhere to exist?" Mapping the brief's
+  life-list (preparing for a race, finishing one, recovering from injury, returning
+  after months, documenting a trip, a season of life) against the model showed they
+  all share one shape — a **span/arc**, not a point — and the product had **no home
+  for the present arc**. It held the permanent *who* (`profiles.identity_statement`,
+  Phase 22) and the discrete *points* (`commits`), but nothing for "what am I living
+  through right now?". `cadence` (Phase 41) is a derived sentence about the past, not
+  a named present; the dormant `bio` column is permanent self-description, semantically
+  wrong (and retired in Phase 23). So the gap was real and **not buildable from
+  existing fields** — a minimal extension was justified. **Built: the chapter** — one
+  nullable `profiles.chapter` column (migration `20260629_0001_chapter.sql`, 1–140,
+  additive/idempotent), mirroring the proven identity_statement template exactly across
+  generated types, DAL (type/mapper/`updateProfileSchema`+`createProfileSchema`/
+  repository insert+update), `lib/auth/schemas.ts` (so `updateProfileFormSchema`
+  inherits it), and the profile update action. The chapter is **present tense and
+  changeable** (distinct from the permanent vow) and is **the user's own words**
+  (principle 13) — null is silence. **UX:** the Profile now reads as a portrait in
+  three movements — *who you are becoming* (identity hero) → *what you are living now*
+  (the chapter, an accent-labelled "Ahora" block, shown only when written) → *the
+  proof* (evidence + cadence). The Today `building` hero — the everyday home screen —
+  now reflects the named season back ("{chapter}" / "en eso estás ahora.") instead of
+  generic filler, and falls back to the plain recognition when there is no chapter.
+  Onboarding was **left untouched** (the sacred act stays light, principle 12); the
+  chapter is set from the Profile edit form, where its invitation lives. No new table
+  (the frozen MVP contract stands — `migrations.test.ts` extended with the ordered
+  filename + an additive-nullable assertion), no new query/entity/RLS, no Server Action
+  beyond the existing profile update. **Rejected alternatives:** Explore/finite discovery
+  (re-proven not-ready, same hard evidence as Phases 50–51 — no public-profile RLS, no
+  public reflections, no places); places/trails (no geo substrate — would be inventing);
+  a heavy chapter-that-*groups*-evidence (a join FK + aggregation surfaces is speculative
+  architecture for value the single living line already delivers); a milestone flag
+  (edges toward celebrating arrival, which the Bible forbids); reusing the dormant `bio`
+  column (wrong semantics, resurrects a retired field). **Code removed:** none — the
+  change is purely additive by design (remove-before-adding found no redundancy to
+  retire). **Process note (Phase 48):** the new migration must be pushed to the hosted
+  Supabase project (`supabase db push` / MCP) before onboarding/profile writes succeed
+  remotely; until then `profiles.chapter` does not exist on the remote table. **Next
+  opportunity:** the chapter is currently a standalone line; the natural deepening is to
+  let a piece of evidence quietly belong to the chapter it was made within (so a season
+  can later be *re-read* as the arc of evidence it held) — but only once chapters have
+  earned their weight in real use, and only if it can be done without a grouping table
+  the frozen contract forbids.
+- Phase 53 (Documentation — evidence becomes an openable, living document) is **done**.
+  Audit question: "What would make someone open Gym Circle even if they are not leaving
+  evidence today?" Answer (product value, not notifications): **to return to and add to
+  a documented experience.** Decisive finding: evidence was **write-only** — you could
+  leave it and glimpse it in a feed, but there was **no route to open a single piece**.
+  `get_commit_detail` (RPC + `CommitService.getCommitDetail` + `CommitDetail` type, all
+  already built) had **zero callers** outside tests — a fully-built dead read. The
+  "Documentation" hypothesis was tested against the existing model and **needed no new
+  entity**: every field a document needs already exists — `commits` (title, type/movement,
+  recordedAt, duration, intensity, visibility, the dormant `evidence` jsonb for future
+  media) plus its 1:N `reflections` (the written account). Proof a new entity was
+  unnecessary: a "document" is just a commit rendered in full with its reflections, and
+  reflections are already 1:N + owner-insertable (`reflections_insert_own` RLS), so the
+  account can **grow over time**. **Built:** (1) `app/evidence/[id]/page.tsx` + a new
+  `features/evidence/` (`queries.getDocumentViewModel`, `DocumentScreen`,
+  `AddReflectionForm`, `actions/addReflection`) — the route activates the dormant
+  `get_commit_detail`; RLS (security-invoker) is the authorization boundary, so a commit
+  the viewer can't see returns empty → `NotFoundError` → `notFound()` (404, never a leak).
+  (2) The document renders the experience: facts (movement/intensity/duration/visibility
+  chips, author shown only to non-owners), then the account (legacy `note` + every
+  reflection in full, oldest→newest), then — **the capability that makes it documentation,
+  not a detail view** — an owner-only form to **add a reflection after the fact** (a lesson
+  from a hike, what a race felt like in hindsight), via `CommitService.createReflection`
+  (private/`process`). This is the concrete non-training-day reason to open the app.
+  (3) `DomainCommitCard` is now a quiet `Link` to `/evidence/{id}` (calm hover/focus
+  affordance, `aria-label`, no chevron), so **every evidence card across Today, Archive,
+  and Profile is openable** — the dead-end feed becomes navigable. **Explore — re-audited
+  and again deferred:** Documentation is exactly the finite, real content Explore would
+  need, but the wall proven in Phases 50–52 stands — `get_commit_detail` is security-invoker,
+  so a public stranger's commit would render with an **empty author** (profiles still have
+  no public-select policy → no attribution). Explore stays one migration
+  (`profiles_select_public`) away; no empty shell built. **Profile — strengthened more than
+  Explore would:** identity (who, Phase 50) + chapter (now, Phase 52) + evidence cards that
+  **now open into full documents** make the three connect — a portrait whose pieces are
+  enterable. No nav change forced. **Architecture impact:** no new table, no new migration,
+  no new entity, no schema change — purely activating a built-but-unused RPC and adding one
+  route + one Server Action (`createReflection`, already in the service). **Code removed:**
+  none — additive by design; the change retires a *dead read* by giving it a surface rather
+  than deleting code. Tests stay 99 (no new test added — the new surfaces are server
+  components + a thin action over already-tested service/RPC paths; `selectMemory`/
+  `deriveState` consume the later-added reflections unchanged). **Next opportunity:** the
+  account can now grow but individual entries can't be edited/removed from the document
+  (`editReflection`/`removeReflection` exist in the service, no surface); and the dormant
+  `commits.evidence` jsonb is the natural home for photos once Storage lands — either is a
+  clean follow-up, neither foundational.
+- Phase 54 (Explore — the world, as a finite library) is **done**. Audit question:
+  "Where does the world exist?" Mapping everything outside the user: people →
+  *blocked only by a product decision* (no public-profile policy); public documentation
+  → *partially supported* (public commits readable since `commits_select_public_authenticated`,
+  documents openable since Phase 53, but **no author attribution**); places/routes/
+  mountains/races/clubs/events/knowledge/techniques/books/podcasts/equipment/recovery →
+  *impossible without inventing entities* (no geo, no events, no content model) and largely
+  feed/editorial shapes the product refuses; challenges → rejected by Principles. So the
+  **only** part of "the world" the architecture can express without new entities is **other
+  people's public documentation, attributed** — and the sole blocker was the single missing
+  RLS policy proven necessary across Phases 50–53. **Built that and nothing speculative:**
+  migration `20260629_0002_profiles_select_public.sql` adds `profiles_select_public` (read a
+  profile only when its owner chose `visibility_preference = 'public'`, not deleted) — a
+  policy, no table, no column. Two opt-ins are now required for anything to surface (public
+  commit **and** public profile). DAL: `CommitRepository.listRecentPublicCommits(limit)` +
+  `CommitService.listRecentPublicCommits` — one bounded cross-user read of public commits
+  (RLS-scoped), no cursor, no infinite scroll. `features/explore/queries.ts` joins those to
+  their now-readable authors via the existing `profiles.listProfilesByIds`, **omitting any
+  document whose author isn't publicly discoverable** (attribution is the point; no faceless
+  cards). **Explore is a calm library, not a feed:** `app/explore/page.tsx` +
+  `ExploreScreen`/`PublicDocumentCard` show a finite (≤30), unranked set of public documents
+  — author (face + name) + movement + title + date — each a `Link` into the existing
+  `/evidence/[id]` document (now rendered with its author populated). No counts, likes,
+  follows, ranking, or pagination. Empty state is an invitation, not a void. **Navigation
+  redesigned (proven, not forced):** the four destinations around the center Commit are now
+  *now (Hoy) · the world (Explorar) · yours (Círculo) · you (Perfil)*; **Archive left the
+  top-level nav** because it is a deeper view of *your own* evidence, which already lives
+  under Profile (Phase 50) — `/archive` stays and is reached by a "Ver todo el archivo" link
+  in the Profile evidence section. New `compass` glyph added to the one icon set. **Why this
+  IA:** Today/Circle/Profile are you-and-yours; the missing top-level concept was the world,
+  and Explore is a genuine destination (a library), whereas Archive is a sub-view of self.
+  **Architecture impact:** no new table, no new entity, no schema/column change — one RLS
+  policy + one bounded read + one route. **Rejected directions:** places/routes/events/clubs/
+  knowledge/books/podcasts/equipment (all require inventing entities or editorial content —
+  speculative, and several are feed/marketplace shapes the product refuses); a "people"
+  directory with follow/discover (no follow primitive exists and it drifts toward a social
+  graph — people appear *through* their documentation instead, and can still be invited to a
+  circle by username); folding Archive *into* Profile as an inline full history (heavier,
+  unnecessary — a link suffices). **Code removed:** none — additive (one policy, one read,
+  one route) plus a nav swap; the dormant public-read substrate finally has a surface.
+  Tests 100 (a migration-contract assertion added). **Process note (Phases 48/52):** the two
+  new migrations (`20260629_0001_chapter.sql`, `20260629_0002_profiles_select_public.sql`)
+  must be pushed to the hosted Supabase project before chapter writes and Explore attribution
+  work remotely. **Next opportunity:** Explore currently lists recent public documents
+  globally; the next deepening (only once there is real public volume) is gentle, non-feed
+  organization — by movement/discipline as library "shelves", or a single public profile
+  view (`/u/[username]`) so a person discovered through one document can be seen whole — both
+  reuse the now-public profile substrate and need no new entity.
+- Phase 55 (Explore lives its restraint — stops feeling like software) is **done**.
+  Founder-eyes experience audit (emotion/rhythm/silence, not code) of every screen:
+  Today, Commit, Document, Circle, Profile all read as **alive**; **Explore was the
+  one surface that still read as software** — and the brief's named target. Two
+  concrete, canon-backed flaws (not taste): (1) it **advertised its own restraint**
+  (subtitle "Finita, sin ranking, sin prisa") — the product hanging a sign saying it
+  is calm, the exact pattern Phase 23 removed ("the product no longer advertises its
+  own philosophy — it lives it"); a calm library is simply calm. (2) Its empty state
+  **reported a void** ("Todavía está en silencio"), violating Voice (empty states are
+  invitations that *begin a story*, never report absence) — and since public content
+  is near-zero, the empty state is the screen **almost every user actually sees**.
+  **Built (purely UX, no schema/migration/entity/DAL/Server-Action change):** removed
+  the self-advertising subtitle from `app/explore/page.tsx` (the page is now eyebrow +
+  title + the room itself — space is breath); rewrote the `ExploreScreen` empty state
+  from a report of silence into a warm invitation ("Aquí vivirá la práctica de otros.
+  … Puedes ser quien lo empiece."). **Deliberately left alone:** the uniform document
+  cards — documents are equals, and elevating one would imply ranking, which the
+  product refuses; the feed-vs-library difference here is **framing**, not hierarchy.
+  **Rejected:** ripping Explore from the nav (thrashing — the cold-start was known and
+  accepted in Phase 54); shelves-by-movement (right long-term shape but sparse/cold
+  with near-zero content — Phase 54 correctly deferred it to "real public volume"); a
+  redundant empty-state CTA (the center Commit button already exists — adding one is
+  the "while you're here…" attention pull the Interaction System forbids). **Code
+  removed:** the subtitle prop usage (one line). Tests stay 100 (copy-only + a server
+  page header change; no logic path touched). **Next opportunity:** once public volume
+  is real, the populated state earns gentle non-feed organization (movement "shelves")
+  and/or a public profile view (`/u/[username]`) — both already noted in Phase 54,
+  both reuse the now-public profile substrate, neither needs a new entity.
+- Phase 56 (The mirror remembers — Selection Policy v2: the Profile origin) is
+  **done**. Product-architect audit of "why would someone open Gym Circle tomorrow if
+  they are NOT leaving evidence?" The honest answer was weak, and the structural reason
+  was canonical: `selectMemory` has been hard-locked to the Quiet Return since Phase 37
+  because everywhere else needs the **Future Memory Ledger** (MEMORY_SELECTION_ENGINE.md
+  Part 11) to keep a *push* rare. **Decisive governance finding (this is why the obvious
+  "big" build was rejected):** answering the brief's question with an everyday Today
+  *push* memory — "give them a reason to open" — is the **exact engagement mechanism the
+  Memory Governance constitution forbids** (Immutable 6 "memory never exists to increase
+  opens"; Decision-Framework Q4 "if its mechanism is 'the user opens the app more', it
+  fails"; Bible Part 10 "it wants their continuity, not their attention"). So the truthful
+  answer flips to a **pull** surface, where the user already came to themselves — and a
+  pull surface needs **no ledger** (the ledger gates pushes, not pulls), which means **no
+  new table, no migration, no write-on-read, no frozen-contract change.** This also
+  **corrects Phase 50**, which deferred Profile memory citing the ledger — an over-broad
+  application of a push-only gate. **Built (Selection Policy v1 → v2):** `selectMemory`
+  gained a `context: "today" | "profile"` discriminator (default "today", so the existing
+  Quiet-Return path and its tests are untouched). The new `profile` branch returns one of
+  the user's **oldest** words — their origin — through the same deterministic, explainable,
+  silence-by-default gates as the return (safety: never an `emotional` reflection; truth:
+  age ≥ `MEMORY_PROFILE_MIN_AGE_DAYS = 30`, matching the engine's own 30-day timeline)
+  **plus** a new gate: never echo the `identity_statement` vow already shown on the hero
+  (Rule 7, one memory at a time). The candidate pool is a new bounded read,
+  `ReflectionRepository.listOldestReflectionsForProfile` (ascending, RLS-scoped by the
+  existing `reflections_select_own`, ≤50) exposed via a small new `ReflectionService`
+  (`services.reflections.listOldestForProfile`) wired in the factory — reflections were
+  previously only reachable commit-scoped through `CommitService`. `getProfileViewModel`
+  loads the oldest reflections and runs the engine; `ProfileScreen` renders the origin as
+  a quiet section between the hero vow and the chapter — *where you started → what you are
+  living now → the proof* — the user's own words leading, our framing reduced to one line
+  of distance ("Lo escribiste hace 3 meses. Sigues siendo esa persona."), and **silent by
+  default** (most profiles return null until a reflection has aged into an origin).
+  **Governance Part 8 — Selection Policy v2:** *What changed?* one pull context (Profile)
+  added; selection otherwise unchanged. *Why?* it deepens identity on a surface the user
+  chose, returning their own earliest voice with the distance that makes it mean something
+  (truth + identity improve; calm preserved — one memory, pull, silent by default). *Which
+  principle?* Bible Part 6 (first-reflection resurfacing), Principles 13/15, Selection doc
+  Part 4 (Profile: "Yes — Identity, origin"); it violates none — notably not Immutable 6,
+  because it is a pull, not an open-driver. **Rejected (and why):** the Future Memory
+  Ledger + everyday Today push (constitution-forbidden as above — the larger build was the
+  *wrong* build, not merely the harder one); a new `memory_surfacings` table (only a push
+  needs it); richer profile customization / trips / races / collections / public profiles
+  (each invents entities or is a feed shape, and none answers the question as truly as the
+  product remembering you). **Code removed:** none — additive (one read, one service, one
+  engine branch, one surface); no obsolete architecture was found to delete this phase.
+  Tests 104 (+4: profile origin selection, the 30-day origin gate vs the return gate, vow
+  non-echo, safety). **Next opportunity / biggest remaining limitation:** the origin pool
+  is the 12 oldest reflections, so a user with a very long history still gets a *true*
+  origin, but Archive (the other sanctioned pull surface, Part 4: "rare gentle header")
+  still shows no memory, and turning-point / "the line that traveled" (early-vs-recent
+  contrast) memories remain unbuilt — both are pull-surface, ledger-free extensions of
+  Policy v2. The everyday Today push stays correctly unbuilt unless/until it can be
+  justified by truth rather than opens, which by the constitution it cannot.
+- Phase 57 (Chapters become living containers — evidence belongs to its season) is
+  **done**. Systems audit of "the smallest capability that makes Gym Circle twice as
+  alive" found three systems whose promises converged on one gap: **Chapters** named
+  the season you are living (Phase 52) but **held nothing** — a dead line on the
+  Profile; **Evidence/Archive** was a flat, undifferentiated stream of points with no
+  arcs; **Documentation** let a single document grow but kept each document an island.
+  The dominating leap (it satisfies the brief's "Chapters as living containers",
+  "Profile as home of the journey", and "documents richer over months" hypotheses at
+  once): **make each piece of evidence belong to the season it was made within**, so a
+  chapter stops being a line and becomes the living arc of evidence it held, and the
+  Archive stops being a stream and becomes *a life told in seasons*. **Built:** a single
+  nullable `commits.chapter` column (migration `20260629_0003_commit_chapter.sql`, ≤140
+  check, additive/idempotent) — a denormalized copy of the user's own chapter words at
+  the moment of the act, **not a grouping table** (the frozen MVP 6-table contract holds;
+  `migrations.test.ts` extended with the ordered filename + an additive-nullable / no-new-
+  table assertion). The season is **stamped automatically** at creation from the
+  profile's current chapter (`publishCommit` action passes `context.profile.chapter` into
+  the existing `publishCommitWithReflection` path) — ambient context, never a new question
+  in the flow, so the sacred act stays light (Principle 12). Full DAL thread: generated
+  types (commits Row/Insert/Update), `Commit.chapter`, `mapCommit`, `publishCommitSchema`,
+  repository insert. **The Archive is reorganized** (`getArchiveViewModel` now groups the
+  journey into contiguous **seasons** by chapter — joining the journey RPC, for evidence +
+  reflections, to a parallel `listCommitsForProfile`, for each commit's chapter, by id —
+  the journey RPC was deliberately left untouched because migrations are not executed by
+  the five validations, so the season-grouping lives in fully-typechecked TypeScript
+  instead of unvalidated SQL). `ArchiveScreen` now renders each season under a quiet
+  accent divider in the user's own words (season-less evidence simply has no header) —
+  **the flat journey list is gone** (the `journey` prop replaced by `seasons`). **What
+  disappeared:** the flat-stream Archive concept — the record is now a sequence of named
+  arcs, a reduction in concept (a log → a life in seasons), not an addition of chrome
+  (same cards, quiet dividers, no counts/stats/feed). **Rejected:** photos on evidence
+  (the dormant `commits.evidence` jsonb is ready, but needs Supabase Storage — a whole
+  unbuilt subsystem — and risks the Instagram drift; deferred); collaborative/shared
+  documentation (needs cross-user reflection writes against `reflections_insert_own` RLS
+  and edges toward social — deferred); memory turning-points (an incremental Policy-v3
+  deepening, not "twice as alive", and needs years of data). **Architecture impact:** one
+  nullable column, no new entity/table/RPC/RLS change; the season timeline is *derived*
+  from stamped evidence (distinct chapter runs = the seasons lived), so chapters never
+  needed a table of their own. **Process note (Phases 48/52/54):** three migrations now
+  await a hosted-Supabase push (`20260629_0001_chapter`, `_0002_profiles_select_public`,
+  `_0003_commit_chapter`); until pushed, `commits.chapter` does not exist remotely and
+  stamping/grouping no-ops to null. Tests 105 (+1 migration assertion; the new code is
+  server queries + pure grouping over already-tested mappers/services). **Single biggest
+  remaining limitation:** a season is only re-readable inside the Archive — a *document*
+  does not yet show the season it belonged to (its connective tissue to the larger arc),
+  and a past chapter has no surface of its own (e.g. a quiet `/season/[name]` or a chapter
+  shown on the Profile as the arc it now contains); both are pure-surface follow-ons over
+  the column shipped here (the Document one needs `chapter` added to the `get_commit_detail`
+  / `get_journey_timeline` RPC return, an owner-only render).
 - Circle and Notifications use client Supabase Realtime hooks
   (`useCircleRealtime`, `useNotificationsRealtime`) that refresh the server tree
   on `postgres_changes`. `app/providers.tsx` exposes the browser Supabase client
@@ -523,6 +789,8 @@ Current routes:
 - `/reset-password` password update form
 - `/onboarding` pending-profile completion
 - `/commit` commit creation flow
+- `/evidence/[id]` a single piece of evidence opened as a full document
+- `/explore` a finite library of public documentation, attributed to its authors
 - `/circle` circle overview
 - `/archive` commit archive
 - `/profile` profile summary

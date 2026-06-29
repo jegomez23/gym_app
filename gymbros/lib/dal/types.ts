@@ -27,6 +27,10 @@ export type Profile = {
   avatarUrl: string | null;
   bio: string | null;
   identityStatement: string | null;
+  // The season of practice the person is living right now (race prep, a return,
+  // a winter of hiking). Present tense and changeable — distinct from the
+  // permanent identityStatement. Their own words; null is silence.
+  chapter: string | null;
   visibilityPreference: ProfileVisibility;
   onboardingCompleted: boolean;
   timezone: string;
@@ -47,6 +51,9 @@ export type Commit = {
   note: string | null;
   visibility: CommitVisibility;
   evidence: Evidence;
+  // The season (chapter) this evidence was made within, in the user's own words —
+  // stamped from the profile's chapter at creation. Null when none was set.
+  chapter: string | null;
   createdAt: string;
   deletedAt: string | null;
 };

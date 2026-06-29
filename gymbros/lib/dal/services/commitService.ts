@@ -21,6 +21,7 @@ type CommitDataAccess = {
   ): Promise<Commit[]>;
   changeCommitVisibility(input: ChangeCommitVisibilityInput): Promise<Commit>;
   removeCommit(commitId: string): Promise<Commit>;
+  listRecentPublicCommits(limit?: number): Promise<Commit[]>;
 };
 
 type ReflectionDataAccess = {
@@ -88,6 +89,10 @@ export class CommitService {
     options?: PaginationOptions
   ): Promise<Commit[]> {
     return this.commits.listCommitsForProfile(profileId, options);
+  }
+
+  listRecentPublicCommits(limit?: number): Promise<Commit[]> {
+    return this.commits.listRecentPublicCommits(limit);
   }
 
   changeCommitVisibility(input: ChangeCommitVisibilityInput): Promise<Commit> {

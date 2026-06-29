@@ -90,6 +90,9 @@ export const publishCommitSchema = z.object({
   note: optionalTrimmedString(500),
   visibility: commitVisibilitySchema.default("private"),
   evidence: z.array(jsonValueSchema).max(20).default([]),
+  // The season this evidence belongs to (the user's own words), stamped from the
+  // profile's current chapter at creation. Null when no season is set.
+  chapter: optionalTrimmedString(140),
 });
 
 export const changeCommitVisibilitySchema = z.object({
@@ -117,6 +120,7 @@ export const updateProfileSchema = z.object({
   avatarUrl: optionalTrimmedString(500),
   bio: optionalTrimmedString(200),
   identityStatement: optionalTrimmedString(140),
+  chapter: optionalTrimmedString(140),
   visibilityPreference: profileVisibilitySchema.optional(),
   onboardingCompleted: z.boolean().optional(),
   timezone: z.string().trim().min(1).max(80).optional(),
@@ -131,6 +135,7 @@ export const createProfileSchema = z.object({
   avatarUrl: optionalTrimmedString(500),
   bio: optionalTrimmedString(200),
   identityStatement: optionalTrimmedString(140),
+  chapter: optionalTrimmedString(140),
   visibilityPreference: profileVisibilitySchema.default("circle"),
   onboardingCompleted: z.boolean().default(false),
   timezone: z.string().trim().min(1).max(80).default("UTC"),
